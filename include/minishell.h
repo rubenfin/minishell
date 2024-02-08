@@ -74,5 +74,14 @@ char					*set_valid_command(char *argv, char **full_path);
 t_command				*init_redirections(char *str, t_command **param);
 char					**get_path(char **envp);
 
+/*
+UTILS / INITIALIZNG
+*/
 int						init_pipe(t_pipes *pipes);
 void					init_stream(t_stream **iostream);
+
+/*
+UTILS / PARSER_UTILS
+*/
+int						pipe_check(t_command *command);
+t_command				*get_command_from_pipe(t_command *command);

@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/06 12:55:18 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/08 15:59:05 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/08 16:27:41 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,5 @@ void	execute(t_command **param, t_stream *iostream)
 		if (command->token == PIPE && iostream->output == -1)
 			iostream->output = iostream->pipes->curr_write;
 	}
-	const char *str = ft_itoa(iostream->output);
-	write(STDOUT_FILENO, &str, ft_strlen(str));
-
 	execute_single(param, iostream);
 }

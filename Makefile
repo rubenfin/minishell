@@ -69,36 +69,6 @@ debug:
 rebug:  fclean debug
 .PHONY: rebug
 
-# all: $(NAME)
-
-# $(OBJS_DIR)/%.o:	%.c
-# 	@mkdir -p $(@D)
-# 	@$(CC) $(CFLAGS) -c $< -o $@
-
-# $(NAME): $(OBJS) $(LIBS_TARGET)
-# 	@$(CC) $(OBJS) $(LINKERFLAGS) -o $@
-# 	@echo "$(GREEN)Compiled mandatory!$(DEFAULT)"
-
-# %.a:
-# 	@$(MAKE) -C $(@D) all
-
-# $(OBJS_DIR):
-# 	@mkdir -p $(OBJS_DIR)
-
-# clean:
-# 	@$(RM) $(OBJS_DIR)
-# 	@$(MAKE) -C $(dir $(LIBS_TARGET)) clean
-# 	@echo "$(YELLOW)Removed all objects!$(DEFAULT)"
-
-# fclean: clean
-# 	@$(RM) $(NAME)
-# 	@$(MAKE) -C $(dir $(LIBS_TARGET)) fclean
-# 	@echo "$(RED)Removed executables!$(DEFAULT)"
-
-# re: fclean all
-
-# .PHONY: all clean fclean re bonus
-
 #COLORS
 RED = \033[1;31m
 GREEN = \033[1;32m

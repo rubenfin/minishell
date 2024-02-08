@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/08 16:17:39 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/08 16:23:50 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,34 +17,6 @@ int	check_status(int status)
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	return (127);
-}
-
-int	pipe_check(t_command *command)
-{
-	int			total_pipes;
-	t_command	*pointer;
-
-	pointer = command;
-	total_pipes = 0;
-	while (pointer)
-	{
-		if (pointer->token == PIPE)
-			total_pipes++;
-		pointer = pointer->next;
-	}
-	return (total_pipes);
-}
-
-t_command	*get_command_from_pipe(t_command *command)
-{
-	t_command	*head;
-
-	head = command;
-	if (head && head->token == PIPE)
-		head = head->next;
-	while (head && head->token != PIPE)
-		head = head->next;
-	return (head);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -79,10 +51,10 @@ int	main(int argc, char **argv, char **envp)
 	forked = 0;
 	if (!total_pipes)
 	{
+		init_stream(&iostream);
 		pid = fork();
 		if (pid == 0)
 		{
-			init_stream(&iostream);
 			execute(&command, iostream);
 		}
 	}
@@ -108,7 +80,7 @@ int	main(int argc, char **argv, char **envp)
 			execute(&until_pipe, iostream);
 	}
 	while (--wait_total)
-		wait_total--;
+		wait(NULL);
 	waitpid(pid, &status, 0);
 	return (check_status(status));
 }

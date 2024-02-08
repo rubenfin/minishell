@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/06 15:49:56 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/08 15:58:02 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/08 16:20:32 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,5 +44,33 @@ t_command	*get_command_until_pipe(t_command *command)
 	}
 	if (command)
 		current = createnode(&head, command->string, command->token);
+	return (head);
+}
+
+int	pipe_check(t_command *command)
+{
+	int			total_pipes;
+	t_command	*pointer;
+
+	pointer = command;
+	total_pipes = 0;
+	while (pointer)
+	{
+		if (pointer->token == PIPE)
+			total_pipes++;
+		pointer = pointer->next;
+	}
+	return (total_pipes);
+}
+
+t_command	*get_command_from_pipe(t_command *command)
+{
+	t_command	*head;
+
+	head = command;
+	if (head && head->token == PIPE)
+		head = head->next;
+	while (head && head->token != PIPE)
+		head = head->next;
 	return (head);
 }
