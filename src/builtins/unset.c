@@ -6,11 +6,11 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/02 11:26:09 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/02 16:01:26 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/08 13:08:40 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../include/minishell.h"
 
 char	**unset(char **env, char *unset_data)
 {

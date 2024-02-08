@@ -6,11 +6,11 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/30 12:09:22 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/02 11:15:26 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/08 13:09:02 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../include/minishell.h"
 
 int	ft_strleng(char *string)
 {
@@ -20,31 +20,6 @@ int	ft_strleng(char *string)
 	while (string[i])
 		i++;
 	return (i);
-}
-
-char	*ft_strjoin(char *s1, char *s2)
-{
-	char	*full_s;
-	int		i;
-
-	if (!s1)
-		return (NULL);
-	if (ft_strleng(s1) + ft_strleng(s2) == 0)
-		return (NULL);
-	full_s = (char *)malloc(((ft_strleng(s1) + ft_strleng(s2)) + 1)
-			* sizeof(char));
-	if (!full_s)
-		return (NULL);
-	i = 0;
-	while (s1[i])
-	{
-		full_s[i] = s1[i];
-		i++;
-	}
-	while (*s2)
-		full_s[i++] = *(s2++);
-	full_s[i] = '\0';
-	return (full_s);
 }
 
 void	cd(char *directory, char **env)

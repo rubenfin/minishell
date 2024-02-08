@@ -6,11 +6,11 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/01 11:28:19 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/05 11:47:12 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/08 13:08:38 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../include/minishell.h"
 
 void	print_2d_arr(char **c)
 {

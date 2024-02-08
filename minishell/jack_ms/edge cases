@@ -1,5 +1,0 @@
-ls -l /home/ | grep a > tea | grep u
-ls / grep / > / grep
-vol fd / vol fd / vol fd
-< test > test | ls > test
-verschil is > geeft output aan variable. pipe geeft output aan command en excute en variable 

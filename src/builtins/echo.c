@@ -6,11 +6,11 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/01 11:40:21 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/02 14:34:35 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/08 13:08:34 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../include/minishell.h"
 
 char	*ft_strchr(const char *s, int c)
 {

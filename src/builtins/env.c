@@ -6,11 +6,11 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/01 13:18:28 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/01 14:15:24 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/08 13:09:15 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../include/minishell.h"
 
 void	get_env(char **env)
 {
