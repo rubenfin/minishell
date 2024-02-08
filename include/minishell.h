@@ -73,3 +73,6 @@ void					execute_single(t_command **param, t_stream *iostream);
 char					*set_valid_command(char *argv, char **full_path);
 t_command				*init_redirections(char *str, t_command **param);
 char					**get_path(char **envp);
+
+int						init_pipe(t_pipes *pipes);
+void					init_stream(t_stream **iostream);

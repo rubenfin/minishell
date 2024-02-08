@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/08 16:06:00 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/08 16:17:39 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,29 +33,6 @@ int	pipe_check(t_command *command)
 		pointer = pointer->next;
 	}
 	return (total_pipes);
-}
-
-int	init_pipe(t_pipes *pipes)
-{
-	int	fds[2];
-
-	if (pipes->curr_write)
-	{
-		pipes->prev_write = pipes->curr_write;
-		pipes->prev_read = pipes->curr_read;
-	}
-	if (pipe(fds) == -1)
-		exit(EXIT_FAILURE);
-	pipes->curr_write = fds[1];
-	pipes->curr_read = fds[0];
-	return (0);
-}
-
-void	init_stream(t_stream **iostream)
-{
-	(*iostream)->args = NULL;
-	(*iostream)->input = -1;
-	(*iostream)->output = -1;
 }
 
 t_command	*get_command_from_pipe(t_command *command)
