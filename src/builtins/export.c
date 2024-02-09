@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/02 11:26:11 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/09 10:12:21 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 12:24:09 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,7 @@ char	**export(char **env, char *export_data)
 			j++;
 		copied_env[i] = (char *)malloc((j + 1) * sizeof(char));
 	}
-	copied_env[i] = (char *)malloc((ft_strlen(export_data) + 1)
-			* sizeof(char));
+	copied_env[i] = (char *)malloc((ft_strlen(export_data) + 1) * sizeof(char));
 	i = -1;
 	while (env[++i])
 	{

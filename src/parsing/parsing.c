@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 15:55:14 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/09 09:46:17 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 12:24:51 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,23 +19,17 @@ t_command	*createnode(t_command **head, char *data, int redirection)
 
 	newnode = (t_command *)malloc(sizeof(t_command));
 	if (!newnode)
-	{
 		return (NULL);
-	}
 	newnode->string = data;
 	newnode->token = redirection;
 	newnode->next = NULL;
 	if (*head == NULL)
-	{
 		*head = newnode;
-	}
 	else
 	{
 		temp = *head;
 		while (temp->next != NULL)
-		{
 			temp = temp->next;
-		}
 		temp->next = newnode;
 	}
 	return (newnode);
@@ -108,7 +102,6 @@ char	*find_flag(char *command)
 	return (flag);
 }
 
-
 int	valid_command(char *argv, char **full_path)
 {
 	int		j;
@@ -175,9 +168,7 @@ int	arg_counter(char **str)
 
 	i = 0;
 	while (str[i])
-	{
 		i++;
-	}
 	return (i);
 }
 
@@ -200,11 +191,11 @@ char	*quote_check(char *str)
 
 t_command	*init_redirections(char *str, t_command **param)
 {
-	int			i;
-	t_command	*command;
-	int			len;
-	int			redirection;
-	char		*result;
+	int i;
+	t_command *command;
+	int len;
+	int redirection;
+	char *result;
 
 	i = 0;
 	command = *param;

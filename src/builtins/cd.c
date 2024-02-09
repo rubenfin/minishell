@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/30 12:09:22 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/09 09:56:50 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 12:24:00 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	cd(char *directory, char **env)
 {
 	char	buffer[1024];
 	char	*path;
+	int		i;
 
 	if (!directory)
 		return ;
@@ -29,7 +30,7 @@ void	cd(char *directory, char **env)
 		write(1, directory, ft_strlen(directory));
 		write(1, "\n", 1);
 	}
-	int i = 0;
+	i = 0;
 	while (ft_strnstr(env[i], "PWD=", 4) == NULL)
 		i++;
 	// free(env[i]);

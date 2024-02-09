@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/09 12:21:05 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 12:26:29 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,13 @@ int	main(int argc, char **argv, char **envp)
 	int			status;
 
 	status = 0;
-	pid = 4389;
-	(void)argv;
+	pid = 1;
 	(void)argc;
-	(void)envp;
+	(void)argv;
 	iostream = (t_stream *)malloc(sizeof(t_stream));
 	iostream->PATH = get_path(envp);
 	iostream->pipes = (t_pipes *)malloc(sizeof(t_pipes));
-	arg = "cat aaaa\t\t\t\tmongol";
+	arg = "cat > infile | ls -l";
 	command = NULL;
 	init_redirections(arg, &command);
 	total_pipes = pipe_check(command);
@@ -41,9 +40,7 @@ int	main(int argc, char **argv, char **envp)
 		init_stream(&iostream);
 		pid = fork();
 		if (pid == 0)
-		{
 			execute(&command, iostream);
-		}
 	}
 	if (total_pipes)
 	{

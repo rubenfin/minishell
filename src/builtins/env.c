@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/01 13:18:28 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/09 09:55:33 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 12:24:07 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,12 @@ void	get_env(char **env)
 		while (env[i][j])
 		{
 			env_one_string[x] = env[i][j];
-            x++;
+			x++;
 			j++;
 		}
 		env_one_string[x] = '\n';
 		x++;
-        i++;
+		i++;
 	}
 	env_one_string[x] = '\0';
 	printf("%s", env_one_string);

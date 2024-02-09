@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/02 11:26:09 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/08 13:08:40 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 12:24:14 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	**unset(char **env, char *unset_data)
 		;
 	if (!env[skip])
 		return (env);
-    printf("%s\n", env[skip]);
+	printf("%s\n", env[skip]);
 	int j = -1;
 	int x = 0;
 	i = -1;
