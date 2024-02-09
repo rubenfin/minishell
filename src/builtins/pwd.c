@@ -6,23 +6,12 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/01 11:28:19 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/08 13:08:38 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 10:12:35 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	print_2d_arr(char **c)
-{
-	int	i;
-
-	i = 0;
-	while (c[i])
-	{
-		printf("%s\n", c[i]);
-		i++;
-	}
-}
 char	*pwd(char **env)
 {
 	int	i;

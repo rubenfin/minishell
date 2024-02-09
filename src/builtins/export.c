@@ -6,23 +6,11 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/02 11:26:11 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/09 09:58:10 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 10:12:21 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-void	print_2d_arrg(char **c)
-{
-	int	i;
-
-	i = 0;
-	while (c[i])
-	{
-		printf("%s\n", c[i]);
-		i++;
-	}
-}
 
 char	**export(char **env, char *export_data)
 {

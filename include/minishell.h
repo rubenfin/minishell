@@ -108,3 +108,4 @@ int check_status(int status);
 UTILS / PRINT
 */
 void	print_list(t_command *command);
+void	print_2d_arrg(char **c);

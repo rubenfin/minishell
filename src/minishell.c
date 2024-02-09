@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/09 10:03:19 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 10:13:04 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)envp;
 	if (argc < 2)
-		return (printf("only 1 arg"), 0);
+		return (printf("only 1 arg\n"), 1);
 	iostream = (t_stream *)malloc(sizeof(t_stream));
 	iostream->PATH = get_path(envp);
 	iostream->pipes = (t_pipes *)malloc(sizeof(t_pipes));
