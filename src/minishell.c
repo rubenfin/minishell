@@ -6,34 +6,32 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/09 10:13:04 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 12:21:05 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
-	char *arg;
-	t_command *command;
-	t_command *until_pipe;
-	t_stream *iostream;
-	int total_pipes;
-	pid_t pid;
-	int wait_total;
-	int status;
+	char		*arg;
+	t_command	*command;
+	t_command	*until_pipe;
+	t_stream	*iostream;
+	int			total_pipes;
+	pid_t		pid;
+	int			wait_total;
+	int			status;
 
 	status = 0;
 	pid = 4389;
 	(void)argv;
 	(void)argc;
 	(void)envp;
-	if (argc < 2)
-		return (printf("only 1 arg\n"), 1);
 	iostream = (t_stream *)malloc(sizeof(t_stream));
 	iostream->PATH = get_path(envp);
 	iostream->pipes = (t_pipes *)malloc(sizeof(t_pipes));
-	arg = argv[1];
+	arg = "cat aaaa\t\t\t\tmongol";
 	command = NULL;
 	init_redirections(arg, &command);
 	total_pipes = pipe_check(command);
@@ -56,7 +54,6 @@ int main(int argc, char **argv, char **envp)
 			until_pipe = get_command_until_pipe(command);
 			command = get_command_from_pipe(command);
 			pid = fork();
-			;
 			if (pid == 0)
 				execute(&until_pipe, iostream);
 			close(iostream->pipes->curr_write);
@@ -68,7 +65,7 @@ int main(int argc, char **argv, char **envp)
 		if (pid == 0)
 			execute(&until_pipe, iostream);
 	}
-	while (--wait_total)
+	while (wait_total--)
 		wait(NULL);
 	waitpid(pid, &status, 0);
 	return (check_status(status));
