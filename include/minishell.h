@@ -94,8 +94,17 @@ void init_stream(t_stream **iostream);
 /*
 UTILS / PARSER_UTILS
 */
-void print_list(t_command *command);
 char **get_path(char **envp);
 int pipe_check(t_command *command);
 t_command *get_command_from_pipe(t_command *command);
 t_command *get_command_until_pipe(t_command *command);
+
+/*
+UTILS / STATUS
+*/
+int check_status(int status);
+
+/*
+UTILS / PRINT
+*/
+void	print_list(t_command *command);

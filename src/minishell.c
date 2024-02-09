@@ -6,18 +6,11 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/09 09:57:50 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 10:03:19 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-int check_status(int status)
-{
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
-	return (127);
-}
 
 int main(int argc, char **argv, char **envp)
 {
