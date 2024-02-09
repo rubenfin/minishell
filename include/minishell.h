@@ -87,6 +87,8 @@ char					*set_valid_command(char *argv, char **full_path);
 t_command				*init_redirections(char *str, t_command **param);
 void					make_env_ll(t_env_ll **env, char **envp);
 t_env_ll				*find_key(t_env_ll *env, char *key_str);
+t_env_ll				*find_value(t_env_ll *env, char *value_str);
+
 /*
 UTILS / INITIALIZNG
 */
