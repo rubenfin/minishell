@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/09 12:35:32 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/09 13:13:28 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 15:48:31 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,4 +77,16 @@ void	make_env_ll(t_env_ll **env, char **envp)
 		i++;
 	}
 	*env = head;
+}
+
+t_env_ll	*find_key(t_env_ll *env, char *key_str)
+{
+	t_env_ll *key_ll = env;
+	while (key_ll)
+	{
+		if (!ft_strncmp(key_ll->key, key_str, ft_strlen(key_str)))
+			return (key_ll);
+		key_ll = key_ll->next;
+	}
+	return (NULL);
 }

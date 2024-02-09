@@ -65,7 +65,7 @@ typedef struct t_command
 /*
 BUILTINS
 */
-void					cd(char *directory, char **env);
+void					cd(char *directory, t_env_ll *env);
 void					echo(char *msg, int n);
 void					get_env(char **env);
 char					**export(char **env, char *export_data);
@@ -86,6 +86,7 @@ t_command				*createnode(t_command **head, char *data,
 char					*set_valid_command(char *argv, char **full_path);
 t_command				*init_redirections(char *str, t_command **param);
 void					make_env_ll(t_env_ll **env, char **envp);
+t_env_ll				*find_key(t_env_ll *env, char *key_str);
 /*
 UTILS / INITIALIZNG
 */

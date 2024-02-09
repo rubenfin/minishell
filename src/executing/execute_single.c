@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/07 16:36:54 by jade-haa      #+#    #+#                 */
-/*   Updated: 2024/02/09 09:52:15 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 15:46:33 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ void	set_args(t_command **param, t_stream *iostream, int count)
 		command = command->next;
 		++i;
 	}
+	iostream->args[i] = NULL;
 }
 
 void	execute_single(t_command **param, t_stream *iostream)

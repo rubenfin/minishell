@@ -6,35 +6,13 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 15:55:14 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/09 12:24:51 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 15:51:10 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-t_command	*createnode(t_command **head, char *data, int redirection)
-{
-	t_command	*newnode;
-	t_command	*temp;
-
-	newnode = (t_command *)malloc(sizeof(t_command));
-	if (!newnode)
-		return (NULL);
-	newnode->string = data;
-	newnode->token = redirection;
-	newnode->next = NULL;
-	if (*head == NULL)
-		*head = newnode;
-	else
-	{
-		temp = *head;
-		while (temp->next != NULL)
-			temp = temp->next;
-		temp->next = newnode;
-	}
-	return (newnode);
-}
-int	directions_checker_int(char *str, int i, int check_all)
+int	redirection_checker_int(char *str, int i, int check_all)
 {
 	if (check_all)
 	{
@@ -52,7 +30,7 @@ int	directions_checker_int(char *str, int i, int check_all)
 	return (0);
 }
 
-int	directions_checker_bool(char *str, int i, int check_all)
+int	redirection_checker_bool(char *str, int i, int check_all)
 {
 	if (check_all)
 	{
@@ -68,17 +46,6 @@ int	directions_checker_bool(char *str, int i, int check_all)
 	if (ft_strncmp(&str[i], ">", 1) == 0)
 		return (1);
 	return (0);
-}
-int	length_command(char *command)
-{
-	int	i;
-
-	i = 0;
-	if (!command)
-		return (0);
-	while (command[i] && command[i] != ' ')
-		i++;
-	return (i + 1);
 }
 char	*find_flag(char *command)
 {
@@ -102,92 +69,45 @@ char	*find_flag(char *command)
 	return (flag);
 }
 
-int	valid_command(char *argv, char **full_path)
+void	set_node(t_command **param, char *str, int redirection, int len)
 {
-	int		j;
-	char	*str;
-	size_t	len;
-	char	*trimmed_command;
-	char	*temp;
+	char		*result;
+	t_command	*command;
 
-	len = length_command(argv);
-	trimmed_command = (char *)malloc(len * sizeof(char));
-	if (!trimmed_command)
-		return (0);
-	ft_strlcpy(trimmed_command, argv, len);
-	j = 0;
-	while (full_path[j])
+	if (len > 0)
 	{
-		temp = ft_strjoin(full_path[j], "/");
-		str = ft_strjoin(temp, trimmed_command);
-		if (!temp | !str)
-			return (0);
-		free(temp);
-		if (access(str, X_OK) == 0)
-			return (1);
-		free(str);
-		j++;
+		result = ft_substr(str, 0, len);
+		command = createnode(param, result, redirection);
 	}
-	free(trimmed_command);
+}
+int	quote_check(t_command **param, char *str)
+{
+	int		i;
+	int		len;
+	char	qoute;
+
+	qoute = str[0];
+	i = 1;
+	len = 0;
+	while (str[i])
+	{
+		if (str[i] == qoute)
+		{
+			set_node(param, &str[1], 0, len);
+			return (i + 1);
+		}
+		++len;
+		++i;
+	}
+	exit(EXIT_FAILURE);
 	return (0);
 }
 
-char	*set_valid_command(char *argv, char **full_path)
-{
-	int		j;
-	char	*str;
-	size_t	len;
-	char	*trimmed_command;
-	char	*temp;
-
-	len = length_command(argv);
-	trimmed_command = (char *)malloc(len * sizeof(char));
-	if (!trimmed_command)
-		return (0);
-	ft_strlcpy(trimmed_command, argv, len);
-	j = 0;
-	while (full_path[j])
-	{
-		temp = ft_strjoin(full_path[j], "/");
-		str = ft_strjoin(temp, trimmed_command);
-		if (!temp | !str)
-			return (NULL);
-		free(temp);
-		if (access(str, X_OK) == 0)
-			break ;
-		free(str);
-		j++;
-	}
-	free(trimmed_command);
-	return (str);
-}
-
-int	arg_counter(char **str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
-
-char	*quote_check(char *str)
-{
-	int	x;
-	int	i;
-
-	i = 0;
-	x = i + 1;
-	++i;
-	while (str[i])
-	{
-		if (str[i] == '\"' || str[i] == '\'')
-			break ;
-		++i;
-	}
-	return (ft_substr(str, x, i - x));
-}
+// if (len > 0)
+// 		{
+// 			result = ft_substr(&str[i], 0, len);
+// 			command = createnode(param, result, redirection);
+// 		}
 
 t_command	*init_redirections(char *str, t_command **param)
 {
@@ -195,7 +115,7 @@ t_command	*init_redirections(char *str, t_command **param)
 	t_command *command;
 	int len;
 	int redirection;
-	char *result;
+	// char *result;
 
 	i = 0;
 	command = *param;
@@ -203,27 +123,30 @@ t_command	*init_redirections(char *str, t_command **param)
 	{
 		redirection = CMD;
 		len = 0;
-		while (str[i] && (str[i] == ' ' || directions_checker_bool(&str[i], 0,
+		while (str[i] && (str[i] == ' ' || redirection_checker_bool(&str[i], 0,
 					0)))
 		{
-			if (directions_checker_bool(&str[i], 0, 0) && redirection == CMD)
-				redirection = directions_checker_int(&str[i], 0, 0);
+			// printf("werkt");
+			if (redirection_checker_bool(&str[i], 0, 0) && redirection == CMD)
+				redirection = redirection_checker_int(&str[i], 0, 0);
 			++i;
+			if (str[i] == '\"' || str[i] == '\'')
+			{
+				// printf("%c\n", str[i]);
+				i += quote_check(param, &str[i]);
+				break ;
+			}
 		}
 		if (ft_strncmp(&str[i], "|", 1) == 0)
 			redirection = PIPE;
 		while (str[i + len] && (str[i + len] != ' '))
 		{
 			++len;
-			if (redirection == PIPE || directions_checker_bool(&str[i + len], 0,
-					1))
+			if (redirection == PIPE || redirection_checker_bool(&str[i + len],
+					0, 1))
 				break ;
 		}
-		if (len > 0)
-		{
-			result = ft_substr(&str[i], 0, len);
-			command = createnode(param, result, redirection);
-		}
+		set_node(param, &str[i], redirection, len);
 		i += len;
 	}
 	return (command);

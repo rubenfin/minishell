@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/09 13:14:02 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 15:53:32 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ int	main(int argc, char **argv, char **envp)
 	int			wait_total;
 	int			status;
 	make_env_ll(&env, envp);
-	print_env_ll(env);
 	status = 0;
 	pid = 1;
 	(void)argc;
@@ -32,7 +31,7 @@ int	main(int argc, char **argv, char **envp)
 	iostream = (t_stream *)malloc(sizeof(t_stream));
 	iostream->PATH = get_path(envp);
 	iostream->pipes = (t_pipes *)malloc(sizeof(t_pipes));
-	arg = "cat > infile | ls -l";
+	arg = "ls -l -a";
 	command = NULL;
 	init_redirections(arg, &command);
 	total_pipes = pipe_check(command);
