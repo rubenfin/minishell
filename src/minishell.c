@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/08 16:23:50 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 09:51:30 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,16 @@ int	check_status(int status)
 int	main(int argc, char **argv, char **envp)
 {
 	char		*arg;
-	int			i;
 	t_command	*command;
 	t_command	*until_pipe;
 	t_stream	*iostream;
 	int			total_pipes;
 	pid_t		pid;
 	int			wait_total;
-	int			forked;
 	int			status;
 
 	status = 0;
 	pid = 4389;
-	i = 0;
 	(void)argv;
 	(void)argc;
 	(void)envp;
@@ -48,7 +45,6 @@ int	main(int argc, char **argv, char **envp)
 	init_redirections(arg, &command);
 	total_pipes = pipe_check(command);
 	wait_total = pipe_check(command) + 1;
-	forked = 0;
 	if (!total_pipes)
 	{
 		init_stream(&iostream);

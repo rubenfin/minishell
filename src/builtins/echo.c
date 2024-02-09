@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/01 11:40:21 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/08 13:08:34 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 09:51:45 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,6 @@ static int	ft_strleng(char *string)
 }
 void	echo(char *msg, int n)
 {
-	int	i;
-
-	i = 0;
 	write(1, msg, ft_strleng(msg));
 	if (!n)
 		write(1, "\n", 1);

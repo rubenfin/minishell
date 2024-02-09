@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/07 16:36:54 by jade-haa      #+#    #+#                 */
-/*   Updated: 2024/02/08 15:58:59 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 09:52:15 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void	execute_single(t_command **param, t_stream *iostream)
 	count = count_commands(&command);
 	iostream->args = (char **)malloc(sizeof(char *) * count);
 	set_args(param, iostream, count);
-	printf("input = %d, output = %d\n",iostream->input, iostream->output);
 	if (iostream->input != -1)
 		dup2(iostream->input, STDIN_FILENO);
 	if (iostream->output != -1)
