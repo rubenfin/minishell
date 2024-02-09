@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 15:55:14 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/08 16:01:36 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 09:46:17 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,24 +108,6 @@ char	*find_flag(char *command)
 	return (flag);
 }
 
-char	**get_path(char **envp)
-{
-	int		i;
-	char	*path_string;
-	char	**result_string;
-
-	path_string = NULL;
-	i = 0;
-	while (!path_string)
-	{
-		path_string = ft_strnstr(envp[i], "PATH=", 5);
-		i++;
-	}
-	result_string = ft_split(path_string, ':');
-	if (!result_string)
-		exit(1);
-	return (result_string);
-}
 
 int	valid_command(char *argv, char **full_path)
 {
