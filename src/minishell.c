@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/09 12:26:29 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 13:14:02 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,13 @@ int	main(int argc, char **argv, char **envp)
 	t_command	*command;
 	t_command	*until_pipe;
 	t_stream	*iostream;
+	t_env_ll	*env;
 	int			total_pipes;
 	pid_t		pid;
 	int			wait_total;
 	int			status;
-
+	make_env_ll(&env, envp);
+	print_env_ll(env);
 	status = 0;
 	pid = 1;
 	(void)argc;

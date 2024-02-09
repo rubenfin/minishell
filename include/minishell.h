@@ -85,7 +85,7 @@ t_command				*createnode(t_command **head, char *data,
 							int redirection);
 char					*set_valid_command(char *argv, char **full_path);
 t_command				*init_redirections(char *str, t_command **param);
-
+void					make_env_ll(t_env_ll **env, char **envp);
 /*
 UTILS / INITIALIZNG
 */
@@ -110,3 +110,4 @@ UTILS / PRINT
 */
 void					print_list(t_command *command);
 void					print_2d_arrg(char **c);
+void					print_env_ll(t_env_ll *env);
