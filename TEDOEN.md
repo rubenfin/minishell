@@ -7,3 +7,6 @@
 - $? maken ( waarschijnlijk als laatst? ) /builtins/
 - builtins maken met nieuwe linked list van env /builtins/
 - libft in Makefile zetten
+
+# Kleine dingen
+- als cd path niet juist is /directory of directory juist printen

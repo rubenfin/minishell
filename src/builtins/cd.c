@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/30 12:09:22 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/09 15:49:58 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 16:07:01 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,27 @@
 
 void	cd(char *directory, t_env_ll *env)
 {
+	char		*path;
 	t_env_ll	*node;
 
 	if (!directory)
 	{
 		node = find_key(env, "HOME=");
 		chdir(node->value);
+		return ;
 	}
+	if (directory[0] != '/')
+		directory = ft_strjoin("/", directory);
+	node = find_key(env, "PWD=");
+	path = ft_strjoin(node->value, directory);
+	if (chdir(path) == -1)
+	{
+		write(1, "cd: not a directory: ", 21);
+		write(1, directory, ft_strlen(directory));
+		write(1, "\n", 1);
+		return;
+	}
+	node->value = path;
 }
 
 // void	cd(char *directory, char **env)
