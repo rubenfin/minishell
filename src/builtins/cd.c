@@ -6,23 +6,33 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/30 12:09:22 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/09 16:07:01 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 19:07:30 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	cd(char *directory, t_env_ll *env)
+void cd(char *directory, t_env_ll *env)
 {
-	char		*path;
-	t_env_ll	*node;
+	char *path;
+	t_env_ll *node;
 
 	if (!directory)
 	{
 		node = find_key(env, "HOME=");
 		chdir(node->value);
-		return ;
+		char *temp = node->value;
+		node = find_key(env, "PWD=");
+		node->value = temp;
+		return;
 	}
+
+	// if (!ft_strncmp(directory, "..", 3))
+	// {
+	// 	node = find_key(env, "PWD=");
+	// 	ft_strrchr(node->value, '/');
+	// }
+
 	if (directory[0] != '/')
 		directory = ft_strjoin("/", directory);
 	node = find_key(env, "PWD=");

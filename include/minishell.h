@@ -94,6 +94,7 @@ UTILS / INITIALIZNG
 */
 int						init_pipe(t_pipes *pipes);
 void					init_stream(t_stream **iostream);
+void					malloc_stream(t_stream **iostream, char **envp);
 
 /*
 UTILS / PARSER_UTILS

@@ -6,11 +6,18 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 16:17:12 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/08 16:17:33 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 18:56:00 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+void	malloc_stream(t_stream **iostream, char **envp)
+{
+	(*iostream) = (t_stream *)malloc(sizeof(t_stream));
+	(*iostream)->PATH = get_path(envp);
+	(*iostream)->pipes = (t_pipes *)malloc(sizeof(t_pipes));
+}
 
 int	init_pipe(t_pipes *pipes)
 {
