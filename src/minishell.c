@@ -6,29 +6,29 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/09 09:51:30 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 09:57:50 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int	check_status(int status)
+int check_status(int status)
 {
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	return (127);
 }
 
-int	main(int argc, char **argv, char **envp)
+int main(int argc, char **argv, char **envp)
 {
-	char		*arg;
-	t_command	*command;
-	t_command	*until_pipe;
-	t_stream	*iostream;
-	int			total_pipes;
-	pid_t		pid;
-	int			wait_total;
-	int			status;
+	char *arg;
+	t_command *command;
+	t_command *until_pipe;
+	t_stream *iostream;
+	int total_pipes;
+	pid_t pid;
+	int wait_total;
+	int status;
 
 	status = 0;
 	pid = 4389;

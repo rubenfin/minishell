@@ -6,41 +6,15 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/01 11:40:21 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/09 09:51:45 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 09:57:20 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-char	*ft_strchr(const char *s, int c)
-{
-	int	i;
-
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == (unsigned char)c)
-			return ((char *)&s[i]);
-		i++;
-	}
-	if ((unsigned char)c == '\0')
-		return ((char *)&s[i]);
-	return (NULL);
-}
-
-static int	ft_strleng(char *string)
-
-{
-	int i;
-
-	i = 0;
-	while (string[i])
-		i++;
-	return (i);
-}
 void	echo(char *msg, int n)
 {
-	write(1, msg, ft_strleng(msg));
+	write(1, msg, ft_strlen(msg));
 	if (!n)
 		write(1, "\n", 1);
 }

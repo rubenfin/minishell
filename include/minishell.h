@@ -65,6 +65,12 @@ typedef struct t_command
 /*
 BUILTINS
 */
+void	cd(char *directory, char **env);
+void	echo(char *msg, int n);
+void	get_env(char **env);
+char	**export(char **env, char *export_data);
+char	*pwd(char **env);
+char	**unset(char **env, char *unset_data);
 
 /*
 EXECUTING

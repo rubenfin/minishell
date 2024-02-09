@@ -6,21 +6,11 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/30 12:09:22 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/08 13:09:02 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 09:56:50 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-int	ft_strleng(char *string)
-{
-	int	i;
-
-	i = 0;
-	while (string[i])
-		i++;
-	return (i);
-}
 
 void	cd(char *directory, char **env)
 {
@@ -36,13 +26,13 @@ void	cd(char *directory, char **env)
 	if (chdir(path) == -1)
 	{
 		write(1, "cd: not a directory: ", 21);
-		write(1, directory, ft_strleng(directory));
+		write(1, directory, ft_strlen(directory));
 		write(1, "\n", 1);
 	}
 	int i = 0;
 	while (ft_strnstr(env[i], "PWD=", 4) == NULL)
 		i++;
-	free(env[i]);
+	// free(env[i]);
 	env[i] = ft_strjoin("PWD=", path);
 }
 

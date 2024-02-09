@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/02 11:26:11 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/08 13:08:37 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/09 09:58:10 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,6 @@ void	print_2d_arrg(char **c)
 		printf("%s\n", c[i]);
 		i++;
 	}
-}
-
-static int	ft_strleng(char *string)
-{
-	int	i;
-
-	i = 0;
-	while (string[i])
-		i++;
-	return (i);
 }
 
 char	**export(char **env, char *export_data)
@@ -54,7 +44,7 @@ char	**export(char **env, char *export_data)
 			j++;
 		copied_env[i] = (char *)malloc((j + 1) * sizeof(char));
 	}
-	copied_env[i] = (char *)malloc((ft_strleng(export_data) + 1)
+	copied_env[i] = (char *)malloc((ft_strlen(export_data) + 1)
 			* sizeof(char));
 	i = -1;
 	while (env[++i])
