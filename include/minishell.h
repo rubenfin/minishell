@@ -67,7 +67,7 @@ typedef struct t_command
 BUILTINS
 */
 void					cd(char *directory, t_env_ll *env);
-void					echo(char *msg, int n);
+void					echo(t_env_ll *env, char *msg, int n);
 void					get_env(t_env_ll *env);
 void					export(t_env_ll *env, char *export_data);
 void					pwd(t_env_ll *env);
