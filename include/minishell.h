@@ -14,6 +14,7 @@ typedef struct s_env_ll
 {
 	char				*key;
 	char				*value;
+	struct s_env_ll		*prev;
 	struct s_env_ll		*next;
 }						t_env_ll;
 
@@ -67,10 +68,10 @@ BUILTINS
 */
 void					cd(char *directory, t_env_ll *env);
 void					echo(char *msg, int n);
-void					get_env(char **env);
-char					**export(char **env, char *export_data);
-char					*pwd(char **env);
-char					**unset(char **env, char *unset_data);
+void					get_env(t_env_ll *env);
+void					export(t_env_ll *env, char *export_data);
+void					pwd(t_env_ll *env);
+void					unset(t_env_ll *env, char *unset_data);
 
 /*
 EXECUTING
@@ -88,7 +89,6 @@ t_command				*init_redirections(char *str, t_command **param);
 void					make_env_ll(t_env_ll **env, char **envp);
 t_env_ll				*find_key(t_env_ll *env, char *key_str);
 t_env_ll				*find_value(t_env_ll *env, char *value_str);
-
 /*
 UTILS / INITIALIZNG
 */
@@ -103,7 +103,7 @@ char					**get_path(char **envp);
 int						pipe_check(t_command *command);
 t_command				*get_command_from_pipe(t_command *command);
 t_command				*get_command_until_pipe(t_command *command);
-
+char					*ft_strndup(char *s, size_t n);
 /*
 UTILS / STATUS
 */

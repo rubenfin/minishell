@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/09 12:35:32 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/09 15:57:43 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/11 11:54:11 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void	make_env_ll(t_env_ll **env, char **envp)
 			while (temp->next != NULL)
 				temp = temp->next;
 			temp->next = current;
+			current->prev = temp;
 		}
 		i++;
 	}

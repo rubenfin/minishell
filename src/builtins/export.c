@@ -6,52 +6,33 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/02 11:26:11 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/09 18:51:03 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/11 11:53:24 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-char	**export(char **env, char *export_data)
+void	export(t_env_ll *env, char *export_data)
 {
-	char	**copied_env;
-	int		i;
-	int		length;
-	int		j;
-
-	length = 0;
-	while (env[length])
-		length++;
-	copied_env = (char **)malloc((length + 2) * sizeof(char *));
-	i = -1;
-	j = 0;
-	while (env[++i])
+	t_env_ll *current;
+	t_env_ll *node;
+	current = env;
+	node = (t_env_ll *)malloc(sizeof(t_env_ll));
+	node->next = NULL;
+	int i = 0;
+	while(export_data[i])
 	{
-		j = 0;
-		while (env[i][j])
-			j++;
-		copied_env[i] = (char *)malloc((j + 1) * sizeof(char));
+		if (export_data[i] == '=')
+			break;
+		i++;
 	}
-	copied_env[i] = (char *)malloc((ft_strlen(export_data) + 1) * sizeof(char));
-	i = -1;
-	while (env[++i])
-	{
-		j = 0;
-		while (env[i][j])
-		{
-			copied_env[i][j] = env[i][j];
-			j++;
-		}
-		copied_env[i][j] = '\0';
-	}
-	j = 0;
-	while (export_data[j])
-	{
-		copied_env[i][j] = export_data[j];
-		j++;
-	}
-	copied_env[i][j] = '\0';
+	if (!export_data[i] || export_data[i] != '=')
+		return;
 	i++;
-	copied_env[i] = 0;
-	return (copied_env);
+	node->key = ft_strndup(export_data, i);
+	node->value = ft_strdup(export_data + i);
+	while (current->next)
+		current = current->next;
+	current->next = node;
+	node->prev = current;
 }

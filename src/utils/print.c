@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/09 10:04:45 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/09 13:12:56 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/11 12:02:02 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	print_env_ll(t_env_ll *env)
 {
 	while (env)
 	{
-		printf("%s %s\n", env->key, env->value);
+		printf("%s%s\n", env->key, env->value);
 		env = env->next;
 	}
 }
