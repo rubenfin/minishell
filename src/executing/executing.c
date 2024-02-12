@@ -6,11 +6,55 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/06 12:55:18 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/08 16:27:41 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/12 17:24:42 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../../include/get_next_line.h"
 #include "../../include/minishell.h"
+
+void	redirection_here(t_stream *iostream, t_command *command)
+{
+	char	*limiter;
+	char	*buffer;
+	char	*str;
+	int		fd;
+	pid_t	pid;
+
+	buffer = NULL;
+	pid = fork();
+	if (pid == 0)
+	{
+		str = ft_strdup("");
+		limiter = ft_strjoin(command->string, "\n");
+		fd = open("objs/utils/.hd", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (fd == -1)
+			printf("failed to open");
+		while (1)
+		{
+			write(STDOUT_FILENO, "> ", 2);
+			buffer = get_next_line(STDIN_FILENO);
+			if (!ft_strncmp(buffer, limiter, ft_strlen(limiter)))
+			{
+				free(buffer);
+				break ;
+			}
+			str = ft_strjoin(str, buffer);
+			free(buffer);
+			buffer = NULL;
+		}
+		write(fd, str, ft_strlen(str));
+		close(fd);
+		fd = open("objs/utils/.hd", O_RDONLY);
+		iostream->input = fd;
+	}
+	else if (pid > 0)
+	{
+		waitpid(pid, NULL, 0);
+		unlink("objs/utils/.hd");
+		exit(0);
+	}
+}
 
 void	redirection_in(t_stream *iostream, t_command *command)
 {
@@ -62,6 +106,8 @@ void	execute(t_command **param, t_stream *iostream)
 			redirection_out(iostream, command);
 		else if (command->token == RE_APPEND)
 			redirection_append(iostream, command);
+		else if (command->token == RE_HERE)
+			redirection_here(iostream, command);
 		command = command->next;
 	}
 	if (command)

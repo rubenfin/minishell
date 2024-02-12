@@ -42,6 +42,7 @@ typedef struct s_stream
 	char				**PATH;
 	int					input;
 	int					output;
+	char				*here_doc;
 	t_pipes				*pipes;
 
 }						t_stream;

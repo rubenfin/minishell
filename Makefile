@@ -17,10 +17,12 @@ BUILTINS_DIR = builtins
 EXECUTING_DIR = executing
 PARSING_DIR = parsing
 UTILS_DIR = utils
+GNL_DIR = gnl
 
 SRC :=  $(wildcard $(SRC_DIR)/*.c) \
         $(wildcard $(SRC_DIR)/$(BUILTINS_DIR)/*.c) \
 		$(wildcard $(SRC_DIR)/$(EXECUTING_DIR)/*.c) \
+		$(wildcard $(SRC_DIR)/$(EXECUTING_DIR)/$(GNL_DIR)/*.c) \
 		$(wildcard $(SRC_DIR)/$(PARSING_DIR)/*.c) \
         $(wildcard $(SRC_DIR)/$(UTILS_DIR)/*.c)
 
