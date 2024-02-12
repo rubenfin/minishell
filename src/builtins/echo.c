@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/01 11:40:21 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/11 20:34:25 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/12 13:40:09 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,12 @@
 
 void	echo(t_env_ll *env, char *msg, int n)
 {
-	int			i;
 	t_env_ll	*node;
+	int			i;
 	int			x;
 	char		*key;
 
+	node = NULL;
 	i = 0;
 	x = 0;
 	if (ft_strchr(msg, '$'))
@@ -31,8 +32,6 @@ void	echo(t_env_ll *env, char *msg, int n)
 				while (msg[i] && msg[i] != ' ')
 					i++;
 				key = ft_strndup(msg + x, i - x);
-				if (!ft_strncmp(key, "", ft_strlen(key)));
-					free(key);
 				break ;
 			}
 			i++;
@@ -40,23 +39,18 @@ void	echo(t_env_ll *env, char *msg, int n)
 	}
 	i = 0;
 	x = 0;
-	
 	while (msg[i])
 	{
-		if (msg[i] != '$' && !ft_isalnum(msg[i + 1]) && msg[i + 1])
+		if (msg[i] != '$')
+			printf("%c", msg[i]);
+		else if (msg[i] == '$' && msg[i + 1] && !ft_isalnum(msg[i + 1]))
 			printf("%c", msg[i]);
 		else
 		{
-			i++;
-			while (msg[i] == key[x])
-			{
-				i++;
-				x++;
-			}
+			i += ft_strlen(key);
 			node = find_key(env, key);
-			if (node->value)
+			if (node && node->value)
 				printf("%s", node->value);
-			continue;
 		}
 		i++;
 	}

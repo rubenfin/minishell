@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/07 16:36:54 by jade-haa      #+#    #+#                 */
-/*   Updated: 2024/02/09 15:46:33 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/12 13:39:46 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,8 @@ void	execute_single(t_command **param, t_stream *iostream)
 		dup2(iostream->input, STDIN_FILENO);
 	if (iostream->output != -1)
 		dup2(iostream->output, STDOUT_FILENO);
-	if (ft_strchr(iostream->args[0], '/'))
-		execve(iostream->args[0], iostream->args, iostream->PATH);
-	else
-		execve(set_valid_command(iostream->args[0], iostream->PATH),
-			iostream->args, iostream->PATH);
+	execve(set_valid_command(iostream->args[0], iostream->PATH), iostream->args,
+		iostream->PATH);
 	perror("did not execute");
 	exit(0);
 }

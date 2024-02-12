@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/09 15:51:29 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/09 15:51:39 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/12 13:40:01 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ char	*set_valid_command(char *argv, char **full_path)
 		return (0);
 	ft_strlcpy(trimmed_command, argv, len);
 	j = 0;
+	if (access(argv, X_OK) == 0)
+		return (argv);
 	while (full_path[j])
 	{
 		temp = ft_strjoin(full_path[j], "/");
