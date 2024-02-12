@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/12 17:08:42 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/12 18:35:36 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	malloc_stream(&iostream, envp);
-	arg = "cat << eof << test";
+	arg = "cat < infile < outfile";
 	x = 0;
 	command = NULL;
 	init_redirections(arg, &command);

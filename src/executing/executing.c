@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/06 12:55:18 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/12 17:24:42 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/12 18:38:29 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,11 @@ void	redirection_here(t_stream *iostream, t_command *command)
 		}
 		write(fd, str, ft_strlen(str));
 		close(fd);
-		fd = open("objs/utils/.hd", O_RDONLY);
-		iostream->input = fd;
+		iostream->input = open("objs/utils/.hd", O_RDONLY);
 	}
 	else if (pid > 0)
 	{
-		waitpid(pid, NULL, 0);
+		wait(NULL);
 		unlink("objs/utils/.hd");
 		exit(0);
 	}
@@ -58,6 +57,14 @@ void	redirection_here(t_stream *iostream, t_command *command)
 
 void	redirection_in(t_stream *iostream, t_command *command)
 {
+	if (access(command->string, F_OK) == -1 || access(command->string, R_OK) == -1)
+	{
+		write(STDIN_FILENO, "bash: ", 6);
+		write(STDIN_FILENO, command->string, ft_strlen(command->string));
+		write(STDIN_FILENO, ": ", 2);
+		perror("");
+		exit(EXIT_FAILURE);
+	}
 	iostream->input = open(command->string, O_RDONLY);
 }
 

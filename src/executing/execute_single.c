@@ -6,11 +6,12 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/07 16:36:54 by jade-haa      #+#    #+#                 */
-/*   Updated: 2024/02/12 17:02:10 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/12 18:39:13 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+#include <errno.h>
 
 int	count_commands(t_command **param)
 {
@@ -58,9 +59,10 @@ void	execute_single(t_command **param, t_stream *iostream)
 	count = count_commands(&command);
 	iostream->args = (char **)malloc(sizeof(char *) * count);
 	set_args(param, iostream, count);
+	printf("%d\n", iostream->input);
 	if (iostream->input != -1)
 		dup2(iostream->input, STDIN_FILENO);
-	if (iostream->output != -1)
+	if (iostream->input != -1)
 		dup2(iostream->output, STDOUT_FILENO);
 	execve(set_valid_command(iostream->args[0], iostream->PATH), iostream->args,
 		iostream->PATH);
