@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/06 12:55:18 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/12 18:38:29 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/13 11:00:17 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 
 void	redirection_here(t_stream *iostream, t_command *command)
 {
-	char	*limiter;
-	char	*buffer;
-	char	*str;
-	int		fd;
-	pid_t	pid;
+	char		*limiter;
+	char		*buffer;
+	char		*str;
+	int			fd;
+	pid_t		pid;
 
 	buffer = NULL;
 	pid = fork();
@@ -27,6 +27,8 @@ void	redirection_here(t_stream *iostream, t_command *command)
 	{
 		str = ft_strdup("");
 		limiter = ft_strjoin(command->string, "\n");
+		while (access("objs/utils/.hd", F_OK) == 0)
+			;
 		fd = open("objs/utils/.hd", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd == -1)
 			printf("failed to open");
@@ -57,7 +59,8 @@ void	redirection_here(t_stream *iostream, t_command *command)
 
 void	redirection_in(t_stream *iostream, t_command *command)
 {
-	if (access(command->string, F_OK) == -1 || access(command->string, R_OK) == -1)
+	if (access(command->string, F_OK) == -1 || access(command->string, R_OK) ==
+		-1)
 	{
 		write(STDIN_FILENO, "bash: ", 6);
 		write(STDIN_FILENO, command->string, ft_strlen(command->string));
