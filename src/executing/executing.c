@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   executing.c                                        :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/02/06 12:55:18 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/13 11:00:17 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   executing.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/06 12:55:18 by rfinneru          #+#    #+#             */
+/*   Updated: 2024/02/13 18:08:35 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 
 void	redirection_here(t_stream *iostream, t_command *command)
 {
-	char		*limiter;
-	char		*buffer;
-	char		*str;
-	int			fd;
-	pid_t		pid;
+	char	*limiter;
+	char	*buffer;
+	char	*str;
+	int		fd;
+	pid_t	pid;
 
 	buffer = NULL;
 	pid = fork();
@@ -56,18 +56,8 @@ void	redirection_here(t_stream *iostream, t_command *command)
 		exit(0);
 	}
 }
-
 void	redirection_in(t_stream *iostream, t_command *command)
 {
-	if (access(command->string, F_OK) == -1 || access(command->string, R_OK) ==
-		-1)
-	{
-		write(STDIN_FILENO, "bash: ", 6);
-		write(STDIN_FILENO, command->string, ft_strlen(command->string));
-		write(STDIN_FILENO, ": ", 2);
-		perror("");
-		exit(EXIT_FAILURE);
-	}
 	iostream->input = open(command->string, O_RDONLY);
 }
 
@@ -116,8 +106,6 @@ void	execute(t_command **param, t_stream *iostream)
 			redirection_out(iostream, command);
 		else if (command->token == RE_APPEND)
 			redirection_append(iostream, command);
-		else if (command->token == RE_HERE)
-			redirection_here(iostream, command);
 		command = command->next;
 	}
 	if (command)

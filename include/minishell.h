@@ -26,6 +26,7 @@ typedef enum TOKEN
 	RE_HERE,
 	RE_APPEND,
 	PIPE,
+	BUILTIN,
 }						TOKEN;
 
 typedef struct s_pipes
@@ -39,7 +40,7 @@ typedef struct s_pipes
 typedef struct s_stream
 {
 	char				**args;
-	char				**PATH;
+	t_env_ll			*env;
 	int					input;
 	int					output;
 	t_pipes				*pipes;
@@ -67,11 +68,11 @@ typedef struct t_command
 BUILTINS
 */
 void					cd(char *directory, t_env_ll *env);
-void					echo(t_env_ll *env, char *msg, int n);
+void					echo(t_env_ll *env, char **args);
 void					get_env(t_env_ll *env);
-void					export(t_env_ll *env, char *export_data);
+void					export(t_env_ll *env, char **export_data);
 void					pwd(t_env_ll *env);
-void					unset(t_env_ll *env, char *unset_data);
+void					unset(t_env_ll *env, char **unset_data);
 
 /*
 EXECUTING
@@ -94,8 +95,8 @@ UTILS / INITIALIZNG
 */
 int						init_pipe(t_pipes *pipes);
 void					init_stream(t_stream **iostream);
-void					malloc_stream(t_stream **iostream, char **envp);
-
+int						check_builtin(char *arg);
+void	malloc_stream(t_stream **iostream, t_env_ll *env);
 /*
 UTILS / PARSER_UTILS
 */
@@ -104,6 +105,7 @@ int						pipe_check(t_command *command);
 t_command				*get_command_from_pipe(t_command *command);
 t_command				*get_command_until_pipe(t_command *command);
 char					*ft_strndup(char *s, size_t n);
+char					**ll_to_2d_arr(t_env_ll *env);
 /*
 UTILS / STATUS
 */

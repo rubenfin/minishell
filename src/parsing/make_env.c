@@ -1,16 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   make_env.c                                         :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/02/09 12:35:32 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/11 11:54:11 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   make_env.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/09 12:35:32 by rfinneru          #+#    #+#             */
+/*   Updated: 2024/02/13 18:09:52 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+char	**ll_to_2d_arr(t_env_ll *env)
+{
+	t_env_ll	*curr;
+	char		**envp;
+	int			i;
+
+	i = 0;
+	curr = env;
+	while (curr)
+	{
+		i++;
+		curr = curr->next;
+	}
+	curr = env;
+	envp = (char **)malloc((i + 1) * sizeof(char *));
+	i = 0;
+	while (curr)
+	{
+		envp[i] = ft_strjoin(curr->key, curr->value);
+		i++;
+		curr = curr->next;
+	}
+	envp[i] = NULL;
+	return (envp);
+}
 
 char	*ft_strndup(char *s, size_t n)
 {

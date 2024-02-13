@@ -1,0 +1,8 @@
+ls | 1
+include
+infile
+Makefile
+minishell
+objs
+src
+TEDOEN.md

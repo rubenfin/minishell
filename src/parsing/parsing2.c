@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   parsing2.c                                         :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/02/09 15:51:29 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/12 13:40:01 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   parsing2.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/09 15:51:29 by rfinneru          #+#    #+#             */
+/*   Updated: 2024/02/12 14:23:17 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,10 +101,15 @@ char	*set_valid_command(char *argv, char **full_path)
 			return (NULL);
 		free(temp);
 		if (access(str, X_OK) == 0)
-			break ;
+			return(str);
 		free(str);
 		j++;
 	}
 	free(trimmed_command);
+	if (!str)
+	{
+		perror("werkt niet");
+		exit(EXIT_FAILURE);
+	}
 	return (str);
 }

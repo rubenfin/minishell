@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   minishell.c                                        :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/13 11:00:54 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   minishell.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/08 13:04:05 by rfinneru          #+#    #+#             */
+/*   Updated: 2024/02/13 18:23:26 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,16 @@ int	main(int argc, char **argv, char **envp)
 	pid_t		pid;
 	int			wait_total;
 	int			status;
-	int			x;
 
+	// print_2d_arrg(envp);
 	make_env_ll(&env, envp);
+	// print_list_env(env);
 	status = 0;
 	pid = 1;
 	(void)argc;
 	(void)argv;
-	malloc_stream(&iostream, envp);
-	arg = "cat -e << eof";
-	x = 0;
+	malloc_stream(&iostream, env);
+	arg = "ls > infile | grep a | cat -e << eof";
 	command = NULL;
 	init_redirections(arg, &command);
 	total_pipes = pipe_check(command);
@@ -52,20 +52,34 @@ int	main(int argc, char **argv, char **envp)
 			init_pipe(iostream->pipes);
 			until_pipe = get_command_until_pipe(command);
 			command = get_command_from_pipe(command);
-			pid = fork();
-			if (pid == 0)
+			printf("%d\n", until_pipe->token);
+			if (until_pipe->token != BUILTIN)
+			{
+				pid = fork();
+				if (pid == 0)
+					execute(&until_pipe, iostream);
+			}
+			else
 				execute(&until_pipe, iostream);
 			close(iostream->pipes->curr_write);
 			total_pipes--;
 		}
+		init_stream(&iostream);
+		char buffer[1024];
+		read(iostream->pipes->curr_read, buffer, 1024);
+		printf("%s", buffer);
 		until_pipe = get_command_until_pipe(command);
 		command = get_command_from_pipe(command);
-		pid = fork();
-		if (pid == 0)
+		if (until_pipe->token != BUILTIN)
+		{
+			pid = fork();
+			if (pid == 0)
+				execute(&until_pipe, iostream);
+		}
+		else
 			execute(&until_pipe, iostream);
 	}
 	while (wait_total--)
 		wait(NULL);
-	waitpid(pid, &status, 0);
 	return (check_status(status));
 }

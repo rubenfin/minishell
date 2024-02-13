@@ -1,38 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   export.c                                           :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/02/02 11:26:11 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/11 11:53:24 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/02 11:26:11 by rfinneru          #+#    #+#             */
+/*   Updated: 2024/02/13 12:10:44 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	export(t_env_ll *env, char *export_data)
+void	export(t_env_ll *env, char **export_data)
 {
 	t_env_ll *current;
 	t_env_ll *node;
-	current = env;
-	node = (t_env_ll *)malloc(sizeof(t_env_ll));
-	node->next = NULL;
-	int i = 0;
-	while(export_data[i])
+	int i;
+	int j = 0;
+	while (export_data[j])
 	{
-		if (export_data[i] == '=')
-			break;
+		i = 0;
+		current = env;
+		node = (t_env_ll *)malloc(sizeof(t_env_ll));
+		node->next = NULL;
+		while (export_data[j][i])
+		{
+			if (export_data[j][i] == '=')
+				break ;
+			i++;
+		}
+		if (!export_data[j][i] || export_data[j][i] != '=')
+			return ;
 		i++;
+		node->key = ft_strndup(export_data[j], i);
+		node->value = ft_strdup(export_data[j] + i);
+		while (current->next)
+			current = current->next;
+		current->next = node;
+		node->prev = current;
+		++j;
 	}
-	if (!export_data[i] || export_data[i] != '=')
-		return;
-	i++;
-	node->key = ft_strndup(export_data, i);
-	node->value = ft_strdup(export_data + i);
-	while (current->next)
-		current = current->next;
-	current->next = node;
-	node->prev = current;
 }

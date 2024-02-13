@@ -1,21 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   initializing.c                                     :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/02/08 16:17:12 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/12 17:23:45 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   initializing.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/08 16:17:12 by rfinneru          #+#    #+#             */
+/*   Updated: 2024/02/13 18:21:38 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	malloc_stream(t_stream **iostream, char **envp)
+void	malloc_stream(t_stream **iostream, t_env_ll *env)
 {
 	(*iostream) = (t_stream *)malloc(sizeof(t_stream));
-	(*iostream)->PATH = get_path(envp);
+	(*iostream)->env = env;
 	(*iostream)->pipes = (t_pipes *)malloc(sizeof(t_pipes));
 }
 

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   parsing.c                                          :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/02/08 15:55:14 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/09 18:23:54 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/08 15:55:14 by rfinneru          #+#    #+#             */
+/*   Updated: 2024/02/13 18:16:53 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,14 +69,35 @@ char	*find_flag(char *command)
 	return (flag);
 }
 
+int	check_first_cmd(char *str, int i)
+{
+	if (i == -1)
+		return(1);
+	while (str[i])
+	{
+		if (i == 0)
+			return (1);
+		if (str[i] == '|')
+			return (1);
+		if (str[i] != ' ')
+			return (0);
+		--i;
+	}
+	return (1);
+}
 void	set_node(t_command **param, char *str, int redirection, int len)
 {
 	char		*result;
 	t_command	*command;
+	int			i;
 
+	i = 0;
 	if (len > 0)
 	{
 		result = ft_substr(str, 0, len);
+		// if (redirection == CMD && check_first_cmd(&str[0], len)
+		// 	&& check_builtin(result))
+		// 	printf("valid builtin!! == %c\n", str[0]);
 		command = createnode(param, result, redirection);
 	}
 }
@@ -103,20 +124,14 @@ int	quote_check(t_command **param, char *str)
 	return (0);
 }
 
-// if (len > 0)
-// 		{
-// 			result = ft_substr(&str[i], 0, len);
-// 			command = createnode(param, result, redirection);
-// 		}
-
 t_command	*init_redirections(char *str, t_command **param)
 {
-	int i;
-	t_command *command;
-	int len;
-	int redirection;
-	// char *result;
+	int			i;
+	t_command	*command;
+	int			len;
+	int			redirection;
 
+	// char *result;
 	i = 0;
 	command = *param;
 	while (str[i])
@@ -146,6 +161,8 @@ t_command	*init_redirections(char *str, t_command **param)
 					0, 1))
 				break ;
 		}
+		if (redirection == CMD && check_first_cmd(str, i - 1) && check_builtin(ft_substr(&str[i], 0, len)))
+			redirection = BUILTIN;
 		set_node(param, &str[i], redirection, len);
 		i += len;
 	}
