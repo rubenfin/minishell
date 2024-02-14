@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:36:54 by jade-haa          #+#    #+#             */
-/*   Updated: 2024/02/13 18:12:23 by jade-haa         ###   ########.fr       */
+/*   Updated: 2024/02/14 11:28:22 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,9 @@ int	check_builtin(char *arg)
 }
 int	get_builtin(char *command, t_stream *param, t_env_ll *env)
 {
-	// char	*command;
 	char	**args;
 
+	// char	*command;
 	(void)env;
 	args = param->args;
 	if (ft_strncmp(command, "echo", 5) == 0)
@@ -125,7 +125,7 @@ void	execute_single(t_command **param, t_stream *iostream)
 	if (iostream->input != -1)
 		dup2(iostream->input, STDIN_FILENO);
 	if (iostream->output != -1)
-		dup2(iostream->output, STDOUT_FILENO);
+		dup2(iostream->output, iostream->dupout);
 	// set_valid_command(iostream->args[0], ll_to_2d_arr(iostream->env));
 	// printf("total %s\n\n\n\n\n\n", set_valid_command(iostream->args[0],
 	// 		ll_to_2d_arr(iostream->env)));

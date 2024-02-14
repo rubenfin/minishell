@@ -44,6 +44,8 @@ typedef struct s_stream
 	int					input;
 	int					output;
 	t_pipes				*pipes;
+	int					stdin_fd;
+	int					stdout_fd;
 
 }						t_stream;
 
@@ -96,7 +98,7 @@ UTILS / INITIALIZNG
 int						init_pipe(t_pipes *pipes);
 void					init_stream(t_stream **iostream);
 int						check_builtin(char *arg);
-void	malloc_stream(t_stream **iostream, t_env_ll *env);
+void					malloc_stream(t_stream **iostream, t_env_ll *env);
 /*
 UTILS / PARSER_UTILS
 */

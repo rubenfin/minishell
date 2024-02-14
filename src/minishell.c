@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 13:04:05 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/02/13 18:23:26 by jade-haa         ###   ########.fr       */
+/*   Updated: 2024/02/14 12:24:01 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	main(int argc, char **argv, char **envp)
 	int			wait_total;
 	int			status;
 
-	// print_2d_arrg(envp);
+	// new_stdout_fd = dup(STDOUT_FILENO);
 	make_env_ll(&env, envp);
 	// print_list_env(env);
 	status = 0;
@@ -32,7 +32,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	malloc_stream(&iostream, env);
-	arg = "ls > infile | grep a | cat -e << eof";
+	arg = "env | grep a > outfile";
 	command = NULL;
 	init_redirections(arg, &command);
 	total_pipes = pipe_check(command);
@@ -65,9 +65,6 @@ int	main(int argc, char **argv, char **envp)
 			total_pipes--;
 		}
 		init_stream(&iostream);
-		char buffer[1024];
-		read(iostream->pipes->curr_read, buffer, 1024);
-		printf("%s", buffer);
 		until_pipe = get_command_until_pipe(command);
 		command = get_command_from_pipe(command);
 		if (until_pipe->token != BUILTIN)

@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 16:17:12 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/02/13 18:21:38 by jade-haa         ###   ########.fr       */
+/*   Updated: 2024/02/14 12:22:28 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void	malloc_stream(t_stream **iostream, t_env_ll *env)
 	(*iostream) = (t_stream *)malloc(sizeof(t_stream));
 	(*iostream)->env = env;
 	(*iostream)->pipes = (t_pipes *)malloc(sizeof(t_pipes));
+	(*iostream)->stdout_fd = dup(STDOUT_FILENO);
+	(*iostream)->stdin_fd = dup(STDIN_FILENO);
 }
 
 int	init_pipe(t_pipes *pipes)
@@ -40,4 +42,6 @@ void	init_stream(t_stream **iostream)
 	(*iostream)->args = NULL;
 	(*iostream)->input = -1;
 	(*iostream)->output = -1;
+	dup2(STDOUT_FILENO, (*iostream)->stdout_fd);
+	dup2(STDIN_FILENO, (*iostream)->stdin_fd);
 }

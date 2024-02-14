@@ -1,0 +1,3 @@
+set follow-fork-mode child
+
+shell ls -l /proc/352782/fd
