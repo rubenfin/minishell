@@ -1,34 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   status.c                                           :+:    :+:            */
+/*   clean.c                                            :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/02/09 10:02:57 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/14 19:17:22 by rfinneru      ########   odam.nl         */
+/*   Created: 2024/02/14 18:56:11 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/02/14 19:08:12 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	check_status(int status)
+void	ft_free(char **buffer)
 {
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
-	return (127);
+	if (*buffer)
+		free(*buffer);
+	buffer = NULL;
 }
 
-void	close_pipes(t_pipes *pipes)
+void	free_ll(t_env_ll *env)
 {
-	if (pipes->prev_read)
+	while (env->next)
 	{
-		close(pipes->prev_write);
-		close(pipes->prev_read);
+		env = env->next;
+		free(env->prev->key);
+		free(env->prev->value);
+		free(env->prev);
 	}
-	if (pipes->curr_read)
-	{
-		close(pipes->curr_write);
-		close(pipes->curr_read);
-	}
+	free(env->key);
+	free(env->value);
+	free(env);
 }

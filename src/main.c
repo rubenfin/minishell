@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/14 15:38:30 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/14 16:59:35 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/14 19:59:52 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,50 +21,49 @@ void	handle_sigint(int sig)
 	rl_redisplay();
 }
 
-int	minishell(int ac, char **av, char **envp)
+int	minishell(t_env_ll *env)
 {
-	t_env_ll	*env;
-	char		*buffer;
-    int fd_stdin = dup(STDIN_FILENO);
-	make_env_ll(&env, envp);
-	// 	char	*prompt;
-	(void)ac;
-	(void)av;
+	char	*buffer;
+	int		fd_stdin;
+	int		status;
+
+	status = 0;
+	fd_stdin = dup(STDIN_FILENO);
+	// char	*prompt;
 	while (1)
 	{
-		// prompt = find_curr_pwd(env);
-        dup2(fd_stdin, STDIN_FILENO);
+		dup2(fd_stdin, STDIN_FILENO);
 		buffer = readline("~$ ");
+		rl_on_new_line();
 		if (!buffer)
-		{
-			write(1, "exit\n", 5);
 			break ;
-		}
 		if (buffer && !ft_strncmp(buffer, "exit", 5))
-		{
-			write(1, "exit\n", 6);
 			break ;
-		}
-		command_line(env, buffer);
+		status = command_line(env, buffer);
 		if (buffer && ft_strlen(buffer) > 0)
 			add_history(buffer);
-		free(buffer);
-		buffer = NULL;
-        // rl_on_new_line()
+		ft_free(&buffer);
+		
 		// free(prompt);
 	}
-	free(buffer);
-	printf("werkt");
+	ft_free(&buffer);
 	// free(prompt);
-	return (0);
+	return (write(1, "exit\n", 5), status);
 }
 
 int	main(int ac, char **av, char **envp)
 {
+	t_env_ll	*env;
+	int			status;
+
+	status = 0;
 	signal(SIGINT, handle_sigint);
 	if (ac == 1)
 	{
-		return (minishell(ac, av, envp));
+		make_env_ll(&env, envp);
+		status = minishell(env);
+		free_ll(env);
+		return (status);
 	}
 	else
 		return (printf("usage: ./minishell\n"), EXIT_FAILURE);

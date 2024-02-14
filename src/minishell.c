@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/14 17:05:19 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/14 19:58:04 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,31 @@ void	main_set_args(t_command **param, t_stream *iostream)
 	count = count_commands(&command);
 	iostream->args = (char **)malloc(sizeof(char *) * count);
 	set_args(param, iostream, count);
+}
+
+int	no_pipes(t_command *command, t_stream *iostream)
+{
+	pid_t	pid;
+
+	pid = 1;
+	init_stream(&iostream);
+	if (command->token == BUILTIN && (ft_strncmp(command->string, "cd", 3) == 0
+			|| (ft_strncmp(command->string, "export", 7) == 0)
+			|| (ft_strncmp(command->string, "unset", 6) == 0)
+			|| (ft_strncmp(command->string, "exit", 5)) == 0))
+	{
+		execute(&command, iostream, false);
+		main_set_args(&command, iostream);
+		get_builtin(command->string, iostream, iostream->env);
+		dup2(STDOUT_FILENO, iostream->stdout_fd);
+		dup2(STDIN_FILENO, iostream->stdin_fd);
+	}
+	else
+	{
+		pid = fork();
+		if (pid == 0)
+			execute(&command, iostream, true);
+	}
 }
 
 int	command_line(t_env_ll *env, char *arg)
@@ -45,27 +70,8 @@ int	command_line(t_env_ll *env, char *arg)
 	total_pipes = pipe_check(command);
 	wait_total = pipe_check(command) + 1;
 	if (!total_pipes)
-	{
-		init_stream(&iostream);
-		if (command->token == BUILTIN && (ft_strncmp(command->string, "cd",
-					3) == 0 || (ft_strncmp(command->string, "export", 7) == 0)
-				|| (ft_strncmp(command->string, "unset", 6) == 0)
-				|| (ft_strncmp(command->string, "exit", 5)) == 0))
-		{
-			execute(&command, iostream, false);
-			main_set_args(&command, iostream);
-			get_builtin(command->string, iostream, iostream->env);
-			dup2(STDOUT_FILENO, iostream->stdout_fd);
-			dup2(STDIN_FILENO, iostream->stdin_fd);
-		}
-		else
-		{
-			pid = fork();
-			if (pid == 0)
-				execute(&command, iostream, true);
-		}
-	}
-	if (total_pipes)
+		no_pipes(command, iostream);
+	else
 	{
 		while (total_pipes > 0)
 		{
@@ -92,7 +98,7 @@ int	command_line(t_env_ll *env, char *arg)
 		wait(NULL);
 		wait_total--;
 	}
-
-	close_pipes(iostream->pipes);
+	if (total_pipes)
+		close_pipes(iostream->pipes);
 	return (check_status(status));
 }

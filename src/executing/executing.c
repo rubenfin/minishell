@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/06 12:55:18 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/14 14:56:55 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/14 19:56:13 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,6 @@ void	execute(t_command **param, t_stream *iostream, bool child)
 		if (command->token == PIPE && iostream->output == -1)
 			iostream->output = iostream->pipes->curr_write;
 	}
-	if (child)
+	if (child == true)
 		execute_single(param, iostream);
 }

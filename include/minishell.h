@@ -129,3 +129,9 @@ UTILS / PRINT
 void					print_list(t_command *command);
 void					print_2d_arrg(char **c);
 void					print_env_ll(t_env_ll *env);
+
+/*
+UTILS / CLEAN
+*/
+void					ft_free(char **buffer);
+void					free_ll(t_env_ll *env);

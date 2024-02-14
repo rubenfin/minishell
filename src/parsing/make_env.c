@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   make_env.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/09 12:35:32 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/02/13 18:09:52 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   make_env.c                                         :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/02/09 12:35:32 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/02/14 19:29:42 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ t_env_ll	*find_key(t_env_ll *env, char *key_str)
 	t_env_ll *key_ll = env;
 	while (key_ll)
 	{
-		if (!ft_strncmp(key_ll->key, key_str, ft_strlen(key_str)))
+		if (!ft_strncmp(key_ll->key, key_str, ft_strlen(key_ll->key + 1)))
 			return (key_ll);
 		key_ll = key_ll->next;
 	}
