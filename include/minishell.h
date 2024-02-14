@@ -67,6 +67,8 @@ typedef struct t_command
 
 }						t_command;
 
+int						command_line(t_env_ll *env, char *arg);
+
 /*
 BUILTINS
 */

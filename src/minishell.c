@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/14 15:41:01 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/14 16:10:33 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,8 @@ void	main_set_args(t_command **param, t_stream *iostream)
 	set_args(param, iostream, count);
 }
 
-int	main(int argc, char **argv, char **envp)
+int	command_line(t_env_ll *env, char *arg)
 {
-	t_env_ll	*env;
-	char		*arg;
 	t_command	*command;
 	t_command	*until_pipe;
 	t_stream	*iostream;
@@ -37,14 +35,11 @@ int	main(int argc, char **argv, char **envp)
 	int			wait_total;
 	int			status;
 
-	// new_stdout_fd = dup(STDOUT_FILENO);
-	// print_list_env(env);
 	status = 0;
 	pid = 1;
-	(void)argc;
-	(void)argv;
+	if (!arg || !arg[0])
+		return (0);
 	malloc_stream(&iostream, env);
-	arg = "unset PATH PWD";
 	command = NULL;
 	init_redirections(arg, &command);
 	total_pipes = pipe_check(command);
@@ -60,6 +55,8 @@ int	main(int argc, char **argv, char **envp)
 			execute(&command, iostream, false);
 			main_set_args(&command, iostream);
 			get_builtin(command->string, iostream, iostream->env);
+			dup2(STDOUT_FILENO, iostream->stdout_fd);
+			dup2(STDIN_FILENO, iostream->stdin_fd);
 		}
 		else
 		{
@@ -95,6 +92,7 @@ int	main(int argc, char **argv, char **envp)
 		wait(NULL);
 		wait_total--;
 	}
+
 	close_pipes(iostream->pipes);
 	return (check_status(status));
 }

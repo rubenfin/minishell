@@ -47,7 +47,7 @@ fclean: clean
 re: fclean all
 
 $(NAME): $(OBJS_DIR) $(OBJ)
-	$(CC) -o $(NAME) $(OBJ) $(LDFLAGS) $(LINKERFLAGS) src/libft.a
+	$(CC) -o $(NAME) $(OBJ) $(LDFLAGS) $(LINKERFLAGS) src/libft.a -lreadline 
 	@echo "$(GREEN)Compiled mandatory!$(DEFAULT)"
 
 $(OBJS_DIR)/%.o: $(SRC_DIR)/%.c
