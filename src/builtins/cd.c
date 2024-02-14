@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/30 12:09:22 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/11 12:05:57 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/14 13:53:31 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	last_slash(char *str)
 	return (x);
 }
 
-void	cd(char *directory, t_env_ll *env)
+void	cd(t_env_ll *env, char *directory)
 {
 	t_env_ll	*node;
 	char		*path;

@@ -3,6 +3,7 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 #include <signal.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -69,7 +70,7 @@ typedef struct t_command
 /*
 BUILTINS
 */
-void					cd(char *directory, t_env_ll *env);
+void					cd(t_env_ll *env, char *directory);
 void					echo(t_env_ll *env, char **args);
 void					get_env(t_env_ll *env);
 void					export(t_env_ll *env, char **export_data);
@@ -79,8 +80,11 @@ void					unset(t_env_ll *env, char **unset_data);
 /*
 EXECUTING
 */
-void					execute(t_command **param, t_stream *iostream);
+void					execute(t_command **param, t_stream *iostream,
+							bool child);
 void					execute_single(t_command **param, t_stream *iostream);
+int						get_builtin(char *command, t_stream *param,
+							t_env_ll *env);
 
 /*
 PARSING
@@ -99,6 +103,8 @@ int						init_pipe(t_pipes *pipes);
 void					init_stream(t_stream **iostream);
 int						check_builtin(char *arg);
 void					malloc_stream(t_stream **iostream, t_env_ll *env);
+void					set_args(t_command **param, t_stream *iostream,
+							int count);
 /*
 UTILS / PARSER_UTILS
 */
@@ -108,10 +114,12 @@ t_command				*get_command_from_pipe(t_command *command);
 t_command				*get_command_until_pipe(t_command *command);
 char					*ft_strndup(char *s, size_t n);
 char					**ll_to_2d_arr(t_env_ll *env);
+int						count_commands(t_command **param);
 /*
 UTILS / STATUS
 */
 int						check_status(int status);
+void					close_pipes(t_pipes *pipes);
 
 /*
 UTILS / PRINT

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   execute_single.c                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/07 16:36:54 by jade-haa          #+#    #+#             */
-/*   Updated: 2024/02/14 11:28:22 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   execute_single.c                                   :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/02/07 16:36:54 by jade-haa      #+#    #+#                 */
+/*   Updated: 2024/02/14 14:51:53 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ int	get_builtin(char *command, t_stream *param, t_env_ll *env)
 	char	**args;
 
 	// char	*command;
-	(void)env;
 	args = param->args;
 	if (ft_strncmp(command, "echo", 5) == 0)
 	{
@@ -79,7 +78,7 @@ int	get_builtin(char *command, t_stream *param, t_env_ll *env)
 	}
 	if (ft_strncmp(command, "cd", 3) == 0)
 	{
-		// cd()
+		cd(env, args[0]);
 		return (1);
 	}
 	if (ft_strncmp(command, "pwd", 4) == 0)
@@ -125,15 +124,16 @@ void	execute_single(t_command **param, t_stream *iostream)
 	if (iostream->input != -1)
 		dup2(iostream->input, STDIN_FILENO);
 	if (iostream->output != -1)
-		dup2(iostream->output, iostream->dupout);
+		dup2(iostream->output, STDOUT_FILENO);
 	// set_valid_command(iostream->args[0], ll_to_2d_arr(iostream->env));
 	// printf("total %s\n\n\n\n\n\n", set_valid_command(iostream->args[0],
 	// 		ll_to_2d_arr(iostream->env)));
-	printf("%s | %d\n", iostream->args[0], count);
+	// printf("%s | %d\n", iostream->args[0], count);
 	if (command->token == BUILTIN)
 	{
-		printf("werkt");
+		// printf("werkt");
 		get_builtin(command->string, iostream, iostream->env);
+		exit(0);
 	}
 	else
 	{

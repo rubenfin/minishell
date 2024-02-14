@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   print.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/09 10:04:45 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/02/13 18:14:24 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   print.c                                            :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/02/09 10:04:45 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/02/14 13:04:00 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,13 @@ void	print_2d_arrg(char **c)
 	}
 }
 
-void		print_env_ll(t_env_ll *env)
+void	print_env_ll(t_env_ll *env)
 {
 	while (env)
 	{
-		// printf("%s%s\n", env->key, env->value);
-		write(1, env->key, ft_strlen(env->key));
-		
-		write(1, env->value, ft_strlen(env->value));
-		write(1, "\n", 1);
+		write(STDOUT_FILENO, env->key, ft_strlen(env->key));
+		write(STDOUT_FILENO, env->value, ft_strlen(env->value));
+		write(STDOUT_FILENO, "\n", 1);
 		env = env->next;
 	}
 }

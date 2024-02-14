@@ -1,16 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/08 13:04:05 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/02/14 12:24:01 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   minishell.c                                        :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/02/14 15:41:01 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+void	main_set_args(t_command **param, t_stream *iostream)
+{
+	t_command	*command;
+	int			count;
+
+	command = *param;
+	if (command->token == PIPE)
+		command = command->next;
+	count = count_commands(&command);
+	iostream->args = (char **)malloc(sizeof(char *) * count);
+	set_args(param, iostream, count);
+}
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -25,14 +38,13 @@ int	main(int argc, char **argv, char **envp)
 	int			status;
 
 	// new_stdout_fd = dup(STDOUT_FILENO);
-	make_env_ll(&env, envp);
 	// print_list_env(env);
 	status = 0;
 	pid = 1;
 	(void)argc;
 	(void)argv;
 	malloc_stream(&iostream, env);
-	arg = "env | grep a > outfile";
+	arg = "unset PATH PWD";
 	command = NULL;
 	init_redirections(arg, &command);
 	total_pipes = pipe_check(command);
@@ -40,9 +52,21 @@ int	main(int argc, char **argv, char **envp)
 	if (!total_pipes)
 	{
 		init_stream(&iostream);
-		pid = fork();
-		if (pid == 0)
-			execute(&command, iostream);
+		if (command->token == BUILTIN && (ft_strncmp(command->string, "cd",
+					3) == 0 || (ft_strncmp(command->string, "export", 7) == 0)
+				|| (ft_strncmp(command->string, "unset", 6) == 0)
+				|| (ft_strncmp(command->string, "exit", 5)) == 0))
+		{
+			execute(&command, iostream, false);
+			main_set_args(&command, iostream);
+			get_builtin(command->string, iostream, iostream->env);
+		}
+		else
+		{
+			pid = fork();
+			if (pid == 0)
+				execute(&command, iostream, true);
+		}
 	}
 	if (total_pipes)
 	{
@@ -52,31 +76,25 @@ int	main(int argc, char **argv, char **envp)
 			init_pipe(iostream->pipes);
 			until_pipe = get_command_until_pipe(command);
 			command = get_command_from_pipe(command);
-			printf("%d\n", until_pipe->token);
-			if (until_pipe->token != BUILTIN)
-			{
-				pid = fork();
-				if (pid == 0)
-					execute(&until_pipe, iostream);
-			}
-			else
-				execute(&until_pipe, iostream);
+			// printf("%d\n", until_pipe->token);
+			pid = fork();
+			if (pid == 0)
+				execute(&until_pipe, iostream, true);
 			close(iostream->pipes->curr_write);
 			total_pipes--;
 		}
+		close(iostream->pipes->curr_write);
 		init_stream(&iostream);
 		until_pipe = get_command_until_pipe(command);
-		command = get_command_from_pipe(command);
-		if (until_pipe->token != BUILTIN)
-		{
-			pid = fork();
-			if (pid == 0)
-				execute(&until_pipe, iostream);
-		}
-		else
-			execute(&until_pipe, iostream);
+		pid = fork();
+		if (pid == 0)
+			execute(&until_pipe, iostream, true);
 	}
-	while (wait_total--)
+	while (wait_total)
+	{
 		wait(NULL);
+		wait_total--;
+	}
+	close_pipes(iostream->pipes);
 	return (check_status(status));
 }

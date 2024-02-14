@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   executing.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/06 12:55:18 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/02/13 18:08:35 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   executing.c                                        :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/02/06 12:55:18 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/02/14 14:56:55 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	last_node(t_command **param)
 	return (0);
 }
 
-void	execute(t_command **param, t_stream *iostream)
+void	execute(t_command **param, t_stream *iostream, bool child)
 {
 	t_command	*command;
 
@@ -106,6 +106,8 @@ void	execute(t_command **param, t_stream *iostream)
 			redirection_out(iostream, command);
 		else if (command->token == RE_APPEND)
 			redirection_append(iostream, command);
+		else if (command->token == RE_HERE)
+			redirection_here(iostream, command);
 		command = command->next;
 	}
 	if (command)
@@ -113,5 +115,6 @@ void	execute(t_command **param, t_stream *iostream)
 		if (command->token == PIPE && iostream->output == -1)
 			iostream->output = iostream->pipes->curr_write;
 	}
-	execute_single(param, iostream);
+	if (child)
+		execute_single(param, iostream);
 }
