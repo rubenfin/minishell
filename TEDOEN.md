@@ -1,12 +1,11 @@
 ## Minishell
 
 # Wat moeten we nog doen?
-- Qoutes met parsen toevoegen ' en " /parsing/
-- Heredocu toevoegen /parsing/
-- Environment variables /builtins/
 - $? maken ( waarschijnlijk als laatst? ) /builtins/
-- builtins maken met nieuwe linked list van env /builtins/
 - libft in Makefile zetten
+- echo werkend maken met -n
 
 # Kleine dingen
 - als cd path niet juist is /directory of directory juist printen
+- cd - fixen
+- segfault met spaces en tabs fixen

@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/14 15:38:30 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/14 16:20:31 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/14 16:59:35 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,12 @@ int	minishell(int ac, char **av, char **envp)
 		buffer = readline("~$ ");
 		if (!buffer)
 		{
-			write(1, "exit1\n", 6);
+			write(1, "exit\n", 5);
 			break ;
 		}
 		if (buffer && !ft_strncmp(buffer, "exit", 5))
 		{
-			write(1, "exit2\n", 7);
+			write(1, "exit\n", 6);
 			break ;
 		}
 		command_line(env, buffer);

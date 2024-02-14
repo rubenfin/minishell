@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/01 11:40:21 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/02/13 17:44:17 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   echo.c                                             :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/02/01 11:40:21 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/02/14 17:17:19 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ void	echo(t_env_ll *env, char **arg)
 					key = ft_strndup(arg[j] + x, i - x);
 					node = find_key(env, key);
 					if (node)
-						write(STDOUT_FILENO, node->value, ft_strlen(node->value));
+						write(STDOUT_FILENO, node->value,
+							ft_strlen(node->value));
 					break ;
 				}
 				i++;
@@ -48,6 +49,8 @@ void	echo(t_env_ll *env, char **arg)
 		else
 		{
 			write(STDOUT_FILENO, arg[j], ft_strlen(arg[j]));
+			if (arg[j + 1])
+				write(1, " ", 1);
 		}
 		++j;
 	}

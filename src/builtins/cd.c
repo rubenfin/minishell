@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/30 12:09:22 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/14 13:53:31 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/14 17:03:25 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	cd(t_env_ll *env, char *directory)
 	int			i;
 
 	// add absolute path
-	if (!ft_strncmp(directory, "", 2))
+	if (!directory)
 	{
 		node = find_key(env, "HOME=");
 		chdir(node->value);
