@@ -1,5 +1,5 @@
 CC = cc 
-CFLAGS = -g
+CFLAGS = -Wall -Wextra -Werror -g
 
 LDFLAGS =
 ifeq ($(shell uname -s),Linux)

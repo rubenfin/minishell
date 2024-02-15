@@ -30,6 +30,12 @@ typedef enum TOKEN
 	BUILTIN,
 }						TOKEN;
 
+typedef struct s_std_fd
+{
+	int					stdin_fd;
+	int					stdout_fd;
+}						t_std_fd;
+
 typedef struct s_pipes
 {
 	int					curr_write;
@@ -45,8 +51,6 @@ typedef struct s_stream
 	int					input;
 	int					output;
 	t_pipes				*pipes;
-	int					stdin_fd;
-	int					stdout_fd;
 
 }						t_stream;
 
@@ -107,6 +111,8 @@ int						check_builtin(char *arg);
 void					malloc_stream(t_stream **iostream, t_env_ll *env);
 void					set_args(t_command **param, t_stream *iostream,
 							int count);
+void					refresh_std_fd(t_std_fd *std_fd);
+void					init_std_fd(t_std_fd **std_fd);
 /*
 UTILS / PARSER_UTILS
 */

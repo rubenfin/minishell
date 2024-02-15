@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/15 09:20:33 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/15 15:04:48 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	main_set_args(t_command **param, t_stream *iostream)
 	set_args(param, iostream, count);
 }
 
-int	no_pipes(t_command *command, t_stream *iostream)
+void	no_pipes(t_command *command, t_stream *iostream)
 {
 	pid_t	pid;
 
@@ -39,8 +39,6 @@ int	no_pipes(t_command *command, t_stream *iostream)
 		execute(&command, iostream, false);
 		main_set_args(&command, iostream);
 		get_builtin(command->string, iostream, iostream->env);
-		dup2(STDOUT_FILENO, iostream->stdout_fd);
-		dup2(STDIN_FILENO, iostream->stdin_fd);
 	}
 	else
 	{
@@ -79,7 +77,6 @@ int	command_line(t_env_ll *env, char *arg)
 			init_pipe(iostream->pipes);
 			until_pipe = get_command_until_pipe(command);
 			command = get_command_from_pipe(command);
-			// printf("%d\n", until_pipe->token);
 			pid = fork();
 			if (pid == 0)
 				execute(&until_pipe, iostream, true);

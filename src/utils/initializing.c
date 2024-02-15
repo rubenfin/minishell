@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 16:17:12 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/15 09:18:02 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/15 14:55:12 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,11 @@ void	malloc_stream(t_stream **iostream, t_env_ll *env)
 	(*iostream)->pipes->curr_write = 0;
 	(*iostream)->pipes->prev_read = 0;
 	(*iostream)->pipes->prev_write = 0;
-	(*iostream)->stdin_fd = dup(STDIN_FILENO);
-	(*iostream)->stdout_fd = dup(STDOUT_FILENO);
 }
 
-int	init_pipe(t_pipes	*pipes)
+int	init_pipe(t_pipes *pipes)
 {
-	int		fds[2];
+	int	fds[2];
 
 	if (pipes->curr_write)
 	{
@@ -46,6 +44,17 @@ void	init_stream(t_stream **iostream)
 	(*iostream)->args = NULL;
 	(*iostream)->input = -1;
 	(*iostream)->output = -1;
-	dup2(STDIN_FILENO, (*iostream)->stdin_fd);
-	dup2(STDOUT_FILENO, (*iostream)->stdout_fd);
+}
+
+void	init_std_fd(t_std_fd **std_fd)
+{
+	(*std_fd) = (t_std_fd *)malloc(sizeof(t_std_fd));
+	(*std_fd)->stdin_fd = dup(STDIN_FILENO);
+	(*std_fd)->stdout_fd = dup(STDOUT_FILENO);
+}
+
+void	refresh_std_fd(t_std_fd *std_fd)
+{
+	dup2(std_fd->stdout_fd, STDOUT_FILENO);
+	dup2(std_fd->stdin_fd, STDIN_FILENO);
 }
