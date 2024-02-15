@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parsing2.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/09 15:51:29 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/02/12 14:23:17 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   parsing2.c                                         :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/02/09 15:51:29 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/02/15 08:50:40 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,13 +67,13 @@ int	valid_command(char *argv, char **full_path)
 		str = ft_strjoin(temp, trimmed_command);
 		if (!temp | !str)
 			return (0);
-		free(temp);
+		ft_free(&temp);
 		if (access(str, X_OK) == 0)
 			return (1);
-		free(str);
+		ft_free(&str);
 		j++;
 	}
-	free(trimmed_command);
+	ft_free(&trimmed_command);
 	return (0);
 }
 
@@ -99,13 +99,13 @@ char	*set_valid_command(char *argv, char **full_path)
 		str = ft_strjoin(temp, trimmed_command);
 		if (!temp | !str)
 			return (NULL);
-		free(temp);
+		ft_free(&temp);
 		if (access(str, X_OK) == 0)
 			return(str);
-		free(str);
+		ft_free(&str);
 		j++;
 	}
-	free(trimmed_command);
+	ft_free(&trimmed_command);
 	if (!str)
 	{
 		perror("werkt niet");

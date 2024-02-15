@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/07 16:36:54 by jade-haa      #+#    #+#                 */
-/*   Updated: 2024/02/14 17:25:31 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/15 09:05:55 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,9 +104,7 @@ int	get_builtin(char *command, t_stream *param, t_env_ll *env)
 		return (1);
 	}
 	if (ft_strncmp(command, "exit", 5) == 0)
-	{
 		return (1);
-	}
 	return (0);
 }
 
@@ -119,19 +117,14 @@ void	execute_single(t_command **param, t_stream *iostream)
 	if (command->token == PIPE)
 		command = command->next;
 	count = count_commands(&command);
-	iostream->args = (char **)malloc(sizeof(char *) * count);
+	iostream->args = (char **)malloc(sizeof(char *) * (count + 1));
 	set_args(param, iostream, count);
 	if (iostream->input != -1)
 		dup2(iostream->input, STDIN_FILENO);
 	if (iostream->output != -1)
 		dup2(iostream->output, STDOUT_FILENO);
-	// set_valid_command(iostream->args[0], ll_to_2d_arr(iostream->env));
-	// printf("total %s\n\n\n\n\n\n", set_valid_command(iostream->args[0],
-	// 		ll_to_2d_arr(iostream->env)));
-	// printf("%s | %d\n", iostream->args[0], count);
 	if (command->token == BUILTIN)
 	{
-		// printf("werkt");
 		get_builtin(command->string, iostream, iostream->env);
 		exit(0);
 	}
