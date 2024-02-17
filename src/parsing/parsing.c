@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/08 15:55:14 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/02/13 18:16:53 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   parsing.c                                          :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/02/08 15:55:14 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/02/17 10:00:44 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,17 +88,14 @@ int	check_first_cmd(char *str, int i)
 void	set_node(t_command **param, char *str, int redirection, int len)
 {
 	char		*result;
-	t_command	*command;
-	int			i;
 
-	i = 0;
 	if (len > 0)
 	{
 		result = ft_substr(str, 0, len);
 		// if (redirection == CMD && check_first_cmd(&str[0], len)
 		// 	&& check_builtin(result))
 		// 	printf("valid builtin!! == %c\n", str[0]);
-		command = createnode(param, result, redirection);
+		createnode(param, result, redirection);
 	}
 }
 int	quote_check(t_command **param, char *str)
