@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/06 12:55:18 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/14 19:56:13 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/17 16:47:56 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,15 @@ void	redirection_here(t_stream *iostream, t_command *command)
 }
 void	redirection_in(t_stream *iostream, t_command *command)
 {
+	if (access(command->string, F_OK) == -1 || access(command->string, R_OK) ==
+		-1)
+	{
+		write(STDOUT_FILENO, "bash: ", 6);
+		write(STDOUT_FILENO, command->string, ft_strlen(command->string));
+		write(STDOUT_FILENO, ": ", 2);
+		perror("");
+		exit(1);
+	}
 	iostream->input = open(command->string, O_RDONLY);
 }
 

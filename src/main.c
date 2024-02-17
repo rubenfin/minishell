@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/14 15:38:30 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/17 10:41:02 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/17 10:48:15 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	minishell(t_env_ll *env, t_std_fd *std_fd)
 	while (1)
 	{
 		refresh_std_fd(std_fd);
-		printf("%d", status);
+		printf("last cmd exit status:%d\n", status);
 		buffer = readline("~$ ");
 		rl_on_new_line();
 		if (!buffer)
