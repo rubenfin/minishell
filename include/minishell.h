@@ -54,18 +54,9 @@ typedef struct s_stream
 
 }						t_stream;
 
-typedef struct token_redirect
-{
-	int					fd;
-}						token_redirect;
-
 typedef struct t_command
 {
-	char				**arguments;
 	char				*string;
-	char				*command_path;
-	char				**envp;
-	int					pipe;
 	int8_t				token;
 	struct t_command	*next;
 
@@ -141,3 +132,4 @@ UTILS / CLEAN
 */
 void					ft_free(char **buffer);
 void					free_ll(t_env_ll *env);
+void					free_ll_command(t_command *head, bool free_first_pipe);

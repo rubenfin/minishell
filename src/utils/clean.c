@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/14 18:56:11 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/17 10:25:51 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/17 17:34:45 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,3 +33,22 @@ void	free_ll(t_env_ll *env)
 	free(env);
 }
 
+void	free_ll_command(t_command *head, bool free_first_pipe)
+{
+	t_command *save;
+	t_command *curr;
+	curr = head;
+
+	if (!free_first_pipe)
+	{
+		if (curr->token == PIPE)
+			curr = curr->next;
+	}
+	while (curr)
+	{
+		save = curr->next;
+		free(curr->string);
+		free(curr);
+		curr = save;
+	}
+}

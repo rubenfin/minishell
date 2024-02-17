@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 15:55:14 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/17 10:00:44 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/17 17:20:13 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,10 +158,12 @@ t_command	*init_redirections(char *str, t_command **param)
 					0, 1))
 				break ;
 		}
-		if (redirection == CMD && check_first_cmd(str, i - 1) && check_builtin(ft_substr(&str[i], 0, len)))
+		char *test = ft_substr(&str[i], 0, len);
+		if (redirection == CMD && check_first_cmd(str, i - 1) && check_builtin(test))
 			redirection = BUILTIN;
 		set_node(param, &str[i], redirection, len);
 		i += len;
+		free(test);
 	}
 	return (command);
 }
