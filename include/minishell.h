@@ -132,4 +132,4 @@ UTILS / CLEAN
 */
 void					ft_free(char **buffer);
 void					free_ll(t_env_ll *env);
-void					free_ll_command(t_command *head, bool free_first_pipe, bool main_command);
+void					free_ll_command(t_command *head, bool main_command);

@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/18 09:56:36 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/18 10:00:15 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	no_pipes(t_command *command, t_stream *iostream)
 		else
 			waitpid(pid, &status, 0);
 	}
-	free_ll_command(command, true, true);
+	free_ll_command(command, true);
 	free(iostream->pipes);
 	free(iostream);
 	return (status);
@@ -117,10 +117,7 @@ int	command_line(t_env_ll *env, char *arg)
 				execute(&until_pipe, iostream, true);
 			close(iostream->pipes->curr_write);
 			total_pipes--;
-			if (total_pipes == wait_total)
-				free_ll_command(until_pipe, false, false);
-			else 
-				free_ll_command(until_pipe, true, false);
+			free_ll_command(until_pipe,false);
 		}
 		close(iostream->pipes->curr_write);
 		init_stream(&iostream);
@@ -129,8 +126,8 @@ int	command_line(t_env_ll *env, char *arg)
 		if (pid == 0)
 			execute(&until_pipe, iostream, true);
 	}
-	free_ll_command(until_pipe, true, false);
-	free_ll_command(saved, true, true);
+	free_ll_command(until_pipe, false);
+	free_ll_command(saved, true);
 	status = wait_for_processes(pid, wait_total);
 	if (total_pipes)
 		close_pipes(iostream->pipes);
