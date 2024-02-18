@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/14 18:56:11 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/18 09:59:28 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/18 10:17:21 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,5 +46,18 @@ void	free_ll_command(t_command *head, bool main_command)
 			free(curr->string);
 		free(curr);
 		curr = save;
+	}
+}
+
+void	free_args(char **args)
+{
+	int	i;
+
+	i = 0;
+	if (!args || !*args)
+		return;
+	while (args[i])
+	{
+		free(args[i]);
 	}
 }

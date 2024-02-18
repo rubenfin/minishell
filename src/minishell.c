@@ -6,13 +6,13 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/18 10:00:15 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/18 10:24:41 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	main_set_args(t_command **param, t_stream *iostream)
+int	main_set_args(t_command **param, t_stream *iostream)
 {
 	t_command	*command;
 	int			count;
@@ -21,15 +21,20 @@ void	main_set_args(t_command **param, t_stream *iostream)
 	if (command->token == PIPE)
 		command = command->next;
 	count = count_commands(&command);
-	iostream->args = (char **)malloc(sizeof(char *) * count);
+	iostream->args = (char **)malloc(sizeof(char *) * (count + 1));
 	set_args(param, iostream, count);
+	return (count);
 }
 
 int	no_pipes(t_command *command, t_stream *iostream)
 {
 	pid_t	pid;
 	int		status;
+	int		i;
+	int		count;
 
+	status = 0;
+	count = 0;
 	pid = 1;
 	init_stream(&iostream);
 	if (command->token == BUILTIN && (ft_strncmp(command->string, "cd", 3) == 0
@@ -38,7 +43,7 @@ int	no_pipes(t_command *command, t_stream *iostream)
 			|| (ft_strncmp(command->string, "exit", 5)) == 0))
 	{
 		execute(&command, iostream, false);
-		main_set_args(&command, iostream);
+		count = main_set_args(&command, iostream);
 		get_builtin(command->string, iostream, iostream->env);
 	}
 	else
@@ -50,6 +55,10 @@ int	no_pipes(t_command *command, t_stream *iostream)
 			waitpid(pid, &status, 0);
 	}
 	free_ll_command(command, true);
+	i = -1;
+	while (++i < count)
+		free(iostream->args[i]);
+	free(iostream->args);
 	free(iostream->pipes);
 	free(iostream);
 	return (status);
@@ -117,7 +126,7 @@ int	command_line(t_env_ll *env, char *arg)
 				execute(&until_pipe, iostream, true);
 			close(iostream->pipes->curr_write);
 			total_pipes--;
-			free_ll_command(until_pipe,false);
+			free_ll_command(until_pipe, false);
 		}
 		close(iostream->pipes->curr_write);
 		init_stream(&iostream);

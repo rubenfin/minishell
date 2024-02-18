@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/07 16:36:54 by jade-haa      #+#    #+#                 */
-/*   Updated: 2024/02/15 09:05:55 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/18 10:15:16 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ int	check_builtin(char *arg)
 		return (1);
 	return (0);
 }
+
+
 int	get_builtin(char *command, t_stream *param, t_env_ll *env)
 {
 	char	**args;
