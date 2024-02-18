@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/14 18:56:11 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/17 17:34:45 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/18 09:55:45 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	ft_free(char **buffer)
 {
 	if (*buffer)
 		free(*buffer);
-	buffer = NULL;
+	*buffer = NULL;
 }
 
 void	free_ll(t_env_ll *env)
@@ -33,12 +33,13 @@ void	free_ll(t_env_ll *env)
 	free(env);
 }
 
-void	free_ll_command(t_command *head, bool free_first_pipe)
+void	free_ll_command(t_command *head, bool free_first_pipe,
+		bool main_command)
 {
-	t_command *save;
-	t_command *curr;
-	curr = head;
+	t_command	*save;
+	t_command	*curr;
 
+	curr = head;
 	if (!free_first_pipe)
 	{
 		if (curr->token == PIPE)
@@ -47,7 +48,8 @@ void	free_ll_command(t_command *head, bool free_first_pipe)
 	while (curr)
 	{
 		save = curr->next;
-		free(curr->string);
+		if (main_command)
+			free(curr->string);
 		free(curr);
 		curr = save;
 	}

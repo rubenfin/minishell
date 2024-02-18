@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/06 15:49:56 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/17 17:39:08 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/18 09:46:46 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,18 +33,16 @@ char	**get_path(char **envp)
 
 t_command *get_command_from_pipe(t_command *command) {
     t_command *head = command;
-    t_command *temp;
+    // t_command *temp;
 
     if (head && head->token == PIPE) {
-        temp = head;
+        // temp = head;
         head = head->next;
-        free(temp);
     }
 
     while (head && head->token != PIPE) {
-        temp = head;
+        // temp = head;
         head = head->next;
-        free(temp);
     }
 
     return head;
@@ -70,7 +68,7 @@ t_command	*get_command_until_pipe(t_command *command)
 		current = current->next;
 	}
 	if (command)
-		current = createnode(&head, command->string, command->token);
+		createnode(&head, command->string, command->token);
 	return (head);
 }
 

@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/17 17:42:19 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/18 09:56:36 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	no_pipes(t_command *command, t_stream *iostream)
 		else
 			waitpid(pid, &status, 0);
 	}
-	free_ll_command(command, true);
+	free_ll_command(command, true, true);
 	free(iostream->pipes);
 	free(iostream);
 	return (status);
@@ -100,6 +100,7 @@ int	command_line(t_env_ll *env, char *arg)
 	if (!arg || !arg[0])
 		return (0);
 	total_pipes = init_command_line(env, &iostream, &command, arg);
+	saved = command;
 	wait_total = total_pipes + 1;
 	if (!total_pipes)
 		return (check_status(no_pipes(command, iostream)));
@@ -110,14 +111,16 @@ int	command_line(t_env_ll *env, char *arg)
 			init_stream(&iostream);
 			init_pipe(iostream->pipes);
 			until_pipe = get_command_until_pipe(command);
-			saved = until_pipe;
 			command = get_command_from_pipe(command);
 			pid = fork();
 			if (pid == 0)
 				execute(&until_pipe, iostream, true);
 			close(iostream->pipes->curr_write);
 			total_pipes--;
-			free_ll_command(saved, false);
+			if (total_pipes == wait_total)
+				free_ll_command(until_pipe, false, false);
+			else 
+				free_ll_command(until_pipe, true, false);
 		}
 		close(iostream->pipes->curr_write);
 		init_stream(&iostream);
@@ -126,7 +129,8 @@ int	command_line(t_env_ll *env, char *arg)
 		if (pid == 0)
 			execute(&until_pipe, iostream, true);
 	}
-	free_ll_command(until_pipe, false);
+	free_ll_command(until_pipe, true, false);
+	free_ll_command(saved, true, true);
 	status = wait_for_processes(pid, wait_total);
 	if (total_pipes)
 		close_pipes(iostream->pipes);
