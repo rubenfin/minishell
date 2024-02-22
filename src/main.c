@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/14 15:38:30 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/17 10:48:15 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/22 14:10:11 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	handle_sigint(int sig)
 	rl_redisplay();
 }
 
-int	minishell(t_env_ll *env, t_std_fd *std_fd)
+int	minishell(t_env_ll **env, t_std_fd *std_fd)
 {
 	char	*buffer;
 	int		status;
@@ -62,8 +62,8 @@ int	main(int ac, char **av, char **envp)
 	{
 		init_std_fd(&std_fd);
 		make_env_ll(&env, envp);
-		status = minishell(env, std_fd);
-		free_ll(env);
+		status = minishell(&env, std_fd);
+		free_ll(&env);
 		free(std_fd);
 		return (status);
 	}

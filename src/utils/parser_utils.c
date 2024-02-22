@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/06 15:49:56 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/18 09:46:46 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/22 16:49:31 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,29 +25,30 @@ char	**get_path(char **envp)
 		path_string = ft_strnstr(envp[i], "PATH=", 5);
 		i++;
 	}
-	result_string = ft_split(path_string, ':');
+	result_string = ft_split(path_string + 5, ':');
 	if (!result_string)
-		exit(1);
+		return(NULL);
 	return (result_string);
 }
 
-t_command *get_command_from_pipe(t_command *command) {
-    t_command *head = command;
-    // t_command *temp;
+t_command	*get_command_from_pipe(t_command *command)
+{
+	t_command	*head;
 
-    if (head && head->token == PIPE) {
-        // temp = head;
-        head = head->next;
-    }
-
-    while (head && head->token != PIPE) {
-        // temp = head;
-        head = head->next;
-    }
-
-    return head;
+	head = command;
+	// t_command *temp;
+	if (head && head->token == PIPE)
+	{
+		// temp = head;
+		head = head->next;
+	}
+	while (head && head->token != PIPE)
+	{
+		// temp = head;
+		head = head->next;
+	}
+	return (head);
 }
-
 
 t_command	*get_command_until_pipe(t_command *command)
 {

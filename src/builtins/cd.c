@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/30 12:09:22 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/14 17:03:25 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/22 15:27:42 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	last_slash(char *str)
 	return (x);
 }
 
-void	cd(t_env_ll *env, char *directory)
+void	cd(t_env_ll **env, char *directory)
 {
 	t_env_ll	*node;
 	char		*path;
@@ -38,17 +38,17 @@ void	cd(t_env_ll *env, char *directory)
 	// add absolute path
 	if (!directory)
 	{
-		node = find_key(env, "HOME=");
+		node = find_key(*env, "HOME");
 		chdir(node->value);
 		temp = node->value;
-		node = find_key(env, "PWD=");
+		node = find_key(*env, "PWD");
 		node->value = temp;
 		return ;
 	}
 	if (!ft_strncmp(directory, "..", 3))
 	{
 		i = 0;
-		node = find_key(env, "PWD=");
+		node = find_key(*env, "PWD");
 		i = last_slash(node->value);
 		temp = ft_strndup(node->value, i);
 		if (chdir(temp) == 0)
@@ -57,7 +57,7 @@ void	cd(t_env_ll *env, char *directory)
 	}
 	if (directory[0] != '/')
 		directory = ft_strjoin("/", directory);
-	node = find_key(env, "PWD=");
+	node = find_key(*env, "PWD");
 	path = ft_strjoin(node->value, directory);
 	if (chdir(path) == -1)
 	{

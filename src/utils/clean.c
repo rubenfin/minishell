@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/14 18:56:11 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/18 10:17:21 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/22 14:09:09 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,18 @@ void	ft_free(char **buffer)
 	*buffer = NULL;
 }
 
-void	free_ll(t_env_ll *env)
+void	free_ll(t_env_ll **env)
 {
-	while (env->next)
+	while ((*env)->next)
 	{
-		env = env->next;
-		free(env->prev->key);
-		free(env->prev->value);
-		free(env->prev);
+		(*env) = (*env)->next;
+		free((*env)->prev->key);
+		free((*env)->prev->value);
+		free((*env)->prev);
 	}
-	free(env->key);
-	free(env->value);
-	free(env);
+	free((*env)->key);
+	free((*env)->value);
+	free((*env));
 }
 
 void	free_ll_command(t_command *head, bool main_command)

@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/06 12:55:18 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/17 16:47:56 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/22 16:41:34 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,12 +72,32 @@ void	redirection_in(t_stream *iostream, t_command *command)
 
 void	redirection_out(t_stream *iostream, t_command *command)
 {
+	if (access(command->string, F_OK) == 0 && access(command->string, W_OK) ==
+		-1)
+	{
+		errno = 13;
+		write(STDOUT_FILENO, "bash: ", 6);
+		write(STDOUT_FILENO, command->string, ft_strlen(command->string));
+		write(STDOUT_FILENO, ": ", 2);
+		perror("");
+		exit(1);
+	}
 	iostream->output = open(command->string, O_CREAT | O_WRONLY | O_TRUNC,
 			0644);
 }
 
 void	redirection_append(t_stream *iostream, t_command *command)
 {
+	if (access(command->string, F_OK) == 0 && access(command->string, W_OK) ==
+		-1)
+	{
+		errno = 13;
+		write(STDOUT_FILENO, "bash: ", 6);
+		write(STDOUT_FILENO, command->string, ft_strlen(command->string));
+		write(STDOUT_FILENO, ": ", 2);
+		perror("");
+		exit(1);
+	}
 	iostream->output = open(command->string, O_WRONLY | O_CREAT | O_APPEND,
 			0644);
 }

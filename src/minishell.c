@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/18 10:24:41 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/22 13:59:31 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	no_pipes(t_command *command, t_stream *iostream)
 	return (status);
 }
 
-int	init_command_line(t_env_ll *env, t_stream **iostream, t_command **command,
+int	init_command_line(t_env_ll **env, t_stream **iostream, t_command **command,
 		char *arg)
 {
 	int	total;
@@ -81,6 +81,7 @@ int	wait_for_processes(int pid, int wait_total)
 	int	status;
 
 	status = 0;
+	waitpid(pid, &status, 0);
 	if (!wait_total)
 		return (0);
 	else
@@ -91,10 +92,10 @@ int	wait_for_processes(int pid, int wait_total)
 			wait_total--;
 		}
 	}
-	return (waitpid(pid, &status, 0));
+	return (status);
 }
 
-int	command_line(t_env_ll *env, char *arg)
+int	command_line(t_env_ll **env, char *arg)
 {
 	t_command	*command;
 	t_command	*until_pipe;

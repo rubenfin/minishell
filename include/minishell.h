@@ -1,4 +1,5 @@
 #include "libft.h"
+#include <errno.h>
 #include <fcntl.h>
 #include <readline/history.h>
 #include <readline/readline.h>
@@ -47,7 +48,7 @@ typedef struct s_pipes
 typedef struct s_stream
 {
 	char				**args;
-	t_env_ll			*env;
+	t_env_ll			**env;
 	int					input;
 	int					output;
 	t_pipes				*pipes;
@@ -62,17 +63,17 @@ typedef struct t_command
 
 }						t_command;
 
-int						command_line(t_env_ll *env, char *arg);
+int						command_line(t_env_ll **env, char *arg);
 
 /*
 BUILTINS
 */
-void					cd(t_env_ll *env, char *directory);
+void					cd(t_env_ll **env, char *directory);
 void					echo(t_env_ll *env, char **args);
 void					get_env(t_env_ll *env);
-void					export(t_env_ll *env, char **export_data);
+void					export(t_env_ll **env, char **export_data);
 void					pwd(t_env_ll *env);
-void					unset(t_env_ll *env, char **unset_data);
+void					unset(t_env_ll **env, char **unset_data);
 
 /*
 EXECUTING
@@ -81,7 +82,7 @@ void					execute(t_command **param, t_stream *iostream,
 							bool child);
 void					execute_single(t_command **param, t_stream *iostream);
 int						get_builtin(char *command, t_stream *param,
-							t_env_ll *env);
+							t_env_ll **env);
 
 /*
 PARSING
@@ -99,7 +100,7 @@ UTILS / INITIALIZNG
 int						init_pipe(t_pipes *pipes);
 void					init_stream(t_stream **iostream);
 int						check_builtin(char *arg);
-void					malloc_stream(t_stream **iostream, t_env_ll *env);
+void					malloc_stream(t_stream **iostream, t_env_ll **env);
 void					set_args(t_command **param, t_stream *iostream,
 							int count);
 void					refresh_std_fd(t_std_fd *std_fd);
@@ -131,6 +132,11 @@ void					print_env_ll(t_env_ll *env);
 UTILS / CLEAN
 */
 void					ft_free(char **buffer);
-void					free_ll(t_env_ll *env);
+void					free_ll(t_env_ll **env);
 void					free_ll_command(t_command *head, bool main_command);
 void					free_args(char **args);
+
+/*
+UTILS / PRINT ERROR
+*/
+void					print_cmd_err(char *cmd);

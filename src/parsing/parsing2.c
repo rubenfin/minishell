@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/09 15:51:29 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/15 08:50:40 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/22 16:55:59 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,10 +86,11 @@ char	*set_valid_command(char *argv, char **full_path)
 	char	*temp;
 
 	len = length_command(argv);
-	trimmed_command = (char *)malloc(len * sizeof(char));
+	trimmed_command = (char *)malloc(len + 1 * sizeof(char));
 	if (!trimmed_command)
 		return (0);
 	ft_strlcpy(trimmed_command, argv, len);
+	trimmed_command[len] = '\0';
 	j = 0;
 	if (access(argv, X_OK) == 0)
 		return (argv);
@@ -101,15 +102,12 @@ char	*set_valid_command(char *argv, char **full_path)
 			return (NULL);
 		ft_free(&temp);
 		if (access(str, X_OK) == 0)
-			return(str);
+			return (str);
 		ft_free(&str);
 		j++;
 	}
 	ft_free(&trimmed_command);
 	if (!str)
-	{
-		perror("werkt niet");
-		exit(EXIT_FAILURE);
-	}
+		return (NULL);
 	return (str);
 }

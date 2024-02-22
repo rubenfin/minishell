@@ -6,13 +6,13 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 16:17:12 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/17 10:19:17 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/22 13:58:13 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	malloc_stream(t_stream **iostream, t_env_ll *env)
+void	malloc_stream(t_stream **iostream, t_env_ll **env)
 {
 	(*iostream) = (t_stream *)malloc(sizeof(t_stream));
 	(*iostream)->env = env;

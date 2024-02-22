@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/07 16:36:54 by jade-haa      #+#    #+#                 */
-/*   Updated: 2024/02/18 10:15:16 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/22 17:00:11 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,7 @@ int	check_builtin(char *arg)
 	return (0);
 }
 
-
-int	get_builtin(char *command, t_stream *param, t_env_ll *env)
+int	get_builtin(char *command, t_stream *param, t_env_ll **env)
 {
 	char	**args;
 
@@ -75,7 +74,7 @@ int	get_builtin(char *command, t_stream *param, t_env_ll *env)
 	args = param->args;
 	if (ft_strncmp(command, "echo", 5) == 0)
 	{
-		echo(env, args);
+		echo(*env, args);
 		return (1);
 	}
 	if (ft_strncmp(command, "cd", 3) == 0)
@@ -85,7 +84,7 @@ int	get_builtin(char *command, t_stream *param, t_env_ll *env)
 	}
 	if (ft_strncmp(command, "pwd", 4) == 0)
 	{
-		pwd(env);
+		pwd(*env);
 		return (1);
 	}
 	if (ft_strncmp(command, "export", 7) == 0)
@@ -102,7 +101,7 @@ int	get_builtin(char *command, t_stream *param, t_env_ll *env)
 	}
 	if (ft_strncmp(command, "env", 4) == 0)
 	{
-		get_env(env);
+		get_env(*env);
 		return (1);
 	}
 	if (ft_strncmp(command, "exit", 5) == 0)
@@ -112,8 +111,12 @@ int	get_builtin(char *command, t_stream *param, t_env_ll *env)
 
 void	execute_single(t_command **param, t_stream *iostream)
 {
-	t_command *command;
-	int count;
+	t_command	*command;
+	int			count;
+	char		**env_from_ll;
+	char		**paths;
+	char		*cmd;
+	// int			i;
 
 	command = *param;
 	if (command->token == PIPE)
@@ -132,10 +135,12 @@ void	execute_single(t_command **param, t_stream *iostream)
 	}
 	else
 	{
-		execve(set_valid_command(iostream->args[0],
-				get_path(ll_to_2d_arr(iostream->env))), iostream->args,
-			ll_to_2d_arr(iostream->env));
-		perror("did not execute");
-		exit(0);
+		env_from_ll = ll_to_2d_arr(*iostream->env);
+		paths = get_path(env_from_ll);
+		cmd = set_valid_command(iostream->args[0], paths);
+		if (!cmd)
+			print_cmd_err(iostream->args[0]);
+		execve(cmd, iostream->args, env_from_ll);
+		exit(127);
 	}
 }

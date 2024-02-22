@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/09 10:04:45 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/14 13:04:00 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/22 13:36:33 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void	print_env_ll(t_env_ll *env)
 	while (env)
 	{
 		write(STDOUT_FILENO, env->key, ft_strlen(env->key));
+		write(STDOUT_FILENO, "=", 1);
 		write(STDOUT_FILENO, env->value, ft_strlen(env->value));
 		write(STDOUT_FILENO, "\n", 1);
 		env = env->next;

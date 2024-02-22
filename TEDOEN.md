@@ -13,6 +13,3 @@
 - env, unset TERM_PROGRAM doet niks, daarna env, unset TERM_PROGRAM, env werkt wel, als je dan control D dodet exit met double free core dumped
 ls -a > ee | echo test > oo
 cat < infile, inplaats van error read ie van stdin
-
-UNSET freed nog niet goed?
-UNSET pakt verkeerde key soms

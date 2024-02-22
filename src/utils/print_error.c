@@ -1,21 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   pwd.c                                              :+:    :+:            */
+/*   print_error.c                                      :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/02/01 11:28:19 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/22 15:27:29 by rfinneru      ########   odam.nl         */
+/*   Created: 2024/02/22 16:56:29 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/02/22 16:58:11 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	pwd(t_env_ll *env)
+void print_cmd_err(char *cmd)
 {
-	t_env_ll *node;
-	node = find_key(env, "PWD");
-	write(1, node->value, ft_strlen(node->value));
-	write(1, "\n", 1);
+    	printf("%s: command not found\n", cmd);
+		exit(127);
 }

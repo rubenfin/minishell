@@ -6,19 +6,34 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/09 12:35:32 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/17 17:49:25 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/22 15:12:45 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+int	ft_strleng(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str)
+		return (0);
+	while (str[i])
+		i++;
+	return (i);
+}
 
 char	**ll_to_2d_arr(t_env_ll *env)
 {
 	t_env_ll	*curr;
 	char		**envp;
 	int			i;
+	char		*key_w_equal;
 
 	i = 0;
+	if (!env)
+		return (NULL);
 	curr = env;
 	while (curr)
 	{
@@ -30,7 +45,8 @@ char	**ll_to_2d_arr(t_env_ll *env)
 	i = 0;
 	while (curr)
 	{
-		envp[i] = ft_strjoin(curr->key, curr->value);
+		key_w_equal = ft_strjoin(curr->key, "=");
+		envp[i] = ft_strjoin(key_w_equal, curr->value);
 		i++;
 		curr = curr->next;
 	}
@@ -83,7 +99,7 @@ void	make_env_ll(t_env_ll **env, char **envp)
 			return ;
 		while (envp[i][j] != '=' && envp[i][j] != '\0')
 			j++;
-		current->key = ft_strndup(envp[i], j + 1);
+		current->key = ft_strndup(envp[i], j);
 		if (!current->key)
 			return ;
 		if (envp[i][j] == '=')
@@ -105,13 +121,22 @@ void	make_env_ll(t_env_ll **env, char **envp)
 	}
 	*env = head;
 }
+int	max(int a, int b)
+{
+	if (a > b)
+		return (a);
+	else
+		return (b);
+}
 
 t_env_ll	*find_key(t_env_ll *env, char *key_str)
 {
-	t_env_ll *key_ll = env;
+	t_env_ll	*key_ll;
+
+	key_ll = env;
 	while (key_ll)
 	{
-		if (!ft_strncmp(key_ll->key, key_str, ft_strlen(key_ll->key + 1)))
+		if (!ft_strncmp(key_ll->key, key_str, max(ft_strlen(key_ll->key), ft_strlen(key_str))))
 			return (key_ll);
 		key_ll = key_ll->next;
 	}
