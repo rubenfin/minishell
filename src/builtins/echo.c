@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/01 11:40:21 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/22 15:38:53 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/23 13:13:44 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,13 @@ void	echo(t_env_ll *env, char **arg)
 	i = 0;
 	x = 0;
 	j = 0;
-	if (!ft_strncmp(arg[0], "-n", 2))
+	if (!arg || !arg[0])
 	{
-		j++;
+		write(STDOUT_FILENO, "\n", 1);
+		return ;
 	}
+	if (!ft_strncmp(arg[0], "-n", 2))
+		j++;
 	while (arg[j])
 	{
 		if (ft_strchr(arg[j], '$'))

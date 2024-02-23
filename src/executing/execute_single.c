@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/07 16:36:54 by jade-haa      #+#    #+#                 */
-/*   Updated: 2024/02/22 17:00:11 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/23 13:57:06 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,8 @@ void	set_args(t_command **param, t_stream *iostream, int count)
 	while (i < count)
 	{
 		if (command->token == CMD)
-			iostream->args[i] = ft_strdup(command->string);
+			iostream->args[i++] = ft_strdup(command->string);
 		command = command->next;
-		++i;
 	}
 	iostream->args[i] = NULL;
 }
@@ -101,7 +100,7 @@ int	get_builtin(char *command, t_stream *param, t_env_ll **env)
 	}
 	if (ft_strncmp(command, "env", 4) == 0)
 	{
-		get_env(*env);
+		get_env(env, args);
 		return (1);
 	}
 	if (ft_strncmp(command, "exit", 5) == 0)

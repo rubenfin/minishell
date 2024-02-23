@@ -70,7 +70,7 @@ BUILTINS
 */
 void					cd(t_env_ll **env, char *directory);
 void					echo(t_env_ll *env, char **args);
-void					get_env(t_env_ll *env);
+void					get_env(t_env_ll **env, char **args);
 void					export(t_env_ll **env, char **export_data);
 void					pwd(t_env_ll *env);
 void					unset(t_env_ll **env, char **unset_data);

@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/14 15:38:30 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/22 14:10:11 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/23 13:38:06 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,17 @@
 
 void	handle_sigint(int sig)
 {
-	(void)sig;
-	rl_replace_line("", 1);
-	write(1, "\n", 1);
-	rl_on_new_line();
-	rl_redisplay();
+	if (sig == SIGINT)
+	{
+		rl_replace_line("", 0);
+		write(1, "\n", 1);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+	else if (sig == SIGQUIT)
+	{
+		return ;
+	}
 }
 
 int	minishell(t_env_ll **env, t_std_fd *std_fd)
@@ -58,6 +64,7 @@ int	main(int ac, char **av, char **envp)
 	status = 0;
 	(void)av;
 	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, handle_sigint);
 	if (ac == 1)
 	{
 		init_std_fd(&std_fd);

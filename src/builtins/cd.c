@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/30 12:09:22 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/22 15:27:42 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/23 14:19:40 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,19 @@ void	cd(t_env_ll **env, char *directory)
 		temp = node->value;
 		node = find_key(*env, "PWD");
 		node->value = temp;
+		return ;
+	}
+	if (!ft_strncmp(directory, "-", 1))
+	{
+		node = find_key(*env, "HOME");
+		temp = node->value;
+		node = find_key(*env, "PWD");
+		if (chdir(temp) == 0)
+		{
+			node->value = temp;
+			write(STDOUT_FILENO, temp, ft_strlen(temp));
+			write(STDOUT_FILENO, "\n", 1);
+		}
 		return ;
 	}
 	if (!ft_strncmp(directory, "..", 3))
