@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/09 12:35:32 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/22 15:12:45 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/25 11:42:03 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ char	**ll_to_2d_arr(t_env_ll *env)
 	{
 		key_w_equal = ft_strjoin(curr->key, "=");
 		envp[i] = ft_strjoin(key_w_equal, curr->value);
+		ft_free(&key_w_equal);
 		i++;
 		curr = curr->next;
 	}

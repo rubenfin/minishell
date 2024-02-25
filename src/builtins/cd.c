@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/30 12:09:22 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/25 11:14:27 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/25 11:30:39 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	last_slash(char *str)
 		i++;
 	}
 	if (x == 0)
-		x = 1;
+		return(1);
 	return (x);
 }
 
@@ -42,8 +42,8 @@ void	relative_path(t_env_ll **env, char *directory)
 	if (!directory)
 	{
 		node = find_key(*env, "HOME");
+		node->value = temp;
 		chdir(node->value);
-		temp = node->value;
 		node = find_key(*env, "PWD");
 		node->value = temp;
 		return ;

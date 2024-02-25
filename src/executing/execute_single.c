@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/07 16:36:54 by jade-haa      #+#    #+#                 */
-/*   Updated: 2024/02/25 11:04:18 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/25 11:41:33 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,8 +134,13 @@ void	execute_single(t_command **param, t_stream *iostream)
 		paths = get_path(env_from_ll);
 		cmd = set_valid_command(iostream->args[0], paths);
 		if (!cmd)
+		{
 			print_cmd_err(iostream->args[0]);
+		}
 		execve(cmd, iostream->args, env_from_ll);
+		free(cmd);
+		free_args(paths);
+		free_args(env_from_ll);
 		exit(127);
 	}
 }

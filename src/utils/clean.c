@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/14 18:56:11 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/22 14:09:09 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/25 11:37:04 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,5 +59,7 @@ void	free_args(char **args)
 	while (args[i])
 	{
 		free(args[i]);
+		i++;
 	}
+	free(args);
 }
