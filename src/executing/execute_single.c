@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/07 16:36:54 by jade-haa      #+#    #+#                 */
-/*   Updated: 2024/02/23 13:57:06 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/25 11:04:18 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,6 @@ int	check_builtin(char *arg)
 		return (1);
 	if (ft_strncmp(arg, "env", 4) == 0)
 		return (1);
-	if (ft_strncmp(arg, "exit", 5) == 0)
-		return (1);
 	return (0);
 }
 
@@ -103,8 +101,6 @@ int	get_builtin(char *command, t_stream *param, t_env_ll **env)
 		get_env(env, args);
 		return (1);
 	}
-	if (ft_strncmp(command, "exit", 5) == 0)
-		return (1);
 	return (0);
 }
 

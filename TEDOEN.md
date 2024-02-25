@@ -9,5 +9,7 @@
 - als cd path niet juist is /directory of directory juist printen
 - cd - fixen
 - segfault met spaces en tabs fixen
+- cd return value fixen
 
 env test moet -1 returnen
+
