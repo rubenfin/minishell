@@ -6,16 +6,23 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/01 11:28:19 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/22 15:27:29 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/26 14:22:41 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	pwd(t_env_ll *env)
+int	pwd(t_env_ll *env)
 {
-	t_env_ll *node;
-	node = find_key(env, "PWD");
-	write(1, node->value, ft_strlen(node->value));
-	write(1, "\n", 1);
+	(void)env;
+	char dir[PATH_MAX];
+	if (getcwd(dir, PATH_MAX))
+	{
+		write(STDOUT_FILENO, dir, ft_strlen(dir));
+		write(STDOUT_FILENO, "\n", 1);
+		return (0);
+	}
+	else
+		write(STDERR_FILENO, "ERROR\n", 6);
+	return (1);
 }

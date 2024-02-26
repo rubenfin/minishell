@@ -1,4 +1,4 @@
-CC = cc 
+CC = cc -fsanitize=address
 CFLAGS = -Wall -Wextra -Werror -g
 
 LDFLAGS =

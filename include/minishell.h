@@ -11,6 +11,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <linux/limits.h>
 
 typedef struct s_env_ll
 {
@@ -63,16 +64,17 @@ typedef struct t_command
 
 }						t_command;
 
+
 int						command_line(t_env_ll **env, char *arg);
 
 /*
 BUILTINS
 */
-void					cd(t_env_ll **env, char *directory);
+int						cd(t_env_ll **env, char *directory);
 void					echo(t_env_ll *env, char **args);
 void					get_env(t_env_ll **env, char **args);
 void					export(t_env_ll **env, char **export_data);
-void					pwd(t_env_ll *env);
+int						pwd(t_env_ll *env);
 void					unset(t_env_ll **env, char **unset_data);
 
 /*
@@ -139,4 +141,15 @@ void					free_args(char **args);
 /*
 UTILS / PRINT ERROR
 */
-void	print_cmd_err(char *cmd);
+void					print_cmd_err(char *cmd);
+void					print_file_dir_err(char *dir);
+
+/*
+UTILS / BUILTINS UTILS
+*/
+void					change_pwd(t_env_ll **env, char *change_value);
+char					*find_key_return_value(t_env_ll *env, char *key_str);
+void					get_key_change_value(t_env_ll **env, char *key_str,
+							char *change_value);
+void					find_key_free_value(t_env_ll **env, char *key_str);
+int						max(int a, int b);

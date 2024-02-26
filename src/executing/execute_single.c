@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/07 16:36:54 by jade-haa      #+#    #+#                 */
-/*   Updated: 2024/02/25 11:41:33 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/26 14:23:01 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,15 +75,9 @@ int	get_builtin(char *command, t_stream *param, t_env_ll **env)
 		return (1);
 	}
 	if (ft_strncmp(command, "cd", 3) == 0)
-	{
-		cd(env, args[0]);
-		return (1);
-	}
+		return (cd(env, args[0]));
 	if (ft_strncmp(command, "pwd", 4) == 0)
-	{
-		pwd(*env);
-		return (1);
-	}
+		return(pwd(*env));
 	if (ft_strncmp(command, "export", 7) == 0)
 	{
 		export(env, args);
@@ -111,8 +105,8 @@ void	execute_single(t_command **param, t_stream *iostream)
 	char		**env_from_ll;
 	char		**paths;
 	char		*cmd;
-	// int			i;
 
+	// int			i;
 	command = *param;
 	if (command->token == PIPE)
 		command = command->next;
@@ -124,10 +118,7 @@ void	execute_single(t_command **param, t_stream *iostream)
 	if (iostream->output != -1)
 		dup2(iostream->output, STDOUT_FILENO);
 	if (command->token == BUILTIN)
-	{
-		get_builtin(command->string, iostream, iostream->env);
-		exit(0);
-	}
+		exit(get_builtin(command->string, iostream, iostream->env));
 	else
 	{
 		env_from_ll = ll_to_2d_arr(*iostream->env);

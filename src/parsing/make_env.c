@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/09 12:35:32 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/25 11:42:03 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/26 10:01:20 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,13 +121,6 @@ void	make_env_ll(t_env_ll **env, char **envp)
 		i++;
 	}
 	*env = head;
-}
-int	max(int a, int b)
-{
-	if (a > b)
-		return (a);
-	else
-		return (b);
 }
 
 t_env_ll	*find_key(t_env_ll *env, char *key_str)

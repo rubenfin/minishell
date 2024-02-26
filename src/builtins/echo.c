@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/01 11:40:21 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/23 13:13:44 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/26 11:02:14 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	echo(t_env_ll *env, char **arg)
 	int			j;
 
 	node = NULL;
+	key = NULL;
 	i = 0;
 	x = 0;
 	j = 0;
@@ -48,6 +49,7 @@ void	echo(t_env_ll *env, char **arg)
 					if (node)
 						write(STDOUT_FILENO, node->value,
 							ft_strlen(node->value));
+					free(key);
 					break ;
 				}
 				i++;

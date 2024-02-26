@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/22 13:59:31 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/26 12:49:26 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ int	no_pipes(t_command *command, t_stream *iostream)
 	int		status;
 	int		i;
 	int		count;
-
+	bool	builtin;
+	builtin = false;
 	status = 0;
 	count = 0;
 	pid = 1;
@@ -44,7 +45,8 @@ int	no_pipes(t_command *command, t_stream *iostream)
 	{
 		execute(&command, iostream, false);
 		count = main_set_args(&command, iostream);
-		get_builtin(command->string, iostream, iostream->env);
+		status = get_builtin(command->string, iostream, iostream->env);
+		builtin = true;
 	}
 	else
 	{
@@ -61,7 +63,9 @@ int	no_pipes(t_command *command, t_stream *iostream)
 	free(iostream->args);
 	free(iostream->pipes);
 	free(iostream);
-	return (status);
+	if (builtin)
+		return (status);
+	return (check_status(status));
 }
 
 int	init_command_line(t_env_ll **env, t_stream **iostream, t_command **command,
@@ -113,7 +117,7 @@ int	command_line(t_env_ll **env, char *arg)
 	saved = command;
 	wait_total = total_pipes + 1;
 	if (!total_pipes)
-		return (check_status(no_pipes(command, iostream)));
+		return (no_pipes(command, iostream));
 	else
 	{
 		while (total_pipes > 0)

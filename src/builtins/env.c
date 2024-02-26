@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/01 13:18:28 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/23 13:58:40 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/26 15:07:54 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 
 void	get_env(t_env_ll **env, char **args)
 {
-	if (args[0])
-		export(env, args);
+	(void)args;
 	print_env_ll(*env);
 }
 

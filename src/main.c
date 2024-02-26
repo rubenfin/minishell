@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/14 15:38:30 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/25 10:57:31 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/26 12:14:29 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ int	minishell(t_env_ll **env, t_std_fd *std_fd)
 	while (1)
 	{
 		refresh_std_fd(std_fd);
-		
 		buffer = readline("~$ ");
 		rl_on_new_line();
 		if (!buffer)
