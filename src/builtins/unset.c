@@ -6,13 +6,13 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/02 11:26:09 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/22 15:13:11 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/27 13:56:12 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	unset(t_env_ll **env, char **unset_data)
+int	unset(t_env_ll **env, char **unset_data)
 {
 	t_env_ll	*node;
 	int			i;
@@ -22,7 +22,7 @@ void	unset(t_env_ll **env, char **unset_data)
 	{
 		node = find_key(*env, unset_data[i]);
 		if (!node)
-			return ;
+			return (EXIT_SUCCESS);
 		if (!node->prev)
 		{
 			*env = node->next;
@@ -39,6 +39,7 @@ void	unset(t_env_ll **env, char **unset_data)
 		free(node);
 		++i;
 	}
+	return (EXIT_SUCCESS);
 }
 
 // 0x12 -> shell -> zsh

@@ -11,3 +11,5 @@
 - segfault met spaces en tabs fixen
 - cd return value fixen
 
+ls -l | cat -e << eof | ls -l | cat -e, en dan STDIN closen krijg je segfault met fsantiize
+echo -na fewwefw

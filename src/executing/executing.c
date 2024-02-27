@@ -6,100 +6,97 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/06 12:55:18 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/22 16:41:34 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/27 13:21:36 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/get_next_line.h"
 #include "../../include/minishell.h"
 
-void	redirection_here(t_stream *iostream, t_command *command)
+int	redirection_here(t_stream *iostream, t_command *command)
 {
 	char	*limiter;
 	char	*buffer;
 	char	*str;
 	int		fd;
-	pid_t	pid;
 
 	buffer = NULL;
-	pid = fork();
-	if (pid == 0)
+	str = ft_strdup("");
+	limiter = ft_strjoin(command->string, "\n");
+	fd = open("objs/utils/.hd", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd == -1)
+		return (set_file_failure_return(iostream));
+	while (1)
 	{
-		str = ft_strdup("");
-		limiter = ft_strjoin(command->string, "\n");
-		while (access("objs/utils/.hd", F_OK) == 0)
-			;
-		fd = open("objs/utils/.hd", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (fd == -1)
-			printf("failed to open");
-		while (1)
+		write(STDOUT_FILENO, "> ", 2);
+		buffer = get_next_line(STDIN_FILENO);
+		if (!buffer || !ft_strncmp(buffer, limiter, ft_strlen(limiter)))
 		{
-			write(STDOUT_FILENO, "> ", 2);
-			buffer = get_next_line(STDIN_FILENO);
-			if (!ft_strncmp(buffer, limiter, ft_strlen(limiter)))
-			{
-				free(buffer);
-				break ;
-			}
-			str = ft_strjoin(str, buffer);
-			free(buffer);
-			buffer = NULL;
+			ft_free(&buffer);
+			break ;
 		}
-		write(fd, str, ft_strlen(str));
-		close(fd);
-		iostream->input = open("objs/utils/.hd", O_RDONLY);
+		str = ft_strjoin_gnl(str, buffer);
+		ft_free(&buffer);
 	}
-	else if (pid > 0)
-	{
-		wait(NULL);
-		unlink("objs/utils/.hd");
-		exit(0);
-	}
+	write(fd, str, ft_strlen(str));
+	close(fd);
+	iostream->input = open("objs/utils/.hd", O_RDONLY);
+	ft_free(&str);
+	ft_free(&limiter);
+	return (EXIT_SUCCESS);
 }
-void	redirection_in(t_stream *iostream, t_command *command)
+
+int	redirection_in(t_stream *iostream, t_command *command)
 {
 	if (access(command->string, F_OK) == -1 || access(command->string, R_OK) ==
 		-1)
 	{
-		write(STDOUT_FILENO, "bash: ", 6);
-		write(STDOUT_FILENO, command->string, ft_strlen(command->string));
-		write(STDOUT_FILENO, ": ", 2);
-		perror("");
-		exit(1);
+		print_file_dir_err(command->string);
+		return (set_file_failure_return(iostream));
 	}
 	iostream->input = open(command->string, O_RDONLY);
+	if (iostream->input == -1)
+	{
+		print_file_dir_err(command->string);
+		return (set_file_failure_return(iostream));
+	}
+	return (EXIT_SUCCESS);
 }
 
-void	redirection_out(t_stream *iostream, t_command *command)
+int	redirection_out(t_stream *iostream, t_command *command)
 {
 	if (access(command->string, F_OK) == 0 && access(command->string, W_OK) ==
 		-1)
 	{
-		errno = 13;
-		write(STDOUT_FILENO, "bash: ", 6);
-		write(STDOUT_FILENO, command->string, ft_strlen(command->string));
-		write(STDOUT_FILENO, ": ", 2);
-		perror("");
-		exit(1);
+		print_file_dir_err(command->string);
+		return (set_file_failure_return(iostream));
 	}
 	iostream->output = open(command->string, O_CREAT | O_WRONLY | O_TRUNC,
 			0644);
+	if (iostream->output == -1)
+	{
+		print_file_dir_err(command->string);
+		return (set_file_failure_return(iostream));
+	}
+	return (EXIT_SUCCESS);
 }
 
-void	redirection_append(t_stream *iostream, t_command *command)
+int	redirection_append(t_stream *iostream, t_command *command)
 {
 	if (access(command->string, F_OK) == 0 && access(command->string, W_OK) ==
 		-1)
 	{
-		errno = 13;
-		write(STDOUT_FILENO, "bash: ", 6);
-		write(STDOUT_FILENO, command->string, ft_strlen(command->string));
-		write(STDOUT_FILENO, ": ", 2);
-		perror("");
-		exit(1);
+		print_file_dir_err(command->string);
+		return (set_file_failure_return(iostream));
 	}
 	iostream->output = open(command->string, O_WRONLY | O_CREAT | O_APPEND,
 			0644);
+	if (iostream->output == -1)
+	{
+		print_file_dir_err(command->string);
+		return (set_file_failure_return(iostream));
+	}
+	return (EXIT_SUCCESS);
 }
 
 int	last_node(t_command **param)
@@ -116,10 +113,12 @@ int	last_node(t_command **param)
 	return (0);
 }
 
-void	execute(t_command **param, t_stream *iostream, bool child)
+int	execute(t_command **param, t_stream *iostream, bool child, int *pid)
 {
 	t_command	*command;
+	int			status;
 
+	status = 0;
 	command = *param;
 	if (command->token == PIPE && last_node(&command->next))
 		iostream->input = iostream->pipes->prev_read;
@@ -130,13 +129,29 @@ void	execute(t_command **param, t_stream *iostream, bool child)
 	while (command && command->token != PIPE)
 	{
 		if (command->token == RE_IN)
-			redirection_in(iostream, command);
+		{
+			status = redirection_in(iostream, command);
+			if (status)
+				return (status);
+		}
 		else if (command->token == RE_OUT)
-			redirection_out(iostream, command);
+		{
+			status = redirection_out(iostream, command);
+			if (status)
+				return (status);
+		}
 		else if (command->token == RE_APPEND)
-			redirection_append(iostream, command);
+		{
+			status = redirection_append(iostream, command);
+			if (status)
+				return (status);
+		}
 		else if (command->token == RE_HERE)
+		{
 			redirection_here(iostream, command);
+			if (status)
+				return (status);
+		}
 		command = command->next;
 	}
 	if (command)
@@ -145,5 +160,10 @@ void	execute(t_command **param, t_stream *iostream, bool child)
 			iostream->output = iostream->pipes->curr_write;
 	}
 	if (child == true)
-		execute_single(param, iostream);
+	{
+		*pid = fork();
+		if (*pid == 0)
+			execute_single(param, iostream);
+	}
+	return (0);
 }

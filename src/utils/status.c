@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/09 10:02:57 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/26 14:27:37 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/27 11:05:18 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,12 @@ int	check_status(int status)
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	return (127);
+}
+
+int set_file_failure_return(t_stream *iostream)
+{
+	iostream->file_failure = true;
+	return(EXIT_FAILURE);
 }
 
 void	close_pipes(t_pipes *pipes)

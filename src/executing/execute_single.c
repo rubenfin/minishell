@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/07 16:36:54 by jade-haa      #+#    #+#                 */
-/*   Updated: 2024/02/26 14:23:01 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/27 16:00:50 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ int	check_builtin(char *arg)
 		return (1);
 	if (ft_strncmp(arg, "env", 4) == 0)
 		return (1);
+	if (ft_strncmp(arg, "exit", 5) == 0)
+		return (1);
 	return (0);
 }
 
@@ -74,27 +76,20 @@ int	get_builtin(char *command, t_stream *param, t_env_ll **env)
 		echo(*env, args);
 		return (1);
 	}
-	if (ft_strncmp(command, "cd", 3) == 0)
+	else if (ft_strncmp(command, "cd", 3) == 0)
 		return (cd(env, args[0]));
-	if (ft_strncmp(command, "pwd", 4) == 0)
-		return(pwd(*env));
-	if (ft_strncmp(command, "export", 7) == 0)
-	{
-		export(env, args);
-		// print_env_ll(env);
-		return (1);
-	}
-	if (ft_strncmp(command, "unset", 6) == 0)
-	{
-		// printf("Werkt");
-		unset(env, args);
-		return (1);
-	}
-	if (ft_strncmp(command, "env", 4) == 0)
-	{
-		get_env(env, args);
-		return (1);
-	}
+	else if (ft_strncmp(command, "pwd", 4) == 0)
+		return (pwd(*env));
+	else if (ft_strncmp(command, "export", 7) == 0)
+		return (export(env, args));
+	else if (ft_strncmp(command, "unset", 6) == 0)
+		return (unset(env, args));
+	else if (ft_strncmp(command, "env", 4) == 0)
+		return (get_env(env, args));
+	else if (ft_strncmp(command, "env", 4) == 0)
+		return (get_env(env, args));
+	else if (ft_strncmp(command, "exit", 5) == 0)
+		return (get_exit(*env, args, param));
 	return (0);
 }
 
@@ -126,6 +121,8 @@ void	execute_single(t_command **param, t_stream *iostream)
 		cmd = set_valid_command(iostream->args[0], paths);
 		if (!cmd)
 		{
+			free_args(paths);
+			free_args(env_from_ll);
 			print_cmd_err(iostream->args[0]);
 		}
 		execve(cmd, iostream->args, env_from_ll);

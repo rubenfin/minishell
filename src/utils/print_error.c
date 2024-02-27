@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/22 16:56:29 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/26 11:26:08 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/27 11:12:33 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,28 @@
 
 void	print_cmd_err(char *cmd)
 {
-	printf("%s: command not found\n", cmd);
+	write(STDERR_FILENO, "minishell: ", 11);
+	write(STDERR_FILENO, cmd, ft_strlen(cmd));
+	write(STDERR_FILENO, ": command not found\n", 20);
 	exit(127);
 }
 
 void	print_file_dir_err(char *dir)
 {
-	write(1, "cd: ", 4);
-	write(1, dir, ft_strlen(dir));
-	write(1, ": No such file or directory\n", 28);
+	write(STDERR_FILENO, "minishell: ", 11);
+	write(STDERR_FILENO, "cd: ", 4);
+	write(STDERR_FILENO, dir, ft_strlen(dir));
+	write(STDERR_FILENO, ": No such file or directory\n", 28);
+}
+
+void	print_exit_err(char *buffer, bool numeric)
+{
+	if (numeric)
+		write(STDERR_FILENO, "minishell: exit: too many arguments\n", 37);
+	else
+	{
+		write(STDERR_FILENO, "minishell: exit: ", 17);
+		write(STDERR_FILENO, buffer, ft_strlen(buffer));
+		write(STDERR_FILENO, " :numeric argument required\n", 28);
+	}
 }

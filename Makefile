@@ -1,12 +1,12 @@
-CC = cc -fsanitize=address
-CFLAGS = -Wall -Wextra -Werror -g
+CC = cc
+CFLAGS = -Wall -Wextra -Werror
 
 LDFLAGS =
 ifeq ($(shell uname -s),Linux)
-    CFLAGS +=-fsanitize=leak
+    CC +=-fsanitize=leak
 endif
 ifdef FSAN
-    CFLAGS +=-fsanitize=address
+    CC +=-fsanitize=address
 endif
 ifdef BUG
     CFLAGS +=-g

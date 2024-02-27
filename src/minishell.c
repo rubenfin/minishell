@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/26 12:49:26 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/27 16:00:42 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,46 +26,60 @@ int	main_set_args(t_command **param, t_stream *iostream)
 	return (count);
 }
 
-int	no_pipes(t_command *command, t_stream *iostream)
+int	no_pipes(t_command *command, t_stream *iostream, bool *exit_called)
 {
 	pid_t	pid;
 	int		status;
-	int		i;
 	int		count;
 	bool	builtin;
+
 	builtin = false;
 	status = 0;
 	count = 0;
-	pid = 1;
+	pid = -1;
 	init_stream(&iostream);
 	if (command->token == BUILTIN && (ft_strncmp(command->string, "cd", 3) == 0
 			|| (ft_strncmp(command->string, "export", 7) == 0)
 			|| (ft_strncmp(command->string, "unset", 6) == 0)
-			|| (ft_strncmp(command->string, "exit", 5)) == 0))
+			|| (ft_strncmp(command->string, "exit", 4)) == 0))
 	{
-		execute(&command, iostream, false);
+		execute(&command, iostream, false, &pid);
 		count = main_set_args(&command, iostream);
 		status = get_builtin(command->string, iostream, iostream->env);
 		builtin = true;
+		if (iostream->has_exit_been_called)
+		{
+			*exit_called = true;
+			pid = fork();
+			if (pid == 0)
+			{
+				status = 0;
+				status = get_exit(*iostream->env, iostream->args, iostream);
+				exit(status);
+			}
+			else
+				waitpid(pid, &status, 0);
+
+		}
 	}
 	else
 	{
-		pid = fork();
-		if (pid == 0)
-			execute(&command, iostream, true);
-		else
-			waitpid(pid, &status, 0);
+		status = execute(&command, iostream, true, &pid);
+		if (iostream->file_failure)
+		{
+			free_ll_command(command, true);
+			free_iostream(&iostream, count);
+			return (status);
+		}
 	}
+	if (!builtin)
+		waitpid(pid, &status, 0);
 	free_ll_command(command, true);
-	i = -1;
-	while (++i < count)
-		free(iostream->args[i]);
-	free(iostream->args);
-	free(iostream->pipes);
-	free(iostream);
-	if (builtin)
+	free_iostream(&iostream, count);
+	if (builtin && !exit_called)
 		return (status);
-	return (check_status(status));
+	else
+		return (check_status(status));
 }
 
 int	init_command_line(t_env_ll **env, t_stream **iostream, t_command **command,
@@ -99,25 +113,28 @@ int	wait_for_processes(int pid, int wait_total)
 	return (status);
 }
 
-int	command_line(t_env_ll **env, char *arg)
+int	command_line(t_env_ll **env, char *arg, int exit_status, bool *exit)
 {
 	t_command	*command;
 	t_command	*until_pipe;
+	t_command	*saved;
 	t_stream	*iostream;
 	int			total_pipes;
 	pid_t		pid;
 	int			wait_total;
 	int			status;
-	t_command	*saved;
 
-	pid = 1;
+	status = 0;
+	pid = -1;
 	if (!arg || !arg[0])
 		return (0);
 	total_pipes = init_command_line(env, &iostream, &command, arg);
+	iostream->prev_exit_status = exit_status;
+	iostream->has_exit_been_called = false;
 	saved = command;
 	wait_total = total_pipes + 1;
 	if (!total_pipes)
-		return (no_pipes(command, iostream));
+		return (no_pipes(command, iostream, exit));
 	else
 	{
 		while (total_pipes > 0)
@@ -126,9 +143,7 @@ int	command_line(t_env_ll **env, char *arg)
 			init_pipe(iostream->pipes);
 			until_pipe = get_command_until_pipe(command);
 			command = get_command_from_pipe(command);
-			pid = fork();
-			if (pid == 0)
-				execute(&until_pipe, iostream, true);
+			execute(&until_pipe, iostream, true, &pid);
 			close(iostream->pipes->curr_write);
 			total_pipes--;
 			free_ll_command(until_pipe, false);
@@ -136,16 +151,14 @@ int	command_line(t_env_ll **env, char *arg)
 		close(iostream->pipes->curr_write);
 		init_stream(&iostream);
 		until_pipe = get_command_until_pipe(command);
-		pid = fork();
-		if (pid == 0)
-			execute(&until_pipe, iostream, true);
+		status = execute(&until_pipe, iostream, true, &pid);
+		if (iostream->file_failure)
+		{
+			free_all_close_pipes(saved, until_pipe, iostream, total_pipes);
+			return (status);
+		}
 	}
-	free_ll_command(until_pipe, false);
-	free_ll_command(saved, true);
 	status = wait_for_processes(pid, wait_total);
-	if (total_pipes)
-		close_pipes(iostream->pipes);
-	free(iostream->pipes);
-	free(iostream);
+	free_all_close_pipes(saved, until_pipe, iostream, total_pipes);
 	return (check_status(status));
 }

@@ -1,6 +1,7 @@
 #include "libft.h"
 #include <errno.h>
 #include <fcntl.h>
+#include <linux/limits.h>
 #include <readline/history.h>
 #include <readline/readline.h>
 #include <signal.h>
@@ -11,7 +12,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include <linux/limits.h>
 
 typedef struct s_env_ll
 {
@@ -32,6 +32,12 @@ typedef enum TOKEN
 	BUILTIN,
 }						TOKEN;
 
+// typedef struct s_general
+// {
+// 	int					prev_exit_status;
+// 	bool				has_exit_been_called;
+// }						t_general;
+
 typedef struct s_std_fd
 {
 	int					stdin_fd;
@@ -48,12 +54,14 @@ typedef struct s_pipes
 
 typedef struct s_stream
 {
-	char				**args;
 	t_env_ll			**env;
+	char				**args;
+	bool				file_failure;
 	int					input;
 	int					output;
 	t_pipes				*pipes;
-
+	int					prev_exit_status;
+	bool				has_exit_been_called;
 }						t_stream;
 
 typedef struct t_command
@@ -64,24 +72,26 @@ typedef struct t_command
 
 }						t_command;
 
-
-int						command_line(t_env_ll **env, char *arg);
+int						command_line(t_env_ll **env, char *arg, int exit_status,
+							bool *exit);
 
 /*
 BUILTINS
 */
 int						cd(t_env_ll **env, char *directory);
 void					echo(t_env_ll *env, char **args);
-void					get_env(t_env_ll **env, char **args);
-void					export(t_env_ll **env, char **export_data);
+int						get_env(t_env_ll **env, char **args);
+int						export(t_env_ll **env, char **export_data);
 int						pwd(t_env_ll *env);
-void					unset(t_env_ll **env, char **unset_data);
+int						unset(t_env_ll **env, char **unset_data);
+int						get_exit(t_env_ll *env, char **args,
+							t_stream *iostream);
 
 /*
 EXECUTING
 */
-void					execute(t_command **param, t_stream *iostream,
-							bool child);
+int						execute(t_command **param, t_stream *iostream,
+							bool child, int *pid);
 void					execute_single(t_command **param, t_stream *iostream);
 int						get_builtin(char *command, t_stream *param,
 							t_env_ll **env);
@@ -122,7 +132,7 @@ UTILS / STATUS
 */
 int						check_status(int status);
 void					close_pipes(t_pipes *pipes);
-
+int						set_file_failure_return(t_stream *iostream);
 /*
 UTILS / PRINT
 */
@@ -137,12 +147,17 @@ void					ft_free(char **buffer);
 void					free_ll(t_env_ll **env);
 void					free_ll_command(t_command *head, bool main_command);
 void					free_args(char **args);
+void					free_iostream(t_stream **iostream, int count);
+void					free_all_close_pipes(t_command *saved,
+							t_command *until_pipe, t_stream *iostream,
+							int total_pipes);
 
 /*
 UTILS / PRINT ERROR
 */
 void					print_cmd_err(char *cmd);
 void					print_file_dir_err(char *dir);
+void					print_exit_err(char *buffer, bool numeric);
 
 /*
 UTILS / BUILTINS UTILS
