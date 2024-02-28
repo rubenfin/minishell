@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/14 15:38:30 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/27 16:43:51 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/28 10:47:17 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ int	minishell(t_env_ll **env, t_std_fd *std_fd)
 		if (exit)
 			break ;
 		// free(prompt);
+		printf("last command status %d\n", status);
 	}
 	rl_clear_history();
 	ft_free(&buffer);
@@ -70,6 +71,7 @@ int	main(int ac, char **av, char **envp)
 		init_std_fd(&std_fd);
 		make_env_ll(&env, envp);
 		status = minishell(&env, std_fd);
+		printf("exited with %d\n", status);
 		free_ll(&env);
 		free(std_fd);
 		return (status);

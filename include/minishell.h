@@ -61,7 +61,6 @@ typedef struct s_stream
 	int					output;
 	t_pipes				*pipes;
 	int					prev_exit_status;
-	bool				has_exit_been_called;
 }						t_stream;
 
 typedef struct t_command
@@ -84,8 +83,7 @@ int						get_env(t_env_ll **env, char **args);
 int						export(t_env_ll **env, char **export_data);
 int						pwd(t_env_ll *env);
 int						unset(t_env_ll **env, char **unset_data);
-int						get_exit(t_env_ll *env, char **args,
-							t_stream *iostream);
+int						get_exit(t_env_ll *env, char **args);
 
 /*
 EXECUTING
@@ -95,6 +93,7 @@ int						execute(t_command **param, t_stream *iostream,
 void					execute_single(t_command **param, t_stream *iostream);
 int						get_builtin(char *command, t_stream *param,
 							t_env_ll **env);
+int						check_if_valid_exit(char **args);
 
 /*
 PARSING

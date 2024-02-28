@@ -6,58 +6,116 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/27 10:09:36 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/27 16:33:33 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/28 12:05:58 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-// int	check_if_valid_exit(char *buffer)
-// {
-// 	int	i;
-// 	int	total_spaces;
+static int	sign_count(char num)
+{
+	int	sign;
 
-// 	total_spaces = 0;
-// 	i = -1;
-// 	while (buffer[++i] == ' ')
-// 		;
-// 	while (buffer[i++])
-// 	{
-// 		if (buffer[i] == )
-// 	}
-// 	return (print_exit_err(buffer, 1), EXIT_FAILURE);
-// }
+	sign = 1;
+	if (num == '-')
+	{
+		sign = -1;
+	}
+	return (sign);
+}
 
-int	get_exit(t_env_ll *env, char **args, t_stream *iostream)
+long long	ft_atoll(const char *nptr)
+{
+	long long	value;
+	long long	sign;
+	char		*num;
+	long long	i;
+
+	i = 0;
+	value = 0;
+	sign = 1;
+	num = (char *)nptr;
+	while (num[i] == ' ' || (num[i] >= 9 && num[i] <= 13))
+	{
+		i++;
+	}
+	if (num[i] == '-' || num[i] == '+')
+	{
+		sign = sign_count(num[i]);
+		i++;
+	}
+	while (num[i] >= '0' && num[i] <= '9')
+	{
+		value = value * 10 + (num[i] - '0');
+		i++;
+	}
+	return (value * sign);
+}
+
+int	check_if_valid_exit(char **args)
+{
+	bool found_not_numeric;
+	int i;
+	int j;
+	int total_min_or_plus;
+
+	total_min_or_plus = 0;
+	found_not_numeric = false;
+	i = -1;
+	j = -1;
+
+	while (args[++i])
+	{
+		j = -1;
+		while (args[i][++j])
+		{
+			if (!ft_isdigit(args[i][j]) && (args[i][j] != '-'
+					&& args[i][j] != '+'))
+				found_not_numeric = true;
+			if (args[i][j] == '-' || args[i][j] == '+')
+				total_min_or_plus++;
+		}
+	}
+	if (i > 1)
+		return (0);
+	else if (found_not_numeric || total_min_or_plus > 1)
+		return (0);
+	return (1);
+}
+
+int	get_exit(t_env_ll *env, char **args)
 {
 	(void)env;
 
 	bool found_not_numeric;
+	int i;
+	int j;
+	int total_min_or_plus;
+
+	total_min_or_plus = 0;
 	found_not_numeric = false;
-	int i = -1;
-	int j = -1;
+	i = -1;
+	j = -1;
+
 	while (args[++i])
 	{
-		j = 0;
+		j = -1;
 		while (args[i][++j])
 		{
-			if (!ft_isdigit(args[i][j]))
+			if (!ft_isdigit(args[i][j]) && (args[i][j] != '-'
+					&& args[i][j] != '+'))
 				found_not_numeric = true;
+			if (args[i][j] == '-' || args[i][j] == '+')
+				total_min_or_plus++;
 		}
 	}
 	if (i > 1)
-	{
-		print_exit_err(args[0], false);
-		return (1);
-	}
-	else if (found_not_numeric)
-	{
-		print_exit_err(args[0], true);
-        return(2);
-	}
-	iostream->has_exit_been_called = true;
+		return (print_exit_err(args[0], false), 1);
+	else if (found_not_numeric || total_min_or_plus > 1)
+		return (print_exit_err(args[0], true), 2);
+
 	if (!args[0])
 		return (0);
 	else
-		return (ft_atoi(args[0]));
+		return (ft_atoll(args[0]));
 }

@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/27 16:35:02 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/28 11:19:04 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,20 +45,23 @@ int	no_pipes(t_command *command, t_stream *iostream, bool *exit_called)
 	{
 		execute(&command, iostream, false, &pid);
 		count = main_set_args(&command, iostream);
-		status = get_builtin(command->string, iostream, iostream->env);
-		builtin = true;
-		if (iostream->has_exit_been_called)
+		if ((ft_strncmp(command->string, "exit", 4)) == 0)
 		{
-			*exit_called = true;
+			if (check_if_valid_exit(iostream->args))
+				*exit_called = true;
 			pid = fork();
 			if (pid == 0)
 			{
-				status = 0;
-				status = get_exit(*iostream->env, iostream->args, iostream);
+				status = get_exit(*iostream->env, iostream->args);
 				exit(status);
 			}
 			else
 				waitpid(pid, &status, 0);
+		}
+		else
+		{
+			status = get_builtin(command->string, iostream, iostream->env);
+			builtin = true;
 		}
 	}
 	else
@@ -129,7 +132,6 @@ int	command_line(t_env_ll **env, char *arg, int exit_status, bool *exit)
 		return (0);
 	total_pipes = init_command_line(env, &iostream, &command, arg);
 	iostream->prev_exit_status = exit_status;
-	iostream->has_exit_been_called = false;
 	saved = command;
 	wait_total = total_pipes + 1;
 	if (!total_pipes)
