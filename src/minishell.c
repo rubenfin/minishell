@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/28 11:19:04 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/29 16:55:14 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,7 @@ int	no_pipes(t_command *command, t_stream *iostream, bool *exit_called)
 	count = 0;
 	pid = -1;
 	init_stream(&iostream);
-	if (command->token == BUILTIN && (ft_strncmp(command->string, "cd", 3) == 0
-			|| (ft_strncmp(command->string, "export", 7) == 0)
-			|| (ft_strncmp(command->string, "unset", 6) == 0)
-			|| (ft_strncmp(command->string, "exit", 4)) == 0))
+	if (command->token == BUILTIN)
 	{
 		execute(&command, iostream, false, &pid);
 		count = main_set_args(&command, iostream);
@@ -78,7 +75,7 @@ int	no_pipes(t_command *command, t_stream *iostream, bool *exit_called)
 		waitpid(pid, &status, 0);
 	free_ll_command(command, true);
 	free_iostream(&iostream, count);
-	if (builtin && !exit_called)
+	if (builtin)
 		return (status);
 	else
 		return (check_status(status));

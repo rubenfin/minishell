@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/09 15:51:29 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/22 16:55:59 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/29 16:49:50 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,19 @@ char	*set_valid_command(char *argv, char **full_path)
 	ft_strlcpy(trimmed_command, argv, len);
 	trimmed_command[len] = '\0';
 	j = 0;
+	if (!argv[0])
+		return (free(trimmed_command), NULL);
+	if (argv[0] == '.' && argv[1] == '/')
+	{
+		if (access(argv, F_OK) != 0)
+			return (free(trimmed_command), NULL);
+		else if (access(argv, X_OK) != 0)
+		{
+			printf("minishell: filename: Permission denied\n");
+			free(trimmed_command);
+			exit(126);
+		}
+	}
 	if (access(argv, X_OK) == 0)
 		return (argv);
 	while (full_path[j])
