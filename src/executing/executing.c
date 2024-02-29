@@ -6,12 +6,13 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/06 12:55:18 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/27 13:21:36 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/02/28 13:14:07 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/get_next_line.h"
 #include "../../include/minishell.h"
+
 
 int	redirection_here(t_stream *iostream, t_command *command)
 {
