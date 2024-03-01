@@ -13,3 +13,4 @@
 
 ls -l | cat -e << eof | ls -l | cat -e, en dan STDIN closen krijg je segfault met fsantiize
 echo -na fewwefw
+export test="echo hallo" werkt nog niet

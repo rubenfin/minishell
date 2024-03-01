@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/29 16:55:14 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/01 15:39:53 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,19 @@ int	main_set_args(t_command **param, t_stream *iostream)
 	return (count);
 }
 
+int	check_parent_builtin(char *str)
+{
+	if (ft_strncmp(str, "exit", 4) == 0)
+		return (1);
+	if (ft_strncmp(str, "unset", 6) == 0)
+		return (1);
+	if (ft_strncmp(str, "export", 7) == 0)
+		return (1);
+	if (ft_strncmp(str, "cd", 3) == 0)
+		return (1);
+	return (0);
+}
+
 int	no_pipes(t_command *command, t_stream *iostream, bool *exit_called)
 {
 	pid_t	pid;
@@ -38,7 +51,7 @@ int	no_pipes(t_command *command, t_stream *iostream, bool *exit_called)
 	count = 0;
 	pid = -1;
 	init_stream(&iostream);
-	if (command->token == BUILTIN)
+	if (command->token == BUILTIN && check_parent_builtin(command->string))
 	{
 		execute(&command, iostream, false, &pid);
 		count = main_set_args(&command, iostream);

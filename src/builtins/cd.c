@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/30 12:09:22 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/26 15:00:11 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/01 15:33:50 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,9 @@ char	*removed_slash_back(char *dir)
 	char	*clean_dir;
 	int		i;
 
-	i = ft_strlen(dir) - 1;
+	i = ft_strlen(dir);
+	if (dir[i] != '/')
+		return (ft_strndup(dir, i));
 	while (i > 0)
 	{
 		if (dir[i] == '/' && (!dir[i - 1] || ft_isalnum(dir[i - 1])))
@@ -110,7 +112,7 @@ char	*removed_slash_back(char *dir)
 		i--;
 	}
 	if (i == 0)
-		return(ft_strdup("/"));
+		return (ft_strdup("/"));
 	clean_dir = ft_strndup(dir, i);
 	return (clean_dir);
 }
