@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/06 12:55:18 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/28 13:14:07 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/01 19:58:22 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,13 @@ int	redirection_in(t_stream *iostream, t_command *command)
 	if (access(command->string, F_OK) == -1 || access(command->string, R_OK) ==
 		-1)
 	{
-		print_file_dir_err(command->string);
+		print_file_dir_err(command->string, false);
 		return (set_file_failure_return(iostream));
 	}
 	iostream->input = open(command->string, O_RDONLY);
 	if (iostream->input == -1)
 	{
-		print_file_dir_err(command->string);
+		print_file_dir_err(command->string, false);
 		return (set_file_failure_return(iostream));
 	}
 	return (EXIT_SUCCESS);
@@ -69,14 +69,15 @@ int	redirection_out(t_stream *iostream, t_command *command)
 	if (access(command->string, F_OK) == 0 && access(command->string, W_OK) ==
 		-1)
 	{
-		print_file_dir_err(command->string);
+		printf("here\n");
+		print_file_dir_err(command->string, false);
 		return (set_file_failure_return(iostream));
 	}
 	iostream->output = open(command->string, O_CREAT | O_WRONLY | O_TRUNC,
 			0644);
 	if (iostream->output == -1)
 	{
-		print_file_dir_err(command->string);
+		print_file_dir_err(command->string, false);
 		return (set_file_failure_return(iostream));
 	}
 	return (EXIT_SUCCESS);
@@ -87,14 +88,14 @@ int	redirection_append(t_stream *iostream, t_command *command)
 	if (access(command->string, F_OK) == 0 && access(command->string, W_OK) ==
 		-1)
 	{
-		print_file_dir_err(command->string);
+		print_file_dir_err(command->string, false);
 		return (set_file_failure_return(iostream));
 	}
 	iostream->output = open(command->string, O_WRONLY | O_CREAT | O_APPEND,
 			0644);
 	if (iostream->output == -1)
 	{
-		print_file_dir_err(command->string);
+		print_file_dir_err(command->string, false);
 		return (set_file_failure_return(iostream));
 	}
 	return (EXIT_SUCCESS);

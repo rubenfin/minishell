@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/30 12:09:22 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/01 15:33:50 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/01 19:59:22 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	relative_path(t_env_ll **env, char *directory)
 	path = ft_strjoin(node->value, directory);
 	if (chdir(path) == -1)
 	{
-		print_file_dir_err(directory);
+		print_file_dir_err(directory, true);
 		ft_free(&directory);
 		ft_free(&path);
 		return (1);
@@ -146,7 +146,7 @@ int	absolute_path(t_env_ll **env, char *directory)
 	}
 	else
 	{
-		print_file_dir_err(directory);
+		print_file_dir_err(directory, true);
 		ft_free(&dir_no_slash);
 		return (1);
 	}
@@ -154,12 +154,20 @@ int	absolute_path(t_env_ll **env, char *directory)
 	return (0);
 }
 
-int	cd(t_env_ll **env, char *directory)
+int	cd(t_env_ll **env, char **directory)
 {
-	if (!directory || directory[0] != '/')
-		return (relative_path(env, directory));
+	int	count;
+
+	count = 0;
+	while (directory[count])
+		count++;
+	if (count > 1)
+		return (write(STDERR_FILENO, "minishell: cd: too many arguments\n",
+				34), 1);
+	if (!directory[0] || directory[0][0] != '/')
+		return (relative_path(env, directory[0]));
 	else
-		return (absolute_path(env, directory));
+		return (absolute_path(env, directory[0]));
 }
 
 // int	main(void)

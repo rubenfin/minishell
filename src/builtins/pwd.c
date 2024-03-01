@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/01 11:28:19 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/26 14:22:41 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/01 18:56:51 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int	pwd(t_env_ll *env)
 		return (0);
 	}
 	else
-		write(STDERR_FILENO, "ERROR\n", 6);
+		write(STDERR_FILENO,
+			"minishell: error: failed to get current working directory\n", 38);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/27 10:09:36 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/28 12:05:58 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/01 19:01:09 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,23 +54,22 @@ long long	ft_atoll(const char *nptr)
 
 int	check_if_valid_exit(char **args)
 {
-	bool found_not_numeric;
-	int i;
-	int j;
-	int total_min_or_plus;
+	bool	found_not_numeric;
+	int		i;
+	int		j;
+	int		total_min_or_plus;
 
 	total_min_or_plus = 0;
 	found_not_numeric = false;
 	i = -1;
 	j = -1;
-
 	while (args[++i])
 	{
 		j = -1;
 		while (args[i][++j])
 		{
-			if (!ft_isdigit(args[i][j]) && (args[i][j] != '-'
-					&& args[i][j] != '+'))
+			if ((!ft_isdigit(args[i][j]) && (args[i][j] != '-'
+					&& args[i][j] != '+') ))
 				found_not_numeric = true;
 			if (args[i][j] == '-' || args[i][j] == '+')
 				total_min_or_plus++;
@@ -102,8 +101,8 @@ int	get_exit(t_env_ll *env, char **args)
 		j = -1;
 		while (args[i][++j])
 		{
-			if (!ft_isdigit(args[i][j]) && (args[i][j] != '-'
-					&& args[i][j] != '+'))
+			if ((!ft_isdigit(args[i][j]) && (args[i][j] != '-'
+					&& args[i][j] != '+')))
 				found_not_numeric = true;
 			if (args[i][j] == '-' || args[i][j] == '+')
 				total_min_or_plus++;

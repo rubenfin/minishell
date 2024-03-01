@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/01 15:39:53 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/01 19:16:36 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,37 @@ int	main_set_args(t_command **param, t_stream *iostream)
 	return (count);
 }
 
+int	do_exit(t_stream *iostream, bool *exit_called)
+{
+	pid_t	pid;
+	int		status;
+
+	status = 0;
+	pid = -1;
+	if (check_if_valid_exit(iostream->args))
+		*exit_called = true;
+	pid = fork();
+	if (pid == 0)
+	{
+		status = get_exit(*iostream->env, iostream->args);
+		exit(status);
+	}
+	else
+		waitpid(pid, &status, 0);
+	return (status);
+}
 int	check_parent_builtin(char *str)
 {
-	if (ft_strncmp(str, "exit", 4) == 0)
+	if (ft_strncmp(str, "exit", 5) == 0)
 		return (1);
-	if (ft_strncmp(str, "unset", 6) == 0)
+	else if (ft_strncmp(str, "unset", 6) == 0)
 		return (1);
-	if (ft_strncmp(str, "export", 7) == 0)
+	else if (ft_strncmp(str, "export", 7) == 0)
 		return (1);
-	if (ft_strncmp(str, "cd", 3) == 0)
+	else if (ft_strncmp(str, "cd", 3) == 0)
 		return (1);
-	return (0);
+	else
+		return (0);
 }
 
 int	no_pipes(t_command *command, t_stream *iostream, bool *exit_called)
@@ -56,18 +76,7 @@ int	no_pipes(t_command *command, t_stream *iostream, bool *exit_called)
 		execute(&command, iostream, false, &pid);
 		count = main_set_args(&command, iostream);
 		if ((ft_strncmp(command->string, "exit", 4)) == 0)
-		{
-			if (check_if_valid_exit(iostream->args))
-				*exit_called = true;
-			pid = fork();
-			if (pid == 0)
-			{
-				status = get_exit(*iostream->env, iostream->args);
-				exit(status);
-			}
-			else
-				waitpid(pid, &status, 0);
-		}
+			status = do_exit(iostream, exit_called);
 		else
 		{
 			status = get_builtin(command->string, iostream, iostream->env);

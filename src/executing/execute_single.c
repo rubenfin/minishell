@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/07 16:36:54 by jade-haa      #+#    #+#                 */
-/*   Updated: 2024/02/28 11:11:49 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/01 20:06:56 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,15 +69,11 @@ int	get_builtin(char *command, t_stream *param, t_env_ll **env)
 {
 	char	**args;
 
-	// char	*command;
 	args = param->args;
 	if (ft_strncmp(command, "echo", 5) == 0)
-	{
-		echo(*env, args);
-		return (1);
-	}
+		return(echo(*env, args), 0);
 	else if (ft_strncmp(command, "cd", 3) == 0)
-		return (cd(env, args[0]));
+		return (cd(env, args));
 	else if (ft_strncmp(command, "pwd", 4) == 0)
 		return (pwd(*env));
 	else if (ft_strncmp(command, "export", 7) == 0)
@@ -116,6 +112,7 @@ void	execute_single(t_command **param, t_stream *iostream)
 		exit(get_builtin(command->string, iostream, iostream->env));
 	else
 	{
+		check_dir_exe(iostream->args[0]);
 		env_from_ll = ll_to_2d_arr(*iostream->env);
 		paths = get_path(env_from_ll);
 		cmd = set_valid_command(iostream->args[0], paths);

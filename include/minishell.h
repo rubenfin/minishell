@@ -1,4 +1,5 @@
 #include "libft.h"
+#include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <linux/limits.h>
@@ -77,7 +78,7 @@ int						command_line(t_env_ll **env, char *arg, int exit_status,
 /*
 BUILTINS
 */
-int						cd(t_env_ll **env, char *directory);
+int						cd(t_env_ll **env, char **directory);
 void					echo(t_env_ll *env, char **args);
 int						get_env(t_env_ll **env, char **args);
 int						export(t_env_ll **env, char **export_data);
@@ -155,7 +156,7 @@ void					free_all_close_pipes(t_command *saved,
 UTILS / PRINT ERROR
 */
 void					print_cmd_err(char *cmd);
-void					print_file_dir_err(char *dir);
+void					print_file_dir_err(char *dir, bool cd);
 void					print_exit_err(char *buffer, bool numeric);
 
 /*
@@ -167,3 +168,6 @@ void					get_key_change_value(t_env_ll **env, char *key_str,
 							char *change_value);
 void					find_key_free_value(t_env_ll **env, char *key_str);
 int						max(int a, int b);
+
+int						dir_check(char *argv);
+void					check_dir_exe(char *argv);

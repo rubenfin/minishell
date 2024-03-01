@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/22 16:56:29 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/27 16:28:01 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/01 19:53:11 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,11 @@ void	print_cmd_err(char *cmd)
 	exit(127);
 }
 
-void	print_file_dir_err(char *dir)
+void	print_file_dir_err(char *dir, bool cd)
 {
 	write(STDERR_FILENO, "minishell: ", 11);
-	write(STDERR_FILENO, "cd: ", 4);
+	if (cd)
+		write(STDERR_FILENO, "cd: ", 4);
 	write(STDERR_FILENO, dir, ft_strlen(dir));
 	write(STDERR_FILENO, ": No such file or directory\n", 28);
 }

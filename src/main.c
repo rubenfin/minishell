@@ -25,7 +25,7 @@ int	minishell(t_env_ll **env, t_std_fd *std_fd)
 	{
 		refresh_std_fd(std_fd);
 	
-		buffer = readline("~$ ");
+		buffer = readline("~$: ");
 		rl_on_new_line();
 		if (!buffer)
 			break ;

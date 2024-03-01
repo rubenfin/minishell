@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/09 15:51:29 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/01 15:54:37 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/01 20:48:53 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,43 @@ int	valid_command(char *argv, char **full_path)
 	return (0);
 }
 
+int	dir_check(char *argv)
+{
+	DIR	*p;
+
+	p = opendir(argv);
+	if (p)
+	{
+		write(STDOUT_FILENO, "minishell: ", 12);
+		write(STDOUT_FILENO, argv, ft_strlen(argv));
+		write(STDOUT_FILENO, ": Is a directory\n", 17);
+		closedir(p);
+		exit(126);
+	}
+	else
+		print_file_dir_err(argv, false);
+	exit(127);
+}
+
+void	check_dir_exe(char *argv)
+{
+	if (argv[0] == '/')
+		dir_check(argv);
+	if ((argv[0] == '.' && argv[1] == '/'))
+	{
+		if (access(argv, F_OK) != 0)
+		{
+			print_file_dir_err(argv, false);
+			exit(127);
+		}
+		else if (access(argv, X_OK) != 0)
+		{
+			printf("minishell: filename: Permission denied\n");
+			exit(126);
+		}
+		dir_check(argv);
+	}
+}
 char	*set_valid_command(char *argv, char **full_path)
 {
 	int		j;
@@ -94,19 +131,6 @@ char	*set_valid_command(char *argv, char **full_path)
 	j = 0;
 	if (!argv[0])
 		return (free(trimmed_command), NULL);
-	if (argv[0] == '/')
-		return(argv);
-	if ((argv[0] == '.' && argv[1] == '/'))
-	{
-		if (access(argv, F_OK) != 0)
-			return (free(trimmed_command), NULL);
-		else if (access(argv, X_OK) != 0)
-		{
-			printf("minishell: filename: Permission denied\n");
-			free(trimmed_command);
-			exit(126);
-		}
-	}
 	if (access(argv, X_OK) == 0)
 		return (argv);
 	while (full_path[j])
