@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/09 15:51:29 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/29 16:49:50 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/01 15:54:37 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,9 @@ char	*set_valid_command(char *argv, char **full_path)
 	j = 0;
 	if (!argv[0])
 		return (free(trimmed_command), NULL);
-	if (argv[0] == '.' && argv[1] == '/')
+	if (argv[0] == '/')
+		return(argv);
+	if ((argv[0] == '.' && argv[1] == '/'))
 	{
 		if (access(argv, F_OK) != 0)
 			return (free(trimmed_command), NULL);
