@@ -33,12 +33,6 @@ typedef enum TOKEN
 	BUILTIN,
 }						TOKEN;
 
-// typedef struct s_general
-// {
-// 	int					prev_exit_status;
-// 	bool				has_exit_been_called;
-// }						t_general;
-
 typedef struct s_std_fd
 {
 	int					stdin_fd;

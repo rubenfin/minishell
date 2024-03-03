@@ -20,7 +20,6 @@ int	minishell(t_env_ll **env, t_std_fd *std_fd)
 
 	exit = false;
 	status = 0;
-	// char	*prompt;
 	while (1)
 	{
 		refresh_std_fd(std_fd);
@@ -28,16 +27,12 @@ int	minishell(t_env_ll **env, t_std_fd *std_fd)
 		rl_on_new_line();
 		if (!buffer)
 			break ;
-		if (buffer && !ft_strncmp(buffer, "exit", 5))
-			break ;
-		// return(get_exit(buffer));
 		status = command_line(env, buffer, status, &exit);
 		if (buffer && ft_strlen(buffer) > 0)
 			add_history(buffer);
 		ft_free(&buffer);
 		if (exit)
 			break ;
-		// free(prompt);
 		printf("last command status %d\n", status);
 	}
 	rl_clear_history();
@@ -65,6 +60,5 @@ int	main(int ac, char **av, char **envp)
 		return (status);
 	}
 	else
-		return (printf("usage: ./minishell\n"), EXIT_FAILURE);
-	return (0);
+		return (write(STDERR_FILENO, "usage: ./minishell\n", 19), EXIT_FAILURE);
 }
