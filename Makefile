@@ -48,7 +48,7 @@ re: fclean all
 
 $(NAME): $(OBJS_DIR) $(OBJ)
 	$(CC) -o $(NAME) $(OBJ) $(LDFLAGS) $(LINKERFLAGS) src/libft.a -lreadline 
-	@echo "$(GREEN)Compiled mandatory!$(DEFAULT)"
+	@echo "$(GREEN)Compiled minishell!$(DEFAULT)"
 
 $(OBJS_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(shell dirname $@)
