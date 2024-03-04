@@ -96,7 +96,7 @@ PARSING
 t_command				*createnode(t_command **head, char *data,
 							int redirection);
 char					*set_valid_command(char *argv, char **full_path);
-t_command				*init_redirections(char *str, t_command **param);
+int	init_redirections(char *str, t_command **param, t_env_ll **env);
 void					make_env_ll(t_env_ll **env, char **envp);
 t_env_ll				*find_key(t_env_ll *env, char *key_str);
 t_env_ll				*find_value(t_env_ll *env, char *value_str);
@@ -161,6 +161,7 @@ char					*find_key_return_value(t_env_ll *env, char *key_str);
 void					get_key_change_value(t_env_ll **env, char *key_str,
 							char *change_value);
 void					find_key_free_value(t_env_ll **env, char *key_str);
+char					*find_value_char(t_env_ll *env, char *value_str);
 int						max(int a, int b);
 
 int						dir_check(char *argv);

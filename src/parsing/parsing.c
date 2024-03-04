@@ -1,17 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   parsing.c                                          :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/02/08 15:55:14 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/22 14:33:44 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/08 15:55:14 by rfinneru          #+#    #+#             */
+/*   Updated: 2024/03/04 11:59:38 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
+char	*find_value_char(t_env_ll *env, char *value_str)
+{
+	t_env_ll *value_ll = env;
+	while (value_ll)
+	{
+			// printf("%s\n", value_ll->value);
+		if (!ft_strncmp(value_ll->key, value_str, ft_strlen(value_str)))
+		{
+			return (value_ll->value);
+		}
+		value_ll = value_ll->next;
+	}
+	return (NULL);
+}
 int	redirection_checker_int(char *str, int i, int check_all)
 {
 	if (check_all)
@@ -72,7 +86,7 @@ char	*find_flag(char *command)
 int	check_first_cmd(char *str, int i)
 {
 	if (i == -1)
-		return(1);
+		return (1);
 	while (str[i])
 	{
 		if (i == 0)
@@ -85,20 +99,66 @@ int	check_first_cmd(char *str, int i)
 	}
 	return (1);
 }
-void	set_node(t_command **param, char *str, int redirection, int len)
+
+int	dollar_sign_check(char *result)
 {
-	char		*result;
+	int	i;
+
+	i = 0;
+	while (result[i])
+	{
+		if (ft_strncmp(&result[i], "$", 1) == 0)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+char	*expanding(char *result, t_env_ll **env)
+{
+	int	i;
+
+	i = 0;
+	if (ft_strncmp(&result[0], "$", 1) == 0)
+	{
+		++i;
+		result = find_value_char(*env, &result[i]);
+		return (ft_strdup(result));
+	}
+	while (result[i])
+	{
+		if (ft_strncmp(&result[i], "$", 1) == 0)
+			return (ft_substr(result, 0, i));
+		i++;
+	}
+	return (NULL);
+}
+void	set_node(t_command **param, char *str, int redirection, int len,
+		t_env_ll **env)
+{
+	char	*result;
 
 	if (len > 0)
 	{
 		result = ft_substr(str, 0, len);
-		// if (redirection == CMD && check_first_cmd(&str[0], len)
-		// 	&& check_builtin(result))
-		// 	printf("valid builtin!! == %c\n", str[0]);
-		createnode(param, result, redirection);
+		// printf("%s\n", result);
+		if (dollar_sign_check(result))
+		{
+			// printf("dollar_sign\n");
+			result = expanding(result, env);
+			redirection = CMD;
+			createnode(param, result, redirection);
+		}
+		else
+		{
+			// printf("normale\n");
+			result = ft_substr(str, 0, len);
+			createnode(param, result, redirection);
+		}
+		// printf("end result == %s\n\n\n", result);
 	}
 }
-int	quote_check(t_command **param, char *str)
+int	quote_check(t_command **param, char *str, t_env_ll **env)
 {
 	int		i;
 	int		len;
@@ -107,30 +167,48 @@ int	quote_check(t_command **param, char *str)
 	qoute = str[0];
 	i = 1;
 	len = 0;
-	while (str[i])
+	while (str && str[i])
 	{
-		if (str[i] == qoute)
+		if (str[i] && str[i] == qoute)
 		{
-			set_node(param, &str[1], 0, len);
+			set_node(param, &str[1], 0, len, env);
 			return (i + 1);
 		}
 		++len;
 		++i;
 	}
-	exit(EXIT_FAILURE);
 	return (0);
 }
 
-t_command	*init_redirections(char *str, t_command **param)
+int	empty_check(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str || !str[0])
+		return (0);
+	while (str[i])
+	{
+		if (str[i] != ' ')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	init_redirections(char *str, t_command **param, t_env_ll **env)
 {
 	int			i;
 	t_command	*command;
 	int			len;
 	int			redirection;
+	char		*test;
 
 	// char *result;
 	i = 0;
 	command = *param;
+	if (!empty_check(str))
+		return (0);
 	while (str[i])
 	{
 		redirection = CMD;
@@ -138,32 +216,31 @@ t_command	*init_redirections(char *str, t_command **param)
 		while (str[i] && (str[i] == ' ' || redirection_checker_bool(&str[i], 0,
 					0)))
 		{
-			// printf("werkt");
 			if (redirection_checker_bool(&str[i], 0, 0) && redirection == CMD)
 				redirection = redirection_checker_int(&str[i], 0, 0);
 			++i;
 			if (str[i] == '\"' || str[i] == '\'')
 			{
-				// printf("%c\n", str[i]);
-				i += quote_check(param, &str[i]);
+				i += quote_check(param, &str[i], env);
 				break ;
 			}
 		}
-		if (ft_strncmp(&str[i], "|", 1) == 0)
+		if (str && ft_strncmp(&str[i], "|", 1) == 0)
 			redirection = PIPE;
-		while (str[i + len] && (str[i + len] != ' '))
+		while (str && str[i + len] && (str[i + len] != ' '))
 		{
 			++len;
 			if (redirection == PIPE || redirection_checker_bool(&str[i + len],
 					0, 1))
 				break ;
 		}
-		char *test = ft_substr(&str[i], 0, len);
-		if (redirection == CMD && check_first_cmd(str, i - 1) && check_builtin(test))
+		test = ft_substr(&str[i], 0, len);
+		if (redirection == CMD && check_first_cmd(str, i - 1)
+			&& check_builtin(test))
 			redirection = BUILTIN;
-		set_node(param, &str[i], redirection, len);
+		set_node(param, &str[i], redirection, len, env);
 		i += len;
 		free(test);
 	}
-	return (command);
+	return (1);
 }

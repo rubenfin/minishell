@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   minishell.c                                        :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/01 19:16:36 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   minishell.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/08 13:04:05 by rfinneru          #+#    #+#             */
+/*   Updated: 2024/03/04 12:07:46 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,8 @@ int	init_command_line(t_env_ll **env, t_stream **iostream, t_command **command,
 
 	malloc_stream(iostream, env);
 	*command = NULL;
-	init_redirections(arg, command);
+	if (init_redirections(arg, command, env) == 0)
+		return (-1);
 	total = pipe_check(*command);
 	return (total);
 }
@@ -150,6 +151,8 @@ int	command_line(t_env_ll **env, char *arg, int exit_status, bool *exit)
 	if (!arg || !arg[0])
 		return (0);
 	total_pipes = init_command_line(env, &iostream, &command, arg);
+	if (total_pipes == -1)
+		return(0);
 	iostream->prev_exit_status = exit_status;
 	saved = command;
 	wait_total = total_pipes + 1;
