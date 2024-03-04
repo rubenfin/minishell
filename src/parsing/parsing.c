@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/08 15:55:14 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/03/04 11:59:38 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   parsing.c                                          :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/02/08 15:55:14 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/03/04 12:56:13 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,12 @@
 
 char	*find_value_char(t_env_ll *env, char *value_str)
 {
-	t_env_ll *value_ll = env;
+	t_env_ll	*value_ll;
+
+	value_ll = env;
 	while (value_ll)
 	{
-			// printf("%s\n", value_ll->value);
+		// printf("%s\n", value_ll->value);
 		if (!ft_strncmp(value_ll->key, value_str, ft_strlen(value_str)))
 		{
 			return (value_ll->value);
@@ -136,16 +138,18 @@ char	*expanding(char *result, t_env_ll **env)
 void	set_node(t_command **param, char *str, int redirection, int len,
 		t_env_ll **env)
 {
+	char	*check;
 	char	*result;
 
 	if (len > 0)
 	{
-		result = ft_substr(str, 0, len);
+		check = ft_substr(str, 0, len);
 		// printf("%s\n", result);
-		if (dollar_sign_check(result))
+		if (dollar_sign_check(check))
 		{
 			// printf("dollar_sign\n");
-			result = expanding(result, env);
+			result = expanding(check, env);
+			ft_free(&check);
 			redirection = CMD;
 			createnode(param, result, redirection);
 		}
@@ -155,6 +159,7 @@ void	set_node(t_command **param, char *str, int redirection, int len,
 			result = ft_substr(str, 0, len);
 			createnode(param, result, redirection);
 		}
+		ft_free(&check);
 		// printf("end result == %s\n\n\n", result);
 	}
 }
@@ -198,11 +203,11 @@ int	empty_check(char *str)
 
 int	init_redirections(char *str, t_command **param, t_env_ll **env)
 {
-	int			i;
-	t_command	*command;
-	int			len;
-	int			redirection;
-	char		*test;
+	int i;
+	t_command *command;
+	int len;
+	int redirection;
+	char *test;
 
 	// char *result;
 	i = 0;
