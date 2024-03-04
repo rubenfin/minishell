@@ -96,7 +96,8 @@ PARSING
 t_command				*createnode(t_command **head, char *data,
 							int redirection);
 char					*set_valid_command(char *argv, char **full_path);
-int	init_redirections(char *str, t_command **param, t_env_ll **env);
+int						init_redirections(char *str, t_command **param,
+							t_env_ll **env);
 void					make_env_ll(t_env_ll **env, char **envp);
 t_env_ll				*find_key(t_env_ll *env, char *key_str);
 t_env_ll				*find_value(t_env_ll *env, char *value_str);
@@ -133,6 +134,7 @@ UTILS / PRINT
 void					print_list(t_command *command);
 void					print_2d_arrg(char **c);
 void					print_env_ll(t_env_ll *env);
+void					print_export(t_env_ll *env);
 
 /*
 UTILS / CLEAN
@@ -152,7 +154,8 @@ UTILS / PRINT ERROR
 void					print_cmd_err(char *cmd);
 void					print_file_dir_err(char *dir, bool cd);
 void					print_exit_err(char *buffer, bool numeric);
-
+void					print_invalid_identifier(t_env_ll **node,
+							char **export_data, int j);
 /*
 UTILS / BUILTINS UTILS
 */

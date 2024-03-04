@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/09 15:51:29 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/01 21:04:55 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/04 16:02:47 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,9 +97,7 @@ int	dir_check(char *argv)
 
 void	check_dir_exe(char *argv)
 {
-	if (argv[0] == '/')
-		dir_check(argv);
-	else if ((argv[0] == '.' && argv[1] == '/'))
+	if ((argv[0] == '.' && argv[1] == '/'))
 	{
 		if (access(argv, F_OK) != 0)
 		{
@@ -132,7 +130,10 @@ char	*set_valid_command(char *argv, char **full_path)
 	if (!argv[0])
 		return (free(trimmed_command), NULL);
 	if (access(argv, X_OK) == 0)
+	{
+		free(trimmed_command);
 		return (argv);
+	}
 	while (full_path[j])
 	{
 		temp = ft_strjoin(full_path[j], "/");
