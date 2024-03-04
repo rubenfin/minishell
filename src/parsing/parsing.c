@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   parsing.c                                          :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/02/08 15:55:14 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/04 12:56:13 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/08 15:55:14 by rfinneru          #+#    #+#             */
+/*   Updated: 2024/03/04 15:00:57 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,9 @@ int	dollar_sign_check(char *result)
 
 char	*expanding(char *result, t_env_ll **env)
 {
-	int	i;
+	int		i;
+	char	*tmp;
+	char	*tmp2;
 
 	i = 0;
 	if (ft_strncmp(&result[0], "$", 1) == 0)
@@ -130,7 +132,14 @@ char	*expanding(char *result, t_env_ll **env)
 	while (result[i])
 	{
 		if (ft_strncmp(&result[i], "$", 1) == 0)
-			return (ft_substr(result, 0, i));
+		{
+			tmp = ft_substr(result, 0, i);
+			tmp2 = find_value_char(*env, &result[i + 1]);
+			if (!tmp2)
+				return (NULL);
+			result = ft_strjoin(tmp, tmp2);
+			return (result);
+		}
 		i++;
 	}
 	return (NULL);
@@ -144,10 +153,8 @@ void	set_node(t_command **param, char *str, int redirection, int len,
 	if (len > 0)
 	{
 		check = ft_substr(str, 0, len);
-		// printf("%s\n", result);
 		if (dollar_sign_check(check))
 		{
-			// printf("dollar_sign\n");
 			result = expanding(check, env);
 			ft_free(&check);
 			redirection = CMD;
@@ -155,28 +162,36 @@ void	set_node(t_command **param, char *str, int redirection, int len,
 		}
 		else
 		{
-			// printf("normale\n");
 			result = ft_substr(str, 0, len);
 			createnode(param, result, redirection);
 		}
 		ft_free(&check);
-		// printf("end result == %s\n\n\n", result);
 	}
 }
 int	quote_check(t_command **param, char *str, t_env_ll **env)
 {
 	int		i;
 	int		len;
+	char	*result;
 	char	qoute;
+	char	**result2d;
+	int		j;
 
 	qoute = str[0];
 	i = 1;
+	j = 0;
 	len = 0;
 	while (str && str[i])
 	{
 		if (str[i] && str[i] == qoute)
 		{
-			set_node(param, &str[1], 0, len, env);
+			result = ft_substr(&str[1], 0, len);
+			result2d = ft_split(result, ' ');
+			while (result2d[j])
+			{
+				set_node(param, result2d[j], 0, len, env);
+				++j;
+			}
 			return (i + 1);
 		}
 		++len;
