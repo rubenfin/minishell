@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/08 13:04:05 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/03/04 13:05:11 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   minishell.c                                        :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/03/04 16:51:12 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,9 +92,9 @@ int	no_pipes(t_command *command, t_stream *iostream, bool *exit_called)
 			free_iostream(&iostream, count);
 			return (status);
 		}
+		else
+			waitpid(pid, &status, 0);
 	}
-	if (!builtin)
-		waitpid(pid, &status, 0);
 	free_ll_command(command, true);
 	free_iostream(&iostream, count);
 	if (builtin)
@@ -152,7 +152,7 @@ int	command_line(t_env_ll **env, char *arg, int exit_status, bool *exit)
 		return (0);
 	total_pipes = init_command_line(env, &iostream, &command, arg);
 	if (total_pipes == -1)
-		return(0);
+		return (0);
 	iostream->prev_exit_status = exit_status;
 	saved = command;
 	wait_total = total_pipes + 1;

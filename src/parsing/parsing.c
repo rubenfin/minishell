@@ -1,27 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/08 15:55:14 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/03/04 15:00:57 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   parsing.c                                          :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/02/08 15:55:14 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/03/05 10:47:00 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-char	*find_value_char(t_env_ll *env, char *value_str)
+int	min(int a, int b)
+{
+	if (a > b)
+		return (b);
+	else
+		return (a);
+}
+
+
+char	*find_value_char(t_env_ll *env, char *value_str, int *i)
 {
 	t_env_ll	*value_ll;
 
 	value_ll = env;
+	if (!value_str || !value_str[0])
+		return (NULL);
 	while (value_ll)
 	{
-		// printf("%s\n", value_ll->value);
-		if (!ft_strncmp(value_ll->key, value_str, ft_strlen(value_str)))
+		if (!ft_strncmp(value_ll->key, value_str, ft_strlen(value_str) + 1))
 		{
+			*i += ft_strlen(value_str);
 			return (value_ll->value);
 		}
 		value_ll = value_ll->next;
@@ -121,25 +132,68 @@ char	*expanding(char *result, t_env_ll **env)
 	int		i;
 	char	*tmp;
 	char	*tmp2;
+	char	*tmp3;
+	int		x;
+	char	*check;
+	int		j;
 
+	x = 0;
 	i = 0;
-	if (ft_strncmp(&result[0], "$", 1) == 0)
+	j = 0;
+	if (result[0] == '$')
 	{
 		++i;
-		result = find_value_char(*env, &result[i]);
-		return (ft_strdup(result));
+		while (result[i])
+		{
+			if (!valid_identifier_check(result[i]))
+			{
+				i -= x;
+				break ;
+			}
+			i++;
+			x++;
+		}
+		if (!result[i])
+			i -= x;
+		check = ft_strndup(result + i, x);
+		tmp = find_value_char(*env, &check[0], &i);
+		if (tmp)
+			result = ft_strjoin(tmp, result + i);
+		return (result);
 	}
 	while (result[i])
 	{
 		if (ft_strncmp(&result[i], "$", 1) == 0)
 		{
 			tmp = ft_substr(result, 0, i);
-			tmp2 = find_value_char(*env, &result[i + 1]);
-			if (!tmp2)
-				return (NULL);
-			result = ft_strjoin(tmp, tmp2);
+			i++;
+			while (result[i])
+			{
+				if (!valid_identifier_check(result[i]))
+				{
+					i -= x;
+					break ;
+				}
+				i++;
+				x++;
+			}
+			if (!result[i])
+				i -= x;
+			check = ft_strndup(result + i, x);
+			tmp2 = find_value_char(*env, &check[0], &i);
+			if (!tmp2 && !result[i])
+				return (tmp);
+			if (tmp2)
+				tmp3 = ft_strjoin(tmp, tmp2);
+			else
+			{
+				result = ft_strjoin(tmp, result + (i));
+				return (result);
+			}
+			result = ft_strjoin(tmp3, result + (i));
 			return (result);
 		}
+		j++;
 		i++;
 	}
 	return (NULL);

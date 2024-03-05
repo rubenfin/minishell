@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/23 10:50:40 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/12 15:04:18 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/05 11:31:07 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,9 @@ char	*read_buffer(int fd, char *line)
 	ssize_t	bytes_read;
 
 	bytes_read = BUFFER_SIZE;
+	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	while (bytes_read == BUFFER_SIZE && !ft_strchr_gnl(line, '\n'))
 	{
-		buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 		if (!buffer)
 			return (ft_free_gnl(&line, NULL, 1));
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
@@ -93,8 +93,8 @@ char	*read_buffer(int fd, char *line)
 		line = ft_strjoin_gnl(line, buffer);
 		if (!line)
 			return (ft_free_gnl(&buffer, NULL, 1));
-		ft_free_gnl(&buffer, NULL, 1);
 	}
+	ft_free_gnl(&buffer, NULL, 1);
 	return (line);
 }
 

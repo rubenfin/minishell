@@ -164,8 +164,10 @@ char					*find_key_return_value(t_env_ll *env, char *key_str);
 void					get_key_change_value(t_env_ll **env, char *key_str,
 							char *change_value);
 void					find_key_free_value(t_env_ll **env, char *key_str);
-char					*find_value_char(t_env_ll *env, char *value_str);
+char					*find_value_char(t_env_ll *env, char *value_str,
+							int *i);
 int						max(int a, int b);
 
 int						dir_check(char *argv);
 void					check_dir_exe(char *argv);
+int						valid_identifier_check(char c);
