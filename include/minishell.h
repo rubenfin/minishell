@@ -85,7 +85,7 @@ EXECUTING
 */
 int						execute(t_command **param, t_stream *iostream,
 							bool child, int *pid);
-void					execute_single(t_command **param, t_stream *iostream);
+int						execute_single(t_command **param, t_stream *iostream);
 int						get_builtin(char *command, t_stream *param,
 							t_env_ll **env);
 int						check_if_valid_exit(char **args);
@@ -93,12 +93,14 @@ int						check_if_valid_exit(char **args);
 /*
 PARSING
 */
-t_command				*createnode(t_command **head, char *data,
+int						createnode(t_command **head, char *data,
 							int redirection);
-char					*set_valid_command(char *argv, char **full_path);
+t_command	*createnode_return(t_command **head, char *data, int redirection);
+
+	char *set_valid_command(char *argv, char **full_path);
 int						init_redirections(char *str, t_command **param,
 							t_env_ll **env);
-void					make_env_ll(t_env_ll **env, char **envp);
+int						make_env_ll(t_env_ll **env, char **envp);
 t_env_ll				*find_key(t_env_ll *env, char *key_str);
 t_env_ll				*find_value(t_env_ll *env, char *value_str);
 /*
@@ -107,11 +109,11 @@ UTILS / INITIALIZNG
 int						init_pipe(t_pipes *pipes);
 void					init_stream(t_stream **iostream);
 int						check_builtin(char *arg);
-void					malloc_stream(t_stream **iostream, t_env_ll **env);
+int						malloc_stream(t_stream **iostream, t_env_ll **env);
 void					set_args(t_command **param, t_stream *iostream,
 							int count);
 void					refresh_std_fd(t_std_fd *std_fd);
-void					init_std_fd(t_std_fd **std_fd);
+int						init_std_fd(t_std_fd **std_fd);
 /*
 UTILS / PARSER_UTILS
 */

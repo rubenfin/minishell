@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   export.c                                           :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/02/02 11:26:11 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/04 16:26:29 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/02 11:26:11 by rfinneru          #+#    #+#             */
+/*   Updated: 2024/03/04 17:37:54 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,26 +21,8 @@ int	valid_identifier_check(char c)
 		return (1);
 }
 
-int	valid_identifier_check(char c)
-{
-	if ((c > 122 && c < 127) || (c > 90 && c < 95) || (c < 65 && c > 58)
-		|| (c < 65 && c > 58) || (c < 48))
-		return (0);
-	else
-		return (1);
-}
-
 int	export(t_env_ll **env, char **export_data)
 {
-	t_env_ll	*current;
-	t_env_ll	*node;
-	t_env_ll	*exist;
-	int			i;
-	int			j;
-
-	j = 0;
-	if (!export_data || !export_data[0])
-		return (print_export(*env), EXIT_SUCCESS);
 	t_env_ll	*current;
 	t_env_ll	*node;
 	t_env_ll	*exist;
@@ -119,4 +101,3 @@ int	export(t_env_ll **env, char **export_data)
 	}
 	return (EXIT_SUCCESS);
 }
-

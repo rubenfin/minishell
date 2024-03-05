@@ -1,18 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   executing.c                                        :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/02/06 12:55:18 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/01 19:58:22 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   executing.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/06 12:55:18 by rfinneru          #+#    #+#             */
+/*   Updated: 2024/03/04 16:29:36 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/get_next_line.h"
 #include "../../include/minishell.h"
-
 
 int	redirection_here(t_stream *iostream, t_command *command)
 {
@@ -38,6 +37,11 @@ int	redirection_here(t_stream *iostream, t_command *command)
 		}
 		str = ft_strjoin_gnl(str, buffer);
 		ft_free(&buffer);
+		if (!str)
+		{
+			ft_free(&limiter);
+			return (EXIT_FAILURE);
+		}
 	}
 	write(fd, str, ft_strlen(str));
 	close(fd);
@@ -165,7 +169,10 @@ int	execute(t_command **param, t_stream *iostream, bool child, int *pid)
 	{
 		*pid = fork();
 		if (*pid == 0)
-			execute_single(param, iostream);
+		{
+			if (execute_single(param, iostream) == -1)
+				exit(EXIT_FAILURE);
+		}
 	}
 	return (0);
 }

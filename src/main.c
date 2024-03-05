@@ -51,8 +51,10 @@ int	main(int ac, char **av, char **envp)
 	signal(SIGINT, handle_sigint);
 	if (ac == 1)
 	{
-		init_std_fd(&std_fd);
-		make_env_ll(&env, envp);
+		if (init_std_fd(&std_fd) == -1)
+			exit(EXIT_FAILURE);
+		if (make_env_ll(&env, envp) == -1)
+			exit(EXIT_FAILURE);
 		status = minishell(&env, std_fd);
 		printf("exited with %d\n", status);
 		free_ll(&env);

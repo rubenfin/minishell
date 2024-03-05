@@ -1,16 +1,16 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g 
 
-LDFLAGS =
-ifeq ($(shell uname -s),Linux)
-    CC +=-fsanitize=leak
-endif
-ifdef FSAN
-    CC +=-fsanitize=address
-endif
-ifdef BUG
-    CFLAGS +=-g
-endif
+# LDFLAGS =
+# ifeq ($(shell uname -s),Linux)
+#     CC +=-fsanitize=leak
+# endif
+# ifdef FSAN
+#     CC +=-fsanitize=address
+# endif
+# ifdef BUG
+#     CFLAGS +=-g
+# endif
 
 SRC_DIR = src
 BUILTINS_DIR = builtins

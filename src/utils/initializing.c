@@ -1,26 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   initializing.c                                     :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/02/08 16:17:12 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/28 11:11:58 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   initializing.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/08 16:17:12 by rfinneru          #+#    #+#             */
+/*   Updated: 2024/03/04 17:19:35 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	malloc_stream(t_stream **iostream, t_env_ll **env)
+int	malloc_stream(t_stream **iostream, t_env_ll **env)
 {
 	(*iostream) = (t_stream *)malloc(sizeof(t_stream));
+	if (!(*iostream))
+		return (0);
 	(*iostream)->env = env;
 	(*iostream)->pipes = (t_pipes *)malloc(sizeof(t_pipes));
+	if (!((*iostream)->pipes))
+		return (0);
 	(*iostream)->pipes->curr_read = 0;
 	(*iostream)->pipes->curr_write = 0;
 	(*iostream)->pipes->prev_read = 0;
 	(*iostream)->pipes->prev_write = 0;
+	return(1);
 }
 
 int	init_pipe(t_pipes *pipes)
@@ -47,11 +52,14 @@ void	init_stream(t_stream **iostream)
 	(*iostream)->file_failure = false;
 }
 
-void	init_std_fd(t_std_fd **std_fd)
+int	init_std_fd(t_std_fd **std_fd)
 {
 	(*std_fd) = (t_std_fd *)malloc(sizeof(t_std_fd));
+	if (!(*std_fd))
+		return(-1);
 	(*std_fd)->stdin_fd = dup(STDIN_FILENO);
 	(*std_fd)->stdout_fd = dup(STDOUT_FILENO);
+	return(1);
 }
 
 void	refresh_std_fd(t_std_fd *std_fd)

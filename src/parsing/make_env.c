@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   make_env.c                                         :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/02/09 12:35:32 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/26 10:01:20 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   make_env.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/09 12:35:32 by rfinneru          #+#    #+#             */
+/*   Updated: 2024/03/04 16:54:06 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ char	**ll_to_2d_arr(t_env_ll *env)
 	}
 	curr = env;
 	envp = (char **)malloc((i + 1) * sizeof(char *));
+	if (!envp)
+		return (NULL);
 	i = 0;
 	while (curr)
 	{
@@ -79,7 +81,7 @@ char	*ft_strndup(char *s, size_t n)
 	return (temp);
 }
 
-void	make_env_ll(t_env_ll **env, char **envp)
+int	make_env_ll(t_env_ll **env, char **envp)
 {
 	int			i;
 	int			j;
@@ -97,12 +99,12 @@ void	make_env_ll(t_env_ll **env, char **envp)
 		j = 0;
 		current = (t_env_ll *)malloc(sizeof(t_env_ll));
 		if (!current)
-			return ;
+			return (-1);
 		while (envp[i][j] != '=' && envp[i][j] != '\0')
 			j++;
 		current->key = ft_strndup(envp[i], j);
 		if (!current->key)
-			return ;
+			return (-1);
 		if (envp[i][j] == '=')
 			current->value = ft_strdup(envp[i] + j + 1);
 		else
@@ -121,6 +123,7 @@ void	make_env_ll(t_env_ll **env, char **envp)
 		i++;
 	}
 	*env = head;
+	return(1);
 }
 
 t_env_ll	*find_key(t_env_ll *env, char *key_str)
@@ -130,7 +133,8 @@ t_env_ll	*find_key(t_env_ll *env, char *key_str)
 	key_ll = env;
 	while (key_ll)
 	{
-		if (!ft_strncmp(key_ll->key, key_str, max(ft_strlen(key_ll->key), ft_strlen(key_str))))
+		if (!ft_strncmp(key_ll->key, key_str, max(ft_strlen(key_ll->key),
+					ft_strlen(key_str))))
 			return (key_ll);
 		key_ll = key_ll->next;
 	}

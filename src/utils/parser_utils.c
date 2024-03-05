@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   parser_utils.c                                     :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/02/06 15:49:56 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/04 16:27:02 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   parser_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/06 15:49:56 by rfinneru          #+#    #+#             */
+/*   Updated: 2024/03/04 17:33:49 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,14 @@ char	**get_path(char **envp)
 
 	path_string = NULL;
 	i = 0;
-	while (envp[i] && !path_string)
+	while (!path_string)
 	{
 		path_string = ft_strnstr(envp[i], "PATH=", 5);
 		i++;
 	}
-	if (!path_string)
-		return(NULL);
 	result_string = ft_split(path_string + 5, ':');
 	if (!result_string)
-		return(NULL);
+		return (NULL);
 	return (result_string);
 }
 
@@ -60,18 +58,24 @@ t_command	*get_command_until_pipe(t_command *command)
 	head = NULL;
 	if (command)
 	{
-		createnode(&head, command->string, command->token);
+		if (createnode(&head, command->string, command->token) == -1)
+			return (NULL);
 		command = command->next;
 	}
 	current = head;
 	while (command && command->token != PIPE)
 	{
-		current = createnode(&head, command->string, command->token);
+		current = createnode_return(&head, command->string, command->token);
+		if (!current)
+			return (NULL);
 		command = command->next;
 		current = current->next;
 	}
 	if (command)
-		createnode(&head, command->string, command->token);
+	{
+		if (createnode(&head, command->string, command->token) == -1)
+			return (NULL);
+	}
 	return (head);
 }
 

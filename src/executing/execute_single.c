@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   execute_single.c                                   :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/02/07 16:36:54 by jade-haa      #+#    #+#                 */
-/*   Updated: 2024/03/03 08:51:01 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   execute_single.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/07 16:36:54 by jade-haa          #+#    #+#             */
+/*   Updated: 2024/03/04 16:48:47 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int	get_builtin(char *command, t_stream *param, t_env_ll **env)
 		return (127);
 }
 
-void	execute_single(t_command **param, t_stream *iostream)
+int 	execute_single(t_command **param, t_stream *iostream)
 {
 	t_command	*command;
 	int			count;
@@ -102,9 +102,14 @@ void	execute_single(t_command **param, t_stream *iostream)
 		command = command->next;
 	count = count_commands(&command);
 	iostream->args = (char **)malloc(sizeof(char *) * (count + 1));
+	if (!iostream->args)
+		return (-1);
 	set_args(param, iostream, count);
 	if (iostream->input != -1)
-		dup2(iostream->input, STDIN_FILENO);
+	{
+		if (dup2(iostream->input, STDIN_FILENO) == -1)
+			exit(errno);
+	}
 	if (iostream->output != -1)
 		dup2(iostream->output, STDOUT_FILENO);
 	if (command->token == BUILTIN)
@@ -113,6 +118,8 @@ void	execute_single(t_command **param, t_stream *iostream)
 	{
 		check_dir_exe(iostream->args[0]);
 		env_from_ll = ll_to_2d_arr(*iostream->env);
+		if (!env_from_ll)
+			exit(EXIT_FAILURE);
 		paths = get_path(env_from_ll);
 		cmd = set_valid_command(iostream->args[0], paths);
 		if (!cmd)

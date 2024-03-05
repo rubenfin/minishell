@@ -1,18 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   parsing2.c                                         :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/02/09 15:51:29 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/04 16:26:50 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   parsing2.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/09 15:51:29 by rfinneru          #+#    #+#             */
+/*   Updated: 2024/03/04 17:25:46 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-t_command	*createnode(t_command **head, char *data, int redirection)
+int	createnode(t_command **head, char *data, int redirection)
+{
+	t_command	*newnode;
+	t_command	*temp;
+
+	newnode = (t_command *)malloc(sizeof(t_command));
+	if (!newnode)
+		return (-1);
+	newnode->string = data;
+	newnode->token = redirection;
+	newnode->next = NULL;
+	if (*head == NULL)
+		*head = newnode;
+	else
+	{
+		temp = *head;
+		while (temp->next != NULL)
+			temp = temp->next;
+		temp->next = newnode;
+	}
+	return (1);
+}
+
+t_command	*createnode_return(t_command **head, char *data, int redirection)
 {
 	t_command	*newnode;
 	t_command	*temp;
@@ -97,7 +120,9 @@ int	dir_check(char *argv)
 
 void	check_dir_exe(char *argv)
 {
-	if ((argv[0] == '.' && argv[1] == '/'))
+	if (argv[0] == '/')
+		dir_check(argv);
+	else if ((argv[0] == '.' && argv[1] == '/'))
 	{
 		if (access(argv, F_OK) != 0)
 		{
@@ -123,22 +148,21 @@ char	*set_valid_command(char *argv, char **full_path)
 	len = length_command(argv);
 	trimmed_command = (char *)malloc((len + 1) * sizeof(char));
 	if (!trimmed_command)
-		return (0);
+		return (NULL);
 	ft_strlcpy(trimmed_command, argv, len);
 	trimmed_command[len] = '\0';
 	j = 0;
 	if (!argv[0])
 		return (free(trimmed_command), NULL);
 	if (access(argv, X_OK) == 0)
-	{
-		free(trimmed_command);
 		return (argv);
-	}
 	while (full_path[j])
 	{
 		temp = ft_strjoin(full_path[j], "/");
+		if (!temp)
+			return (NULL);
 		str = ft_strjoin(temp, trimmed_command);
-		if (!temp | !str)
+		if (!str)
 			return (NULL);
 		ft_free(&temp);
 		if (access(str, X_OK) == 0)

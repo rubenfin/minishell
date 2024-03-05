@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 15:55:14 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/03/04 15:00:57 by jade-haa         ###   ########.fr       */
+/*   Updated: 2024/03/05 11:29:08 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,27 +62,6 @@ int	redirection_checker_bool(char *str, int i, int check_all)
 	if (ft_strncmp(&str[i], ">", 1) == 0)
 		return (1);
 	return (0);
-}
-char	*find_flag(char *command)
-{
-	int		i;
-	int		j;
-	char	*flag;
-
-	i = 0;
-	if (!command[i])
-		return (NULL);
-	j = i;
-	while (command[j])
-		j++;
-	flag = malloc(j * sizeof(char) + 1);
-	if (!flag)
-		return (NULL);
-	j = 0;
-	while (command[i])
-		flag[j++] = command[i++];
-	flag[j] = '\0';
-	return (flag);
 }
 
 int	check_first_cmd(char *str, int i)
@@ -144,7 +123,7 @@ char	*expanding(char *result, t_env_ll **env)
 	}
 	return (NULL);
 }
-void	set_node(t_command **param, char *str, int redirection, int len,
+int	set_node(t_command **param, char *str, int redirection, int len,
 		t_env_ll **env)
 {
 	char	*check;
@@ -158,15 +137,18 @@ void	set_node(t_command **param, char *str, int redirection, int len,
 			result = expanding(check, env);
 			ft_free(&check);
 			redirection = CMD;
-			createnode(param, result, redirection);
+			if (createnode(param, result, redirection) == -1)
+				return (-1);
 		}
 		else
 		{
 			result = ft_substr(str, 0, len);
-			createnode(param, result, redirection);
+			if (createnode(param, result, redirection) == -1)
+				return (-1);
 		}
 		ft_free(&check);
 	}
+	return (1);
 }
 int	quote_check(t_command **param, char *str, t_env_ll **env)
 {
@@ -189,7 +171,8 @@ int	quote_check(t_command **param, char *str, t_env_ll **env)
 			result2d = ft_split(result, ' ');
 			while (result2d[j])
 			{
-				set_node(param, result2d[j], 0, len, env);
+				if (set_node(param, result2d[j], 0, len, env) == -1)
+					return (-1);
 				++j;
 			}
 			return (i + 1);
@@ -223,6 +206,7 @@ int	init_redirections(char *str, t_command **param, t_env_ll **env)
 	int len;
 	int redirection;
 	char *test;
+	int temp;
 
 	// char *result;
 	i = 0;
@@ -241,7 +225,11 @@ int	init_redirections(char *str, t_command **param, t_env_ll **env)
 			++i;
 			if (str[i] == '\"' || str[i] == '\'')
 			{
-				i += quote_check(param, &str[i], env);
+				temp = quote_check(param, &str[i], env);
+				if (temp == -1)
+					return(0);
+				i += temp;
+				temp  = 0;
 				break ;
 			}
 		}
@@ -258,7 +246,9 @@ int	init_redirections(char *str, t_command **param, t_env_ll **env)
 		if (redirection == CMD && check_first_cmd(str, i - 1)
 			&& check_builtin(test))
 			redirection = BUILTIN;
-		set_node(param, &str[i], redirection, len, env);
+		if (set_node(param, &str[i], redirection, len, env) == -1)
+			return (0);
+
 		i += len;
 		free(test);
 	}

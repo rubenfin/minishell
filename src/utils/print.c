@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   print.c                                            :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/02/09 10:04:45 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/04 16:27:12 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   print.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/09 10:04:45 by rfinneru          #+#    #+#             */
+/*   Updated: 2024/03/04 17:38:36 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,3 @@ void	print_invalid_identifier(t_env_ll **node, char **export_data, int j)
 	write(STDERR_FILENO, export_data[j], ft_strlen(export_data[j]));
 	write(STDERR_FILENO, ": not a valid identifier\n", 25);
 }
-

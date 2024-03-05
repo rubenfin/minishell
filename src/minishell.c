@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 13:04:05 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/03/04 13:05:11 by jade-haa         ###   ########.fr       */
+/*   Updated: 2024/03/04 17:33:14 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ int	main_set_args(t_command **param, t_stream *iostream)
 		command = command->next;
 	count = count_commands(&command);
 	iostream->args = (char **)malloc(sizeof(char *) * (count + 1));
+	if (!iostream->args)
+		return (-1);
 	set_args(param, iostream, count);
 	return (count);
 }
@@ -75,6 +77,8 @@ int	no_pipes(t_command *command, t_stream *iostream, bool *exit_called)
 	{
 		execute(&command, iostream, false, &pid);
 		count = main_set_args(&command, iostream);
+		if (count == -1)
+			return (EXIT_FAILURE);
 		if ((ft_strncmp(command->string, "exit", 4)) == 0)
 			status = do_exit(iostream, exit_called);
 		else
@@ -92,9 +96,9 @@ int	no_pipes(t_command *command, t_stream *iostream, bool *exit_called)
 			free_iostream(&iostream, count);
 			return (status);
 		}
+		else
+			waitpid(pid, &status, 0);
 	}
-	if (!builtin)
-		waitpid(pid, &status, 0);
 	free_ll_command(command, true);
 	free_iostream(&iostream, count);
 	if (builtin)
@@ -108,7 +112,8 @@ int	init_command_line(t_env_ll **env, t_stream **iostream, t_command **command,
 {
 	int	total;
 
-	malloc_stream(iostream, env);
+	if (malloc_stream(iostream, env) == -1)
+		return (-1);
 	*command = NULL;
 	if (init_redirections(arg, command, env) == 0)
 		return (-1);
@@ -152,7 +157,7 @@ int	command_line(t_env_ll **env, char *arg, int exit_status, bool *exit)
 		return (0);
 	total_pipes = init_command_line(env, &iostream, &command, arg);
 	if (total_pipes == -1)
-		return(0);
+		return (EXIT_FAILURE);
 	iostream->prev_exit_status = exit_status;
 	saved = command;
 	wait_total = total_pipes + 1;
@@ -165,6 +170,8 @@ int	command_line(t_env_ll **env, char *arg, int exit_status, bool *exit)
 			init_stream(&iostream);
 			init_pipe(iostream->pipes);
 			until_pipe = get_command_until_pipe(command);
+			if (!until_pipe)
+				return (EXIT_FAILURE);
 			command = get_command_from_pipe(command);
 			execute(&until_pipe, iostream, true, &pid);
 			close(iostream->pipes->curr_write);
@@ -174,6 +181,8 @@ int	command_line(t_env_ll **env, char *arg, int exit_status, bool *exit)
 		close(iostream->pipes->curr_write);
 		init_stream(&iostream);
 		until_pipe = get_command_until_pipe(command);
+		if (!until_pipe)
+				return (EXIT_FAILURE);
 		status = execute(&until_pipe, iostream, true, &pid);
 		if (iostream->file_failure)
 		{
