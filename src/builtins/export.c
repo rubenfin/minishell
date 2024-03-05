@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 11:26:11 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/03/04 17:37:54 by jade-haa         ###   ########.fr       */
+/*   Updated: 2024/03/05 12:11:52 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,6 @@ int	export(t_env_ll **env, char **export_data)
 				if (export_data[j][0] == '=')
 					return (print_invalid_identifier(&node, export_data, j),
 						EXIT_FAILURE);
-			{
-				if (export_data[j][0] == '=')
-					return (print_invalid_identifier(&node, export_data, j),
-						EXIT_FAILURE);
-				break ;
-			}
-			if (!valid_identifier_check(export_data[j][i]))
-				return (print_invalid_identifier(&node, export_data, j),
-					EXIT_FAILURE);
 			}
 			if (!valid_identifier_check(export_data[j][i]))
 				return (print_invalid_identifier(&node, export_data, j),
@@ -69,18 +60,6 @@ int	export(t_env_ll **env, char **export_data)
 		i++;
 		node->key = ft_strndup(export_data[j], i - 1);
 		node->value = ft_strdup(export_data[j] + i);
-		exist = find_key(*env, node->key);
-		if (exist)
-		{
-			ft_free(&exist->key);
-			ft_free(&exist->value);
-			exist->key = ft_strdup(node->key);
-			exist->value = ft_strdup(node->value);
-			free(node->key);
-			free(node->value);
-			free(node);
-			return (EXIT_SUCCESS);
-		}
 		exist = find_key(*env, node->key);
 		if (exist)
 		{

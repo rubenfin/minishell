@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 13:04:05 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/03/04 17:33:14 by jade-haa         ###   ########.fr       */
+/*   Updated: 2024/03/05 12:11:42 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ int	no_pipes(t_command *command, t_stream *iostream, bool *exit_called)
 			free_iostream(&iostream, count);
 			return (status);
 		}
+		else
+			waitpid(pid, &status, 0);
 		else
 			waitpid(pid, &status, 0);
 	}
