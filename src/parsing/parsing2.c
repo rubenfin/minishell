@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parsing2.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/09 15:51:29 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/03/05 12:12:06 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   parsing2.c                                         :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/02/09 15:51:29 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/03/05 14:10:12 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,9 +120,7 @@ int	dir_check(char *argv)
 
 void	check_dir_exe(char *argv)
 {
-	if (argv[0] == '/')
-		dir_check(argv);
-	else if ((argv[0] == '.' && argv[1] == '/'))
+	if ((argv[0] == '.' && argv[1] == '/'))
 	{
 		if (access(argv, F_OK) != 0)
 		{
@@ -137,6 +135,7 @@ void	check_dir_exe(char *argv)
 		dir_check(argv);
 	}
 }
+
 char	*set_valid_command(char *argv, char **full_path)
 {
 	int		j;
@@ -155,7 +154,7 @@ char	*set_valid_command(char *argv, char **full_path)
 	if (!argv[0])
 		return (free(trimmed_command), NULL);
 	if (access(argv, X_OK) == 0)
-		return (argv);
+		return (free(trimmed_command), argv);
 	while (full_path[j])
 	{
 		temp = ft_strjoin(full_path[j], "/");

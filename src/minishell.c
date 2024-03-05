@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/08 13:04:05 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/03/05 12:11:42 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   minishell.c                                        :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/03/05 14:08:38 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,6 @@ int	no_pipes(t_command *command, t_stream *iostream, bool *exit_called)
 		}
 		else
 			waitpid(pid, &status, 0);
-		else
-			waitpid(pid, &status, 0);
 	}
 	free_ll_command(command, true);
 	free_iostream(&iostream, count);
@@ -177,14 +175,14 @@ int	command_line(t_env_ll **env, char *arg, int exit_status, bool *exit)
 			command = get_command_from_pipe(command);
 			execute(&until_pipe, iostream, true, &pid);
 			close(iostream->pipes->curr_write);
-			total_pipes--;
 			free_ll_command(until_pipe, false);
+			total_pipes--;
 		}
 		close(iostream->pipes->curr_write);
 		init_stream(&iostream);
 		until_pipe = get_command_until_pipe(command);
 		if (!until_pipe)
-				return (EXIT_FAILURE);
+			return (EXIT_FAILURE);
 		status = execute(&until_pipe, iostream, true, &pid);
 		if (iostream->file_failure)
 		{

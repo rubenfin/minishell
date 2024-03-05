@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/08 15:55:14 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/03/05 12:11:59 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   parsing.c                                          :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/02/08 15:55:14 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/03/05 14:17:25 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int	min(int a, int b)
 	else
 		return (a);
 }
-
 
 char	*find_value_char(t_env_ll *env, char *value_str, int *i)
 {
@@ -136,15 +135,19 @@ char	*expanding(char *result, t_env_ll **env)
 			i -= x;
 		check = ft_strndup(result + i, x);
 		tmp = find_value_char(*env, &check[0], &i);
-		if (tmp)
+		if (!tmp)
+			return(ft_strdup("$"));
+		else 
 			result = ft_strjoin(tmp, result + i);
+			
 		return (result);
 	}
 	while (result[i])
 	{
-		if (ft_strncmp(&result[i], "$", 1) == 0)
+		if (result[i] == '$')
 		{
 			tmp = ft_substr(result, 0, i);
+			printf("%s\n", tmp);
 			i++;
 			while (result[i])
 			{
@@ -160,14 +163,13 @@ char	*expanding(char *result, t_env_ll **env)
 				i -= x;
 			check = ft_strndup(result + i, x);
 			tmp2 = find_value_char(*env, &check[0], &i);
-			if (!tmp2 && !result[i])
+			if (!tmp2)
 				return (tmp);
 			if (tmp2)
-				tmp3 = ft_strjoin(tmp, tmp2);
-			else
 			{
-				result = ft_strjoin(tmp, result + (i));
-				return (result);
+				tmp3 = ft_strjoin(tmp, tmp2);
+				ft_free(&tmp);
+				ft_free(&tmp2);
 			}
 			result = ft_strjoin(tmp3, result + (i));
 			return (result);
@@ -281,9 +283,9 @@ int	init_redirections(char *str, t_command **param, t_env_ll **env)
 			{
 				temp = quote_check(param, &str[i], env);
 				if (temp == -1)
-					return(0);
+					return (0);
 				i += temp;
-				temp  = 0;
+				temp = 0;
 				break ;
 			}
 		}
