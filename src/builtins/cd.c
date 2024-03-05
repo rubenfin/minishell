@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/30 12:09:22 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/01 19:59:22 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/05 16:19:16 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,19 +40,24 @@ int	relative_path(t_env_ll **env, char *directory)
 	int			i;
 
 	temp = NULL;
-	if (!directory)
+	if (!directory || !ft_strncmp(directory, "~", 1))
 	{
 		if (chdir(find_key_return_value(*env, "HOME")) == -1)
 		{
-			write(STDOUT_FILENO, "cd: HOME not set\n", 17);
-			return (1);
+			if (errno == ENOENT)
+				return (print_file_dir_err(find_key_return_value(*env, "HOME"),
+						true), 1);
+			return (write(STDOUT_FILENO, "cd: HOME not set\n", 17), 1);
 		}
 		find_key_free_value(env, "OLDPWD");
 		temp = find_key_return_value(*env, "PWD");
 		get_key_change_value(env, "OLDPWD", temp);
 		get_key_change_value(env, "PWD", ft_strdup(find_key_return_value(*env,
 					"HOME")));
-		return (0);
+		if (directory && !ft_strncmp(directory, "~", 1))
+			directory = ft_strdup(directory + 1);
+		else
+			return (0);
 	}
 	if (!ft_strncmp(directory, ".", 2) || !ft_strncmp(directory, "./", 2))
 		return (0);
@@ -78,8 +83,10 @@ int	relative_path(t_env_ll **env, char *directory)
 			change_pwd(env, temp);
 			return (0);
 		}
-		else
-			ft_free(&temp);
+		write(STDERR_FILENO,
+			"minishell: cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n",
+			119);
+		ft_free(&temp);
 		return (1);
 	}
 	if (directory[0] != '/')
@@ -94,64 +101,18 @@ int	relative_path(t_env_ll **env, char *directory)
 		return (1);
 	}
 	ft_free(&directory);
-	change_pwd(env, path);
+	change_pwd(env, get_curr_dir());
 	return (0);
-}
-char	*removed_slash_back(char *dir)
-{
-	char	*clean_dir;
-	int		i;
-
-	i = ft_strlen(dir);
-	if (dir[i] != '/')
-		return (ft_strndup(dir, i));
-	while (i > 0)
-	{
-		if (dir[i] == '/' && (!dir[i - 1] || ft_isalnum(dir[i - 1])))
-			break ;
-		i--;
-	}
-	if (i == 0)
-		return (ft_strdup("/"));
-	clean_dir = ft_strndup(dir, i);
-	return (clean_dir);
-}
-
-char	*removed_slash_infront(char *dir)
-{
-	char	*clean_dir;
-	int		i;
-
-	i = 0;
-	while (dir[i])
-	{
-		if (dir[i] == '/' && (!dir[i + 1] || ft_isalnum(dir[i + 1])))
-			break ;
-		i++;
-	}
-	clean_dir = ft_strdup(dir + i);
-	return (clean_dir);
 }
 
 int	absolute_path(t_env_ll **env, char *directory)
 {
-	char	*dir_no_slash;
-	char	*temp;
 
-	dir_no_slash = removed_slash_back(directory);
 	if (chdir(directory) == 0)
-	{
-		temp = removed_slash_infront(dir_no_slash);
-		change_pwd(env, temp);
-	}
+		change_pwd(env, get_curr_dir());
 	else
-	{
-		print_file_dir_err(directory, true);
-		ft_free(&dir_no_slash);
-		return (1);
-	}
-	ft_free(&dir_no_slash);
-	return (0);
+		return (print_file_dir_err(directory, true), EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
 
 int	cd(t_env_ll **env, char **directory)
@@ -162,8 +123,8 @@ int	cd(t_env_ll **env, char **directory)
 	while (directory[count])
 		count++;
 	if (count > 1)
-		return (write(STDERR_FILENO, "minishell: cd: too many arguments\n",
-				34), 1);
+		return (write(STDERR_FILENO, "minishell: cd: too many arguments\n", 34),
+			1);
 	if (!directory[0] || directory[0][0] != '/')
 		return (relative_path(env, directory[0]));
 	else

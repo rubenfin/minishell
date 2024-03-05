@@ -1,16 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/01 11:40:21 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/03/04 13:04:00 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   echo.c                                             :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/02/01 11:40:21 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/03/05 15:22:28 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+int	check_for_n(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (str[i] != '-')
+		return (0);
+	i++;
+	while (str[i])
+	{
+		if (str[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
+}
 
 void	echo(t_env_ll *env, char **arg)
 {
@@ -27,7 +44,7 @@ void	echo(t_env_ll *env, char **arg)
 		write(STDOUT_FILENO, "\n", 1);
 		return ;
 	}
-	if (!ft_strncmp(arg[0], "-n", 2))
+	while (check_for_n(arg[j]))
 		j++;
 	while (arg[j])
 	{

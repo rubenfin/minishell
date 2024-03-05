@@ -6,11 +6,24 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/01 11:28:19 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/01 18:56:51 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/05 16:22:53 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+char	*get_curr_dir(void)
+{
+	char	dir[PATH_MAX];
+	char	*ret;
+
+	ret = NULL;
+	if (getcwd(dir, PATH_MAX))
+		ret = ft_strdup(dir);
+	if (!ret)
+		return (NULL);
+	return (ret);
+}
 
 int	pwd(t_env_ll *env)
 {
@@ -24,6 +37,6 @@ int	pwd(t_env_ll *env)
 	}
 	else
 		write(STDERR_FILENO,
-			"minishell: error: failed to get current working directory\n", 38);
+			"minishell: error: failed to get current working directory\n", 58);
 	return (1);
 }

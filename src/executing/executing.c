@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   executing.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/06 12:55:18 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/03/04 16:29:36 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   executing.c                                        :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/02/06 12:55:18 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/03/05 17:06:38 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,12 +119,43 @@ int	last_node(t_command **param)
 	return (0);
 }
 
+int	token_checker(t_command *command, t_stream *iostream)
+{
+	int	status;
+
+	status = 0;
+	if (command->token == RE_IN)
+	{
+		status = redirection_in(iostream, command);
+		if (status)
+			return (status);
+	}
+	else if (command->token == RE_OUT)
+	{
+		status = redirection_out(iostream, command);
+		if (status)
+			return (status);
+	}
+	else if (command->token == RE_APPEND)
+	{
+		status = redirection_append(iostream, command);
+		if (status)
+			return (status);
+	}
+	else if (command->token == RE_HERE)
+	{
+		redirection_here(iostream, command);
+		if (status)
+			return (status);
+	}
+	return (status);
+}
+
 int	execute(t_command **param, t_stream *iostream, bool child, int *pid)
 {
 	t_command	*command;
 	int			status;
 
-	status = 0;
 	command = *param;
 	if (command->token == PIPE && last_node(&command->next))
 		iostream->input = iostream->pipes->prev_read;
@@ -134,30 +165,9 @@ int	execute(t_command **param, t_stream *iostream, bool child, int *pid)
 		command = command->next;
 	while (command && command->token != PIPE)
 	{
-		if (command->token == RE_IN)
-		{
-			status = redirection_in(iostream, command);
-			if (status)
-				return (status);
-		}
-		else if (command->token == RE_OUT)
-		{
-			status = redirection_out(iostream, command);
-			if (status)
-				return (status);
-		}
-		else if (command->token == RE_APPEND)
-		{
-			status = redirection_append(iostream, command);
-			if (status)
-				return (status);
-		}
-		else if (command->token == RE_HERE)
-		{
-			redirection_here(iostream, command);
-			if (status)
-				return (status);
-		}
+		status = token_checker(command, iostream);
+		if (status)
+			return (0);
 		command = command->next;
 	}
 	if (command)

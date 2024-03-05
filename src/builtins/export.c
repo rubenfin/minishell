@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   export.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/02 11:26:11 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/03/05 12:11:52 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   export.c                                           :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/02/02 11:26:11 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/03/05 16:26:31 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int	export(t_env_ll **env, char **export_data)
 	int			j;
 
 	j = 0;
+	i = 0;
 	if (!export_data || !export_data[0])
 		return (print_export(*env), EXIT_SUCCESS);
 	while (export_data[j])
@@ -45,6 +46,7 @@ int	export(t_env_ll **env, char **export_data)
 				if (export_data[j][0] == '=')
 					return (print_invalid_identifier(&node, export_data, j),
 						EXIT_FAILURE);
+				break ;
 			}
 			if (!valid_identifier_check(export_data[j][i]))
 				return (print_invalid_identifier(&node, export_data, j),

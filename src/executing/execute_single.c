@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   execute_single.c                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/07 16:36:54 by jade-haa          #+#    #+#             */
-/*   Updated: 2024/03/04 16:48:47 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   execute_single.c                                   :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/02/07 16:36:54 by jade-haa      #+#    #+#                 */
+/*   Updated: 2024/03/05 17:02:43 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,13 +89,41 @@ int	get_builtin(char *command, t_stream *param, t_env_ll **env)
 		return (127);
 }
 
-int 	execute_single(t_command **param, t_stream *iostream)
+void	else_statement(t_stream *iostream)
+{
+	char	**env_from_ll;
+	char	**paths;
+	char	*cmd;
+
+	check_dir_exe(iostream->args[0]);
+	env_from_ll = ll_to_2d_arr(*iostream->env);
+	if (!env_from_ll)
+		exit(EXIT_FAILURE);
+	paths = get_path(env_from_ll);
+	cmd = set_valid_command(iostream->args[0], paths);
+	if (!cmd)
+	{
+		free_args(paths);
+		free_args(env_from_ll);
+		print_cmd_err(iostream->args[0]);
+	}
+	execve(cmd, iostream->args, env_from_ll);
+	free(cmd);
+	free_args(paths);
+	free_args(env_from_ll);
+	exit(127);
+}
+
+void	ft_dup2(int iostream, int standard)
+{
+	if (dup2(iostream, standard) == -1)
+		exit(errno);
+}
+
+int	execute_single(t_command **param, t_stream *iostream)
 {
 	t_command	*command;
 	int			count;
-	char		**env_from_ll;
-	char		**paths;
-	char		*cmd;
 
 	command = *param;
 	if (command->token == PIPE)
@@ -106,32 +134,12 @@ int 	execute_single(t_command **param, t_stream *iostream)
 		return (-1);
 	set_args(param, iostream, count);
 	if (iostream->input != -1)
-	{
-		if (dup2(iostream->input, STDIN_FILENO) == -1)
-			exit(errno);
-	}
+		ft_dup2(iostream->input, STDIN_FILENO);
 	if (iostream->output != -1)
-		dup2(iostream->output, STDOUT_FILENO);
+		ft_dup2(iostream->output, STDOUT_FILENO);
 	if (command->token == BUILTIN)
 		exit(get_builtin(command->string, iostream, iostream->env));
 	else
-	{
-		check_dir_exe(iostream->args[0]);
-		env_from_ll = ll_to_2d_arr(*iostream->env);
-		if (!env_from_ll)
-			exit(EXIT_FAILURE);
-		paths = get_path(env_from_ll);
-		cmd = set_valid_command(iostream->args[0], paths);
-		if (!cmd)
-		{
-			free_args(paths);
-			free_args(env_from_ll);
-			print_cmd_err(iostream->args[0]);
-		}
-		execve(cmd, iostream->args, env_from_ll);
-		free(cmd);
-		free_args(paths);
-		free_args(env_from_ll);
-		exit(127);
-	}
+		else_statement(iostream);
+	return (1);
 }

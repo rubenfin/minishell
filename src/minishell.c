@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/05 14:08:38 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/05 15:59:52 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,15 +107,13 @@ int	no_pipes(t_command *command, t_stream *iostream, bool *exit_called)
 		return (check_status(status));
 }
 
-int	init_command_line(t_env_ll **env, t_stream **iostream, t_command **command,
+int	init_command_line(t_env_ll **env, t_stream *iostream, t_command **command,
 		char *arg)
 {
 	int	total;
 
-	if (malloc_stream(iostream, env) == -1)
-		return (-1);
 	*command = NULL;
-	if (init_redirections(arg, command, env) == 0)
+	if (init_redirections(arg, command, env, iostream) == 0)
 		return (-1);
 	total = pipe_check(*command);
 	return (total);
@@ -155,10 +153,11 @@ int	command_line(t_env_ll **env, char *arg, int exit_status, bool *exit)
 	pid = -1;
 	if (!arg || !arg[0])
 		return (0);
-	total_pipes = init_command_line(env, &iostream, &command, arg);
+	if (malloc_stream(&iostream, env, exit_status) == -1)
+		return (EXIT_FAILURE);
+	total_pipes = init_command_line(env, iostream, &command, arg);
 	if (total_pipes == -1)
 		return (EXIT_FAILURE);
-	iostream->prev_exit_status = exit_status;
 	saved = command;
 	wait_total = total_pipes + 1;
 	if (!total_pipes)

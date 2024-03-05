@@ -95,11 +95,12 @@ PARSING
 */
 int						createnode(t_command **head, char *data,
 							int redirection);
-t_command	*createnode_return(t_command **head, char *data, int redirection);
+t_command				*createnode_return(t_command **head, char *data,
+							int redirection);
 
-	char *set_valid_command(char *argv, char **full_path);
+char					*set_valid_command(char *argv, char **full_path);
 int						init_redirections(char *str, t_command **param,
-							t_env_ll **env);
+							t_env_ll **env, t_stream *iostream);
 int						make_env_ll(t_env_ll **env, char **envp);
 t_env_ll				*find_key(t_env_ll *env, char *key_str);
 t_env_ll				*find_value(t_env_ll *env, char *value_str);
@@ -109,7 +110,7 @@ UTILS / INITIALIZNG
 int						init_pipe(t_pipes *pipes);
 void					init_stream(t_stream **iostream);
 int						check_builtin(char *arg);
-int						malloc_stream(t_stream **iostream, t_env_ll **env);
+int						malloc_stream(t_stream **iostream, t_env_ll **env, int exit_status);
 void					set_args(t_command **param, t_stream *iostream,
 							int count);
 void					refresh_std_fd(t_std_fd *std_fd);
@@ -173,3 +174,4 @@ int						max(int a, int b);
 int						dir_check(char *argv);
 void					check_dir_exe(char *argv);
 int						valid_identifier_check(char c);
+char					*get_curr_dir(void);

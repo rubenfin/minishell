@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 15:55:14 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/05 14:17:25 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/05 16:35:18 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	*find_value_char(t_env_ll *env, char *value_str, int *i)
 		if (!ft_strncmp(value_ll->key, value_str, ft_strlen(value_str) + 1))
 		{
 			*i += ft_strlen(value_str);
-			return (value_ll->value);
+			return (ft_strdup(value_ll->value));
 		}
 		value_ll = value_ll->next;
 	}
@@ -136,10 +136,9 @@ char	*expanding(char *result, t_env_ll **env)
 		check = ft_strndup(result + i, x);
 		tmp = find_value_char(*env, &check[0], &i);
 		if (!tmp)
-			return(ft_strdup("$"));
-		else 
+			return (ft_strdup(""));
+		else
 			result = ft_strjoin(tmp, result + i);
-			
 		return (result);
 	}
 	while (result[i])
@@ -206,15 +205,16 @@ int	set_node(t_command **param, char *str, int redirection, int len,
 	}
 	return (1);
 }
-int	quote_check(t_command **param, char *str, t_env_ll **env)
+int	quote_check(t_command **param, char *str, t_env_ll **env,
+		t_stream *iostream)
 {
 	int		i;
 	int		len;
 	char	*result;
 	char	qoute;
-	char	**result2d;
 	int		j;
 
+	(void)iostream;
 	qoute = str[0];
 	i = 1;
 	j = 0;
@@ -224,13 +224,8 @@ int	quote_check(t_command **param, char *str, t_env_ll **env)
 		if (str[i] && str[i] == qoute)
 		{
 			result = ft_substr(&str[1], 0, len);
-			result2d = ft_split(result, ' ');
-			while (result2d[j])
-			{
-				if (set_node(param, result2d[j], 0, len, env) == -1)
-					return (-1);
-				++j;
-			}
+			if (set_node(param, result, 0, len, env) == -1)
+				return (-1);
 			return (i + 1);
 		}
 		++len;
@@ -255,7 +250,8 @@ int	empty_check(char *str)
 	return (0);
 }
 
-int	init_redirections(char *str, t_command **param, t_env_ll **env)
+int	init_redirections(char *str, t_command **param, t_env_ll **env,
+		t_stream *iostream)
 {
 	int i;
 	t_command *command;
@@ -281,7 +277,7 @@ int	init_redirections(char *str, t_command **param, t_env_ll **env)
 			++i;
 			if (str[i] == '\"' || str[i] == '\'')
 			{
-				temp = quote_check(param, &str[i], env);
+				temp = quote_check(param, &str[i], env, iostream);
 				if (temp == -1)
 					return (0);
 				i += temp;
