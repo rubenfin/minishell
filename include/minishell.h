@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/06 15:10:14 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/06 18:18:44 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,16 +125,15 @@ int						get_builtin(char *command, t_stream *param,
 							t_env_ll **env);
 int						check_if_valid_exit(char **args);
 
-void					setup_cmds(cmd_data **data, t_command **command);
-int						setup_before_executing(cmd_data **data,
-							t_env_ll **env, t_command **command,
-							t_stream **iostream);
+int						setup_cmds(cmd_data **data, t_command **command);
+int						setup_before_executing(cmd_data **data, t_env_ll **env,
+							t_command **command, t_stream **iostream);
 int						trim_command(cmd_data **data, bool last_cmd);
 int						clean_cmd_leftovers(cmd_data **data,
 							t_stream **iostream);
 int						setup_last_cmd(cmd_data **data, t_stream **iostream);
-int						status_and_clean(cmd_data **data,
-							t_stream **iostream, int *status, int *pid);
+int						status_and_clean(cmd_data **data, t_stream **iostream,
+							int *status, int *pid);
 
 /*
 PARSING

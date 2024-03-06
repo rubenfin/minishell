@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 15:04:48 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/06 15:07:25 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/06 18:28:26 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,24 +31,28 @@ int	wait_for_processes(int pid, int wait_total)
 	return (status);
 }
 
-void	setup_cmds(cmd_data **data, t_command **command)
+int	setup_cmds(cmd_data **data, t_command **command)
 {
 	(*data) = (cmd_data *)malloc(sizeof(cmd_data));
+	if (!(*data))
+		return (0);
 	(*data)->command = command;
 	(*data)->total_pipes = pipe_check(*(*data)->command);
 	(*data)->wait_total = (*data)->total_pipes + 1;
 	if (!(*data)->total_pipes)
-		return ;
+		return (1);
 	(*data)->one_cmd = *command;
 	(*data)->cmds_left = *command;
+	return (1);
 }
 
-int	setup_before_executing(cmd_data **data, t_env_ll **env,
-		t_command **command, t_stream **iostream)
+int	setup_before_executing(cmd_data **data, t_env_ll **env, t_command **command,
+		t_stream **iostream)
 {
-	setup_cmds(data, command);
-	if (malloc_stream(iostream, env) == -1)
-		return (EXIT_FAILURE);
+	if (!setup_cmds(data, command))
+		return (0);
+	if (!malloc_stream(iostream, env))
+		return (0);
 	return (1);
 }
 
