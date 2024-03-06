@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 15:55:14 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/05 16:35:18 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/05 18:53:00 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ char	*expanding(char *result, t_env_ll **env)
 		check = ft_strndup(result + i, x);
 		tmp = find_value_char(*env, &check[0], &i);
 		if (!tmp)
-			return (ft_strdup(""));
+			return (ft_strdup(" "));
 		else
 			result = ft_strjoin(tmp, result + i);
 		return (result);
@@ -146,7 +146,6 @@ char	*expanding(char *result, t_env_ll **env)
 		if (result[i] == '$')
 		{
 			tmp = ft_substr(result, 0, i);
-			printf("%s\n", tmp);
 			i++;
 			while (result[i])
 			{
@@ -236,17 +235,32 @@ int	quote_check(t_command **param, char *str, t_env_ll **env,
 
 int	empty_check(char *str)
 {
-	int	i;
+	int		i;
+	bool	flag;
 
+	flag = false;
 	i = 0;
 	if (!str || !str[0])
 		return (0);
+	i = 0;
 	while (str[i])
 	{
 		if (str[i] != ' ')
-			return (1);
+			break ;
 		i++;
 	}
+	if (!str[i] || str[i] == ' ')
+		return (0);
+	i = 0;
+	while (str[i])
+	{
+		if (ft_isalnum(str[i]) || str[i] == '.' || str[i] == '/')
+			flag = true;
+		i++;
+	}
+	if (flag)
+		return (1);
+	write(STDERR_FILENO, "minishell: syntax error\n", 24);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/05 15:59:52 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/05 18:55:26 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,32 +162,28 @@ int	command_line(t_env_ll **env, char *arg, int exit_status, bool *exit)
 	wait_total = total_pipes + 1;
 	if (!total_pipes)
 		return (no_pipes(command, iostream, exit));
-	else
+	while (total_pipes-- > 0)
 	{
-		while (total_pipes > 0)
-		{
-			init_stream(&iostream);
-			init_pipe(iostream->pipes);
-			until_pipe = get_command_until_pipe(command);
-			if (!until_pipe)
-				return (EXIT_FAILURE);
-			command = get_command_from_pipe(command);
-			execute(&until_pipe, iostream, true, &pid);
-			close(iostream->pipes->curr_write);
-			free_ll_command(until_pipe, false);
-			total_pipes--;
-		}
-		close(iostream->pipes->curr_write);
 		init_stream(&iostream);
+		init_pipe(iostream->pipes);
 		until_pipe = get_command_until_pipe(command);
 		if (!until_pipe)
 			return (EXIT_FAILURE);
-		status = execute(&until_pipe, iostream, true, &pid);
-		if (iostream->file_failure)
-		{
-			free_all_close_pipes(saved, until_pipe, iostream, total_pipes);
-			return (status);
-		}
+		command = get_command_from_pipe(command);
+		execute(&until_pipe, iostream, true, &pid);
+		close(iostream->pipes->curr_write);
+		free_ll_command(until_pipe, false);
+	}
+	close(iostream->pipes->curr_write);
+	init_stream(&iostream);
+	until_pipe = get_command_until_pipe(command);
+	if (!until_pipe)
+		return (EXIT_FAILURE);
+	status = execute(&until_pipe, iostream, true, &pid);
+	if (iostream->file_failure)
+	{
+		free_all_close_pipes(saved, until_pipe, iostream, total_pipes);
+		return (status);
 	}
 	status = wait_for_processes(pid, wait_total);
 	free_all_close_pipes(saved, until_pipe, iostream, total_pipes);

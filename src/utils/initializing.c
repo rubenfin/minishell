@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 16:17:12 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/05 15:31:25 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/06 12:16:00 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,16 @@ int	init_std_fd(t_std_fd **std_fd)
 		return (-1);
 	(*std_fd)->stdin_fd = dup(STDIN_FILENO);
 	(*std_fd)->stdout_fd = dup(STDOUT_FILENO);
+	(*std_fd)->stderr_fd = dup(STDERR_FILENO);
 	return (1);
 }
 
 void	refresh_std_fd(t_std_fd *std_fd)
 {
 	close(STDOUT_FILENO);
+	close(STDERR_FILENO);
 	close(STDIN_FILENO);
 	dup2(std_fd->stdout_fd, STDOUT_FILENO);
 	dup2(std_fd->stdin_fd, STDIN_FILENO);
+	dup2(std_fd->stderr_fd, STDERR_FILENO);
 }

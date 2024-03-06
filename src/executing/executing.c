@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/06 12:55:18 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/05 17:06:38 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/06 12:18:31 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,15 @@ int	redirection_here(t_stream *iostream, t_command *command)
 		return (set_file_failure_return(iostream));
 	while (1)
 	{
+		send_signals(HERE_DOC);
 		write(STDOUT_FILENO, "> ", 2);
 		buffer = get_next_line(STDIN_FILENO);
 		if (!buffer || !ft_strncmp(buffer, limiter, ft_strlen(limiter)))
 		{
+			if (!buffer)
+			{
+				print_hd_err(command->string);
+			}
 			ft_free(&buffer);
 			break ;
 		}
@@ -73,7 +78,6 @@ int	redirection_out(t_stream *iostream, t_command *command)
 	if (access(command->string, F_OK) == 0 && access(command->string, W_OK) ==
 		-1)
 	{
-		printf("here\n");
 		print_file_dir_err(command->string, false);
 		return (set_file_failure_return(iostream));
 	}
@@ -177,12 +181,18 @@ int	execute(t_command **param, t_stream *iostream, bool child, int *pid)
 	}
 	if (child == true)
 	{
+		signal(SIGINT, SIG_IGN);
 		*pid = fork();
 		if (*pid == 0)
 		{
+			send_signals(RUNNING_CMD);
 			if (execute_single(param, iostream) == -1)
 				exit(EXIT_FAILURE);
 		}
+		if (iostream->input != -1)
+			close(iostream->input);
+		if (iostream->output != -1)
+			close(iostream->output);
 	}
 	return (0);
 }

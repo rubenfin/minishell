@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/09 15:51:29 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/05 14:10:12 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/05 17:19:13 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,8 @@ int	dir_check(char *argv)
 
 void	check_dir_exe(char *argv)
 {
+	if (!argv)
+		return ;
 	if ((argv[0] == '.' && argv[1] == '/'))
 	{
 		if (access(argv, F_OK) != 0)
@@ -129,7 +131,9 @@ void	check_dir_exe(char *argv)
 		}
 		else if (access(argv, X_OK) != 0)
 		{
-			printf("minishell: filename: Permission denied\n");
+			write(STDERR_FILENO, "minishell: ", 12);
+			write(STDERR_FILENO, argv, ft_strlen(argv));
+			write(STDERR_FILENO, ": Permission denied\n", 20);
 			exit(126);
 		}
 		dir_check(argv);

@@ -1,17 +1,6 @@
 
 #include "../include/minishell.h"
 
-void	handle_sigint(int sig)
-{
-	if (sig == SIGINT)
-	{
-		rl_replace_line("", 0);
-		write(1, "\n", 1);
-		rl_on_new_line();
-		rl_redisplay();
-	}
-}
-
 int	minishell(t_env_ll **env, t_std_fd *std_fd)
 {
 	char	*buffer;
@@ -22,7 +11,8 @@ int	minishell(t_env_ll **env, t_std_fd *std_fd)
 	status = 0;
 	while (1)
 	{
-		refresh_std_fd(std_fd);
+		send_signals(NORMAL);
+		signal_status = -1;
 		buffer = readline("~$: ");
 		rl_on_new_line();
 		if (!buffer)
@@ -33,11 +23,25 @@ int	minishell(t_env_ll **env, t_std_fd *std_fd)
 		ft_free(&buffer);
 		if (exit)
 			break ;
-		printf("last command status %d\n", status);
+		if (signal_status != -1)
+			status = signal_status;
+		refresh_std_fd(std_fd);
 	}
 	rl_clear_history();
 	ft_free(&buffer);
 	return (write(1, "exit\n", 5), status);
+}
+
+int	set_tty_settings(void)
+{
+	struct termios	term;
+
+	if (tcgetattr(STDIN_FILENO, &term) == -1)
+		return (0);
+	term.c_lflag &= ~ECHOCTL;
+	if (tcsetattr(STDIN_FILENO, TCSANOW, &term) == -1)
+		return (0);
+	return (1);
 }
 
 int	main(int ac, char **av, char **envp)
@@ -48,7 +52,8 @@ int	main(int ac, char **av, char **envp)
 
 	status = 0;
 	(void)av;
-	signal(SIGINT, handle_sigint);
+	if (!set_tty_settings())
+		return (EXIT_FAILURE);
 	if (ac == 1)
 	{
 		if (init_std_fd(&std_fd) == -1)
@@ -58,6 +63,9 @@ int	main(int ac, char **av, char **envp)
 		status = minishell(&env, std_fd);
 		printf("exited with %d\n", status);
 		free_ll(&env);
+		close(std_fd->stderr_fd);
+		close(std_fd->stdin_fd);
+		close(std_fd->stdout_fd);
 		free(std_fd);
 		return (status);
 	}

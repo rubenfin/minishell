@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   minishell.h                                        :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/03/06 12:10:47 by rfinneru      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 #include <dirent.h>
 #include <errno.h>
@@ -12,7 +24,10 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <termios.h>
 #include <unistd.h>
+
+extern sig_atomic_t		signal_status;
 
 typedef struct s_env_ll
 {
@@ -21,6 +36,13 @@ typedef struct s_env_ll
 	struct s_env_ll		*prev;
 	struct s_env_ll		*next;
 }						t_env_ll;
+
+typedef enum SIGNALS
+{
+	NORMAL,
+	HERE_DOC,
+	RUNNING_CMD,
+}						t_SIGNALS;
 
 typedef enum TOKEN
 {
@@ -37,6 +59,7 @@ typedef struct s_std_fd
 {
 	int					stdin_fd;
 	int					stdout_fd;
+	int					stderr_fd;
 }						t_std_fd;
 
 typedef struct s_pipes
@@ -104,13 +127,22 @@ int						init_redirections(char *str, t_command **param,
 int						make_env_ll(t_env_ll **env, char **envp);
 t_env_ll				*find_key(t_env_ll *env, char *key_str);
 t_env_ll				*find_value(t_env_ll *env, char *value_str);
+
+/*
+SIGNALS
+*/
+void					handle_signals_running(int sig);
+void					handle_signals_heredoc(int sig);
+void					send_signals(t_SIGNALS SIGNAL);
+
 /*
 UTILS / INITIALIZNG
 */
 int						init_pipe(t_pipes *pipes);
 void					init_stream(t_stream **iostream);
 int						check_builtin(char *arg);
-int						malloc_stream(t_stream **iostream, t_env_ll **env, int exit_status);
+int						malloc_stream(t_stream **iostream, t_env_ll **env,
+							int exit_status);
 void					set_args(t_command **param, t_stream *iostream,
 							int count);
 void					refresh_std_fd(t_std_fd *std_fd);
@@ -159,6 +191,8 @@ void					print_file_dir_err(char *dir, bool cd);
 void					print_exit_err(char *buffer, bool numeric);
 void					print_invalid_identifier(t_env_ll **node,
 							char **export_data, int j);
+void					print_hd_err(char *limiter);
+
 /*
 UTILS / BUILTINS UTILS
 */

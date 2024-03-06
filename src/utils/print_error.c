@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/22 16:56:29 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/01 19:53:11 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/06 12:13:43 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,14 @@ void	print_exit_err(char *buffer, bool numeric)
 		write(STDERR_FILENO, buffer, ft_strlen(buffer));
 		write(STDERR_FILENO, ": numeric argument required\n", 28);
 	}
+}
+
+void	print_hd_err(char *limiter)
+{
+	write(STDOUT_FILENO, "\n", 1);
+	write(STDOUT_FILENO,
+		"minishell: warning: here-document delimited by signal (wanted `", 64);
+	write(STDOUT_FILENO, limiter, ft_strlen(limiter));
+	write(STDOUT_FILENO, "')", 2);
+	write(STDOUT_FILENO, "\n", 1);
 }
