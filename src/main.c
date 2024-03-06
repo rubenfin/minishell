@@ -39,7 +39,10 @@ int	minishell(t_env_ll **env, t_std_fd *std_fd)
 		if (!buffer)
 			break ;
 		if (!parser(env, &parsed, buffer))
+		{
+			ft_free(&buffer);
 			continue ;
+		}
 		status = command_line(env, &parsed, &exit);
 		if (buffer && ft_strlen(buffer) > 0)
 			add_history(buffer);
