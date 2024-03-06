@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/05 18:55:26 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/06 14:23:48 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,18 +107,6 @@ int	no_pipes(t_command *command, t_stream *iostream, bool *exit_called)
 		return (check_status(status));
 }
 
-int	init_command_line(t_env_ll **env, t_stream *iostream, t_command **command,
-		char *arg)
-{
-	int	total;
-
-	*command = NULL;
-	if (init_redirections(arg, command, env, iostream) == 0)
-		return (-1);
-	total = pipe_check(*command);
-	return (total);
-}
-
 int	wait_for_processes(int pid, int wait_total)
 {
 	int	status;
@@ -138,54 +126,57 @@ int	wait_for_processes(int pid, int wait_total)
 	return (status);
 }
 
-int	command_line(t_env_ll **env, char *arg, int exit_status, bool *exit)
+void	setup_cmds(t_basic_cmd **cmd_data, t_command **command)
 {
-	t_command	*command;
-	t_command	*until_pipe;
-	t_command	*saved;
+	(*cmd_data) = (t_basic_cmd *)malloc(sizeof(t_basic_cmd));
+	(*cmd_data)->command = command;
+	(*cmd_data)->until_pipe = *command;
+	(*cmd_data)->commands_left = *command;
+}
+
+int	command_line(t_env_ll **env, t_command **command, bool *exit)
+{
+	t_basic_cmd	*cmd_data;
 	t_stream	*iostream;
 	int			total_pipes;
 	pid_t		pid;
 	int			wait_total;
 	int			status;
 
+	cmd_data = NULL;
 	status = 0;
 	pid = -1;
-	if (!arg || !arg[0])
-		return (0);
-	if (malloc_stream(&iostream, env, exit_status) == -1)
+	setup_cmds(&cmd_data, command);
+	if (malloc_stream(&iostream, env) == -1)
 		return (EXIT_FAILURE);
-	total_pipes = init_command_line(env, iostream, &command, arg);
-	if (total_pipes == -1)
-		return (EXIT_FAILURE);
-	saved = command;
+	total_pipes = pipe_check(*cmd_data->command);
 	wait_total = total_pipes + 1;
 	if (!total_pipes)
-		return (no_pipes(command, iostream, exit));
+		return (no_pipes(*cmd_data->command, iostream, exit));
 	while (total_pipes-- > 0)
 	{
 		init_stream(&iostream);
 		init_pipe(iostream->pipes);
-		until_pipe = get_command_until_pipe(command);
-		if (!until_pipe)
+		cmd_data->until_pipe = get_command_until_pipe(cmd_data->commands_left);
+		if (!cmd_data->until_pipe)
 			return (EXIT_FAILURE);
-		command = get_command_from_pipe(command);
-		execute(&until_pipe, iostream, true, &pid);
+		cmd_data->commands_left = get_command_from_pipe(cmd_data->commands_left);
+		execute(&cmd_data->until_pipe, iostream, true, &pid);
 		close(iostream->pipes->curr_write);
-		free_ll_command(until_pipe, false);
+		free_ll_command(cmd_data->until_pipe, false);
 	}
 	close(iostream->pipes->curr_write);
 	init_stream(&iostream);
-	until_pipe = get_command_until_pipe(command);
-	if (!until_pipe)
+	cmd_data->until_pipe = get_command_until_pipe(cmd_data->commands_left);
+	if (!cmd_data->until_pipe)
 		return (EXIT_FAILURE);
-	status = execute(&until_pipe, iostream, true, &pid);
+	status = execute(&cmd_data->until_pipe, iostream, true, &pid);
 	if (iostream->file_failure)
 	{
-		free_all_close_pipes(saved, until_pipe, iostream, total_pipes);
+		free_all_close_pipes(&cmd_data, iostream, total_pipes);
 		return (status);
 	}
 	status = wait_for_processes(pid, wait_total);
-	free_all_close_pipes(saved, until_pipe, iostream, total_pipes);
+	free_all_close_pipes(&cmd_data, iostream, total_pipes);
 	return (check_status(status));
 }

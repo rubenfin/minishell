@@ -6,13 +6,13 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 16:17:12 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/06 12:16:00 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/06 13:29:52 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	malloc_stream(t_stream **iostream, t_env_ll **env, int exit_status)
+int	malloc_stream(t_stream **iostream, t_env_ll **env)
 {
 	(*iostream) = (t_stream *)malloc(sizeof(t_stream));
 	if (!(*iostream))
@@ -21,7 +21,6 @@ int	malloc_stream(t_stream **iostream, t_env_ll **env, int exit_status)
 	(*iostream)->pipes = (t_pipes *)malloc(sizeof(t_pipes));
 	if (!((*iostream)->pipes))
 		return (0);
-	(*iostream)->prev_exit_status = exit_status;
 	(*iostream)->pipes->curr_read = 0;
 	(*iostream)->pipes->curr_write = 0;
 	(*iostream)->pipes->prev_read = 0;

@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 15:55:14 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/05 18:53:00 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/06 13:23:33 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,8 +204,7 @@ int	set_node(t_command **param, char *str, int redirection, int len,
 	}
 	return (1);
 }
-int	quote_check(t_command **param, char *str, t_env_ll **env,
-		t_stream *iostream)
+int	quote_check(t_command **param, char *str, t_env_ll **env)
 {
 	int		i;
 	int		len;
@@ -213,7 +212,6 @@ int	quote_check(t_command **param, char *str, t_env_ll **env,
 	char	qoute;
 	int		j;
 
-	(void)iostream;
 	qoute = str[0];
 	i = 1;
 	j = 0;
@@ -264,15 +262,14 @@ int	empty_check(char *str)
 	return (0);
 }
 
-int	init_redirections(char *str, t_command **param, t_env_ll **env,
-		t_stream *iostream)
+int	init_redirections(char *str, t_command **param, t_env_ll **env)
 {
-	int i;
-	t_command *command;
-	int len;
-	int redirection;
-	char *test;
-	int temp;
+	int			i;
+	t_command	*command;
+	int			len;
+	int			redirection;
+	char		*test;
+	int			temp;
 
 	// char *result;
 	i = 0;
@@ -291,7 +288,7 @@ int	init_redirections(char *str, t_command **param, t_env_ll **env,
 			++i;
 			if (str[i] == '\"' || str[i] == '\'')
 			{
-				temp = quote_check(param, &str[i], env, iostream);
+				temp = quote_check(param, &str[i], env);
 				if (temp == -1)
 					return (0);
 				i += temp;
@@ -314,7 +311,6 @@ int	init_redirections(char *str, t_command **param, t_env_ll **env,
 			redirection = BUILTIN;
 		if (set_node(param, &str[i], redirection, len, env) == -1)
 			return (0);
-
 		i += len;
 		free(test);
 	}

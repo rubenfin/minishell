@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/05 18:11:33 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/06 12:02:12 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/06 13:13:46 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	handle_signals_normal(int sig)
 	{
 		signal_status = 130;
 		rl_replace_line("", 0);
-		write(1, "\n", 1);
+		write(STDIN_FILENO, "\n", 1);
 		rl_on_new_line();
 		rl_redisplay();
 	}

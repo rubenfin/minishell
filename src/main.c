@@ -1,23 +1,45 @@
 
 #include "../include/minishell.h"
 
-int	minishell(t_env_ll **env, t_std_fd *std_fd)
+int	clear_history_close_fds(t_std_fd *std_fd, char **buffer)
+{
+	rl_clear_history();
+	ft_free(buffer);
+	if (!close_std_fds(std_fd))
+		return (0);
+	return (1);
+}
+
+char	*setup_rl_and_sig(int *status)
 {
 	char	*buffer;
-	int		status;
-	bool	exit;
+
+	send_signals(NORMAL);
+	signal_status = -1;
+	buffer = readline("~$: ");
+	if (signal_status != -1)
+		*status = signal_status;
+	rl_on_new_line();
+	return (buffer);
+}
+
+int	minishell(t_env_ll **env, t_std_fd *std_fd)
+{
+	t_command	*parsed;
+	char		*buffer;
+	int			status;
+	bool		exit;
 
 	exit = false;
 	status = 0;
+	parsed = NULL;
 	while (1)
 	{
-		send_signals(NORMAL);
-		signal_status = -1;
-		buffer = readline("~$: ");
-		rl_on_new_line();
+		buffer = setup_rl_and_sig(&status);
 		if (!buffer)
 			break ;
-		status = command_line(env, buffer, status, &exit);
+		parser(env, &parsed, buffer);
+		status = command_line(env, &parsed, &exit);
 		if (buffer && ft_strlen(buffer) > 0)
 			add_history(buffer);
 		ft_free(&buffer);
@@ -26,9 +48,9 @@ int	minishell(t_env_ll **env, t_std_fd *std_fd)
 		if (signal_status != -1)
 			status = signal_status;
 		refresh_std_fd(std_fd);
+		printf("exit status: %d\n", status);
 	}
-	rl_clear_history();
-	ft_free(&buffer);
+	clear_history_close_fds(std_fd, &buffer);
 	return (write(1, "exit\n", 5), status);
 }
 
@@ -63,9 +85,6 @@ int	main(int ac, char **av, char **envp)
 		status = minishell(&env, std_fd);
 		printf("exited with %d\n", status);
 		free_ll(&env);
-		close(std_fd->stderr_fd);
-		close(std_fd->stdin_fd);
-		close(std_fd->stdout_fd);
 		free(std_fd);
 		return (status);
 	}

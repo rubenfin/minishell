@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/06 12:10:47 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/06 14:14:53 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,17 @@ typedef struct t_command
 
 }						t_command;
 
-int						command_line(t_env_ll **env, char *arg, int exit_status,
+typedef struct s_basic_cmd
+{
+	t_command			**command;
+	t_command			*until_pipe;
+	t_command			*commands_left;
+}						t_basic_cmd;
+
+int						parser(t_env_ll **env, t_command **command,
+							char *buffer);
+
+int						command_line(t_env_ll **env, t_command **command,
 							bool *exit);
 
 /*
@@ -123,7 +133,7 @@ t_command				*createnode_return(t_command **head, char *data,
 
 char					*set_valid_command(char *argv, char **full_path);
 int						init_redirections(char *str, t_command **param,
-							t_env_ll **env, t_stream *iostream);
+							t_env_ll **env);
 int						make_env_ll(t_env_ll **env, char **envp);
 t_env_ll				*find_key(t_env_ll *env, char *key_str);
 t_env_ll				*find_value(t_env_ll *env, char *value_str);
@@ -141,8 +151,7 @@ UTILS / INITIALIZNG
 int						init_pipe(t_pipes *pipes);
 void					init_stream(t_stream **iostream);
 int						check_builtin(char *arg);
-int						malloc_stream(t_stream **iostream, t_env_ll **env,
-							int exit_status);
+int						malloc_stream(t_stream **iostream, t_env_ll **env);
 void					set_args(t_command **param, t_stream *iostream,
 							int count);
 void					refresh_std_fd(t_std_fd *std_fd);
@@ -179,9 +188,8 @@ void					free_ll(t_env_ll **env);
 void					free_ll_command(t_command *head, bool main_command);
 void					free_args(char **args);
 void					free_iostream(t_stream **iostream, int count);
-void					free_all_close_pipes(t_command *saved,
-							t_command *until_pipe, t_stream *iostream,
-							int total_pipes);
+void					free_all_close_pipes(t_basic_cmd **cmd_data,
+							t_stream *iostream, int total_pipes);
 
 /*
 UTILS / PRINT ERROR
@@ -209,3 +217,8 @@ int						dir_check(char *argv);
 void					check_dir_exe(char *argv);
 int						valid_identifier_check(char c);
 char					*get_curr_dir(void);
+
+/*
+UTILS / FD_HANDLING
+*/
+int						close_std_fds(t_std_fd *std_fd);
