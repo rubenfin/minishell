@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/02 11:26:09 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/27 13:56:12 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/06 18:35:08 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,23 +41,3 @@ int	unset(t_env_ll **env, char **unset_data)
 	}
 	return (EXIT_SUCCESS);
 }
-
-// 0x12 -> shell -> zsh
-// 0x16 -> pwd -> dir
-// null
-
-// minishell
-// {
-// 	t_env_ll* env;
-// 	unset(&env);
-// 				{
-// 					env = 0x12;
-// 					*env => shell;
-// 					copy van location of shell;
-// 					free(env->value);
-// 					free(env);
-// 					env = null;
-// 					env -> 0x0;
-// 				}
-// 	env -> 0x12;
-// }

@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/30 12:09:22 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/05 16:19:16 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/06 18:35:12 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,9 +130,3 @@ int	cd(t_env_ll **env, char **directory)
 	else
 		return (absolute_path(env, directory[0]));
 }
-
-// int	main(void)
-// {
-// 	cd("directory_test");
-// 	return (0);
-// }
