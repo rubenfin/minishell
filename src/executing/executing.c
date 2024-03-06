@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/06 12:55:18 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/06 12:18:31 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/06 14:56:56 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,7 @@ int	execute(t_command **param, t_stream *iostream, bool child, int *pid)
 	{
 		status = token_checker(command, iostream);
 		if (status)
-			return (0);
+			return (1);
 		command = command->next;
 	}
 	if (command)

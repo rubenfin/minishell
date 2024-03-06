@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/06 14:14:53 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/06 15:07:25 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,9 +92,11 @@ typedef struct t_command
 typedef struct s_basic_cmd
 {
 	t_command			**command;
-	t_command			*until_pipe;
-	t_command			*commands_left;
-}						t_basic_cmd;
+	t_command			*one_cmd;
+	t_command			*cmds_left;
+	int					total_pipes;
+	int					wait_total;
+}						cmd_data;
 
 int						parser(t_env_ll **env, t_command **command,
 							char *buffer);
@@ -123,6 +125,17 @@ int						get_builtin(char *command, t_stream *param,
 							t_env_ll **env);
 int						check_if_valid_exit(char **args);
 
+void					setup_cmds(cmd_data **data, t_command **command);
+int						setup_before_executing(cmd_data **data,
+							t_env_ll **env, t_command **command,
+							t_stream **iostream);
+int						trim_command(cmd_data **data, bool last_cmd);
+int						clean_cmd_leftovers(cmd_data **data,
+							t_stream **iostream);
+int						setup_last_cmd(cmd_data **data, t_stream **iostream);
+int						status_and_clean(cmd_data **data,
+							t_stream **iostream, int *status, int *pid);
+
 /*
 PARSING
 */
@@ -148,6 +161,7 @@ void					send_signals(t_SIGNALS SIGNAL);
 /*
 UTILS / INITIALIZNG
 */
+int						init_stream_pipes(t_stream **iostream);
 int						init_pipe(t_pipes *pipes);
 void					init_stream(t_stream **iostream);
 int						check_builtin(char *arg);
@@ -188,7 +202,7 @@ void					free_ll(t_env_ll **env);
 void					free_ll_command(t_command *head, bool main_command);
 void					free_args(char **args);
 void					free_iostream(t_stream **iostream, int count);
-void					free_all_close_pipes(t_basic_cmd **cmd_data,
+void					free_all_close_pipes(cmd_data **data,
 							t_stream *iostream, int total_pipes);
 
 /*

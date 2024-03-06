@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/06 14:23:48 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/06 15:07:25 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,15 @@ int	check_parent_builtin(char *str)
 		return (0);
 }
 
-int	no_pipes(t_command *command, t_stream *iostream, bool *exit_called)
+int	no_pipes(cmd_data **data, t_stream *iostream, bool *exit_called)
 {
-	pid_t	pid;
-	int		status;
-	int		count;
-	bool	builtin;
+	pid_t		pid;
+	int			status;
+	int			count;
+	bool		builtin;
+	t_command	*command;
 
+	command = *(*data)->command;
 	builtin = false;
 	status = 0;
 	count = 0;
@@ -94,6 +96,7 @@ int	no_pipes(t_command *command, t_stream *iostream, bool *exit_called)
 		{
 			free_ll_command(command, true);
 			free_iostream(&iostream, count);
+			free(*data);
 			return (status);
 		}
 		else
@@ -101,82 +104,37 @@ int	no_pipes(t_command *command, t_stream *iostream, bool *exit_called)
 	}
 	free_ll_command(command, true);
 	free_iostream(&iostream, count);
+	free(*data);
 	if (builtin)
 		return (status);
 	else
 		return (check_status(status));
 }
 
-int	wait_for_processes(int pid, int wait_total)
-{
-	int	status;
 
-	status = 0;
-	waitpid(pid, &status, 0);
-	if (!wait_total)
-		return (0);
-	else
-	{
-		while (wait_total - 1)
-		{
-			wait(NULL);
-			wait_total--;
-		}
-	}
-	return (status);
-}
 
-void	setup_cmds(t_basic_cmd **cmd_data, t_command **command)
+int	command_line(t_env_ll **env, t_command **parsed, bool *exit)
 {
-	(*cmd_data) = (t_basic_cmd *)malloc(sizeof(t_basic_cmd));
-	(*cmd_data)->command = command;
-	(*cmd_data)->until_pipe = *command;
-	(*cmd_data)->commands_left = *command;
-}
-
-int	command_line(t_env_ll **env, t_command **command, bool *exit)
-{
-	t_basic_cmd	*cmd_data;
+	cmd_data	*data;
 	t_stream	*iostream;
-	int			total_pipes;
 	pid_t		pid;
-	int			wait_total;
 	int			status;
 
-	cmd_data = NULL;
+	data = NULL;
 	status = 0;
 	pid = -1;
-	setup_cmds(&cmd_data, command);
-	if (malloc_stream(&iostream, env) == -1)
-		return (EXIT_FAILURE);
-	total_pipes = pipe_check(*cmd_data->command);
-	wait_total = total_pipes + 1;
-	if (!total_pipes)
-		return (no_pipes(*cmd_data->command, iostream, exit));
-	while (total_pipes-- > 0)
+	setup_before_executing(&data, env, parsed, &iostream);
+	if (!data->total_pipes)
+		return (no_pipes(&data, iostream, exit));
+	while (data->total_pipes-- > 0)
 	{
-		init_stream(&iostream);
-		init_pipe(iostream->pipes);
-		cmd_data->until_pipe = get_command_until_pipe(cmd_data->commands_left);
-		if (!cmd_data->until_pipe)
-			return (EXIT_FAILURE);
-		cmd_data->commands_left = get_command_from_pipe(cmd_data->commands_left);
-		execute(&cmd_data->until_pipe, iostream, true, &pid);
-		close(iostream->pipes->curr_write);
-		free_ll_command(cmd_data->until_pipe, false);
+		init_stream_pipes(&iostream);
+		trim_command(&data, false);
+		execute(&data->one_cmd, iostream, true, &pid);
+		clean_cmd_leftovers(&data, &iostream);
 	}
-	close(iostream->pipes->curr_write);
-	init_stream(&iostream);
-	cmd_data->until_pipe = get_command_until_pipe(cmd_data->commands_left);
-	if (!cmd_data->until_pipe)
-		return (EXIT_FAILURE);
-	status = execute(&cmd_data->until_pipe, iostream, true, &pid);
-	if (iostream->file_failure)
-	{
-		free_all_close_pipes(&cmd_data, iostream, total_pipes);
-		return (status);
-	}
-	status = wait_for_processes(pid, wait_total);
-	free_all_close_pipes(&cmd_data, iostream, total_pipes);
+	setup_last_cmd(&data, &iostream);
+	status = execute(&data->one_cmd, iostream, true, &pid);
+	status_and_clean(&data, &iostream, &status, &pid);
 	return (check_status(status));
 }
