@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   libft.h                                            :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2023/11/01 14:23:53 by jade-haa      #+#    #+#                 */
-/*   Updated: 2024/02/09 12:23:31 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   libft.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/01 14:23:53 by jade-haa          #+#    #+#             */
+/*   Updated: 2024/03/06 14:44:32 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,5 @@ int		ft_tolower(int c);
 int		ft_toupper(int c);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
+char	*errorarray(void);
 #endif

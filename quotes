@@ -1,0 +1,31 @@
+finneru@f1r1s15:~/Codam/rank03/minishell$ echo "test="hallo""
+test=hallo
+rfinneru@f1r1s15:~/Codam/rank03/minishell$ echo "test='hallo'"
+test='hallo'
+rfinneru@f1r1s15:~/Codam/rank03/minishell$ echo "test='"hallo"'"
+test='hallo'
+rfinneru@f1r1s15:~/Codam/rank03/minishell$ echo "test=''hallo''"
+test=''hallo''
+rfinneru@f1r1s15:~/Codam/rank03/minishell$ echo test=''hallo''
+test=hallo
+rfinneru@f1r1s15:~/Codam/rank03/minishell$ echo '"test=hallo"'
+"test=hallo"
+rfinneru@f1r1s15:~/Codam/rank03/minishell$ echo '"'"test=hallo"'"'
+"test=hallo"
+rfinneru@f1r1s15:~/Codam/rank03/minishell$
+4:43
+rfinneru@f1r1s15:~/Codam/rank03/minishell$ echo test="hallo world"
+test=hallo world
+rfinneru@f1r1s15:~/Codam/rank03/minishell$ echo test="hallo" "world"
+test=hallo world
+
+
+
+jade-haa@f1r2s21:~/Desktop/minishell-2$ echo "Hello $PATH"
+Hello /home/jade-haa/bin:/home/jade-haa/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/jade-haa/.dotnet/tools
+jade-haa@f1r2s21:~/Desktop/minishell-2$ echo '"Hello $PATH"'
+"Hello $PATH"
+jade-haa@f1r2s21:~/Desktop/minishell-2$ echo "'"Hello $PATH"'"
+'Hello /home/jade-haa/bin:/home/jade-haa/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/jade-haa/.dotnet/tools'
+jade-haa@f1r2s21:~/Desktop/minishell-2$ echo '"'"Hello $PATH"'"'
+"Hello /home/jade-haa/bin:/home/jade-haa/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/jade-haa/.dotnet/tools"
