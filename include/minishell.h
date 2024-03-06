@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/06 15:07:25 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/06 15:10:14 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ int						get_exit(t_env_ll *env, char **args);
 /*
 EXECUTING
 */
-int						execute(t_command **param, t_stream *iostream,
+int						set_redirections(t_command **param, t_stream *iostream,
 							bool child, int *pid);
 int						execute_single(t_command **param, t_stream *iostream);
 int						get_builtin(char *command, t_stream *param,

@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/06 12:55:18 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/06 14:56:56 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/06 15:09:55 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ int	token_checker(t_command *command, t_stream *iostream)
 	return (status);
 }
 
-int	execute(t_command **param, t_stream *iostream, bool child, int *pid)
+int	set_redirections(t_command **param, t_stream *iostream, bool child, int *pid)
 {
 	t_command	*command;
 	int			status;

@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/06 15:07:25 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/06 15:10:31 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	no_pipes(cmd_data **data, t_stream *iostream, bool *exit_called)
 	init_stream(&iostream);
 	if (command->token == BUILTIN && check_parent_builtin(command->string))
 	{
-		execute(&command, iostream, false, &pid);
+		set_redirections(&command, iostream, false, &pid);
 		count = main_set_args(&command, iostream);
 		if (count == -1)
 			return (EXIT_FAILURE);
@@ -91,7 +91,7 @@ int	no_pipes(cmd_data **data, t_stream *iostream, bool *exit_called)
 	}
 	else
 	{
-		status = execute(&command, iostream, true, &pid);
+		status = set_redirections(&command, iostream, true, &pid);
 		if (iostream->file_failure)
 		{
 			free_ll_command(command, true);
@@ -130,11 +130,11 @@ int	command_line(t_env_ll **env, t_command **parsed, bool *exit)
 	{
 		init_stream_pipes(&iostream);
 		trim_command(&data, false);
-		execute(&data->one_cmd, iostream, true, &pid);
+		set_redirections(&data->one_cmd, iostream, true, &pid);
 		clean_cmd_leftovers(&data, &iostream);
 	}
 	setup_last_cmd(&data, &iostream);
-	status = execute(&data->one_cmd, iostream, true, &pid);
+	status = set_redirections(&data->one_cmd, iostream, true, &pid);
 	status_and_clean(&data, &iostream, &status, &pid);
 	return (check_status(status));
 }
