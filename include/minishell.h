@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   minishell.h                                        :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/06 15:10:14 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/06 12:01:35 by rfinneru          #+#    #+#             */
+/*   Updated: 2024/03/07 12:20:06 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,15 +126,14 @@ int						get_builtin(char *command, t_stream *param,
 int						check_if_valid_exit(char **args);
 
 void					setup_cmds(cmd_data **data, t_command **command);
-int						setup_before_executing(cmd_data **data,
-							t_env_ll **env, t_command **command,
-							t_stream **iostream);
+int						setup_before_executing(cmd_data **data, t_env_ll **env,
+							t_command **command, t_stream **iostream);
 int						trim_command(cmd_data **data, bool last_cmd);
 int						clean_cmd_leftovers(cmd_data **data,
 							t_stream **iostream);
 int						setup_last_cmd(cmd_data **data, t_stream **iostream);
-int						status_and_clean(cmd_data **data,
-							t_stream **iostream, int *status, int *pid);
+int						status_and_clean(cmd_data **data, t_stream **iostream,
+							int *status, int *pid);
 
 /*
 PARSING
@@ -150,6 +149,14 @@ int						init_redirections(char *str, t_command **param,
 int						make_env_ll(t_env_ll **env, char **envp);
 t_env_ll				*find_key(t_env_ll *env, char *key_str);
 t_env_ll				*find_value(t_env_ll *env, char *value_str);
+char					*expanding(char *result, t_env_ll **env);
+int						empty_checker(char *str);
+int						redirection_checker_int(char *str, int i,
+							int check_all);
+int						redirection_checker_bool(char *str, int i,
+							int check_all);
+int						check_first_cmd(char *str, int i);
+int						dollar_sign_check(char *result);
 
 /*
 SIGNALS
