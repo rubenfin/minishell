@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/07 12:09:47 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/07 12:34:02 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/07 13:55:52 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ int	do_exit(t_stream *iostream, bool *exit_called)
 		waitpid(pid, &status, 0);
 	return (status);
 }
+
 int	check_parent_builtin(char *str)
 {
 	if (ft_strncmp(str, "exit", 5) == 0)

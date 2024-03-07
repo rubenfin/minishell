@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/07 12:17:52 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/07 15:23:24 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,11 @@ int						check_parent_builtin(char *str);
 void					clean_single_cmd(t_cmd_data *data, t_stream *iostream,
 							int count);
 int						wait_for_processes(int pid, int wait_total);
+int						redirection_here(t_stream *iostream,
+							t_command *command);
+int						redirection_in(t_stream *iostream, t_command *cmd);
+int						redirection_out(t_stream *iostream, t_command *cmd);
+int						redirection_append(t_stream *iostream, t_command *cmd);
 
 /*
 PARSING

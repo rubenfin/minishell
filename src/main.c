@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/07 11:47:31 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/07 11:47:34 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/07 16:49:15 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,12 @@ char	*setup_rl_and_sig(int *status)
 {
 	char	*buffer;
 
-	send_signals(NORMAL);
 	g_signal_status = -1;
+	send_signals(NORMAL);
 	buffer = readline("~$: ");
+	rl_on_new_line();
 	if (g_signal_status != -1)
 		*status = g_signal_status;
-	rl_on_new_line();
 	return (buffer);
 }
 
@@ -50,10 +50,7 @@ int	minishell(t_env_ll **env, t_std_fd *std_fd)
 		if (!buffer)
 			break ;
 		if (!parser(env, &parsed, buffer))
-		{
-			ft_free(&buffer);
 			continue ;
-		}
 		status = command_line(env, &parsed, &exit);
 		if (buffer && ft_strlen(buffer) > 0)
 			add_history(buffer);

@@ -6,22 +6,23 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/09 12:35:32 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/07 11:44:02 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/07 15:14:30 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	ft_strleng(char *str)
+int	count_ll_len(t_env_ll *env)
 {
-	int	i;
+	int	len;
 
-	i = 0;
-	if (!str)
-		return (0);
-	while (str[i])
-		i++;
-	return (i);
+	len = 0;
+	while (env)
+	{
+		len++;
+		env = env->next;
+	}
+	return(len);
 }
 
 char	**ll_to_2d_arr(t_env_ll *env)
@@ -34,12 +35,7 @@ char	**ll_to_2d_arr(t_env_ll *env)
 	i = 0;
 	if (!env)
 		return (NULL);
-	curr = env;
-	while (curr)
-	{
-		i++;
-		curr = curr->next;
-	}
+	i = count_ll_len(env);
 	curr = env;
 	envp = (char **)malloc((i + 1) * sizeof(char *));
 	if (!envp)
@@ -52,7 +48,7 @@ char	**ll_to_2d_arr(t_env_ll *env)
 		ft_free(&key_w_equal);
 		curr = curr->next;
 	}
-	envp[i] = NULL;
+	envp[++i] = NULL;
 	return (envp);
 }
 
@@ -122,7 +118,7 @@ int	make_env_ll(t_env_ll **env, char **envp)
 		i++;
 	}
 	*env = head;
-	return(1);
+	return (1);
 }
 
 t_env_ll	*find_key(t_env_ll *env, char *key_str)

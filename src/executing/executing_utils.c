@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 15:04:48 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/07 12:10:09 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/07 13:53:36 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ int	setup_cmds(t_cmd_data **data, t_command **command)
 	return (1);
 }
 
-int	setup_before_executing(t_cmd_data **data, t_env_ll **env, t_command **command,
-		t_stream **iostream)
+int	setup_before_executing(t_cmd_data **data, t_env_ll **env,
+		t_command **command, t_stream **iostream)
 {
 	if (!setup_cmds(data, command))
 		return (0);
@@ -72,4 +72,3 @@ int	clean_cmd_leftovers(t_cmd_data **data, t_stream **iostream)
 	free_ll_command((*data)->one_cmd, false);
 	return (1);
 }
-
