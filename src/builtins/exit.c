@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/27 10:09:36 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/01 19:01:09 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/07 12:29:09 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	check_if_valid_exit(char **args)
 		while (args[i][++j])
 		{
 			if ((!ft_isdigit(args[i][j]) && (args[i][j] != '-'
-					&& args[i][j] != '+') ))
+						&& args[i][j] != '+')))
 				found_not_numeric = true;
 			if (args[i][j] == '-' || args[i][j] == '+')
 				total_min_or_plus++;
@@ -78,43 +78,46 @@ int	check_if_valid_exit(char **args)
 	if (i > 1)
 		return (0);
 	else if (found_not_numeric || total_min_or_plus > 1)
-		return (0);
+		return(0);
 	return (1);
+}
+
+int	check_return(int i, bool found_not_numeric, char **args,
+		int total_min_or_plus)
+{
+	if (i > 1)
+		return (print_exit_err(args[0], false), 1);
+	else if (found_not_numeric || total_min_or_plus > 1)
+		return (print_exit_err(args[0], true), 2);
+	if (!args[0])
+		return (0);
+	else
+		return (ft_atoll(args[0]));
 }
 
 int	get_exit(t_env_ll *env, char **args)
 {
+	bool	found_not_numeric;
+	int		i;
+	int		j;
+	int		total_min_or_plus;
+
 	(void)env;
-
-	bool found_not_numeric;
-	int i;
-	int j;
-	int total_min_or_plus;
-
 	total_min_or_plus = 0;
 	found_not_numeric = false;
 	i = -1;
 	j = -1;
-
 	while (args[++i])
 	{
 		j = -1;
 		while (args[i][++j])
 		{
 			if ((!ft_isdigit(args[i][j]) && (args[i][j] != '-'
-					&& args[i][j] != '+')))
+						&& args[i][j] != '+')))
 				found_not_numeric = true;
 			if (args[i][j] == '-' || args[i][j] == '+')
 				total_min_or_plus++;
 		}
 	}
-	if (i > 1)
-		return (print_exit_err(args[0], false), 1);
-	else if (found_not_numeric || total_min_or_plus > 1)
-		return (print_exit_err(args[0], true), 2);
-
-	if (!args[0])
-		return (0);
-	else
-		return (ft_atoll(args[0]));
+	return (check_return(i, found_not_numeric, args, total_min_or_plus));
 }

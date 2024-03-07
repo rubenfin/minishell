@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 15:04:48 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/07 11:20:20 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/07 12:10:09 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ int	wait_for_processes(int pid, int wait_total)
 	return (status);
 }
 
-int	setup_cmds(cmd_data **data, t_command **command)
+int	setup_cmds(t_cmd_data **data, t_command **command)
 {
-	(*data) = (cmd_data *)malloc(sizeof(cmd_data));
+	(*data) = (t_cmd_data *)malloc(sizeof(t_cmd_data));
 	if (!(*data))
 		return (0);
 	(*data)->command = command;
@@ -46,7 +46,7 @@ int	setup_cmds(cmd_data **data, t_command **command)
 	return (1);
 }
 
-int	setup_before_executing(cmd_data **data, t_env_ll **env, t_command **command,
+int	setup_before_executing(t_cmd_data **data, t_env_ll **env, t_command **command,
 		t_stream **iostream)
 {
 	if (!setup_cmds(data, command))
@@ -56,7 +56,7 @@ int	setup_before_executing(cmd_data **data, t_env_ll **env, t_command **command,
 	return (1);
 }
 
-int	trim_command(cmd_data **data, bool last_cmd)
+int	trim_command(t_cmd_data **data, bool last_cmd)
 {
 	(*data)->one_cmd = get_command_until_pipe((*data)->cmds_left);
 	if (!(*data)->one_cmd)
@@ -66,30 +66,10 @@ int	trim_command(cmd_data **data, bool last_cmd)
 	return (0);
 }
 
-int	clean_cmd_leftovers(cmd_data **data, t_stream **iostream)
+int	clean_cmd_leftovers(t_cmd_data **data, t_stream **iostream)
 {
 	close((*iostream)->pipes->curr_write);
 	free_ll_command((*data)->one_cmd, false);
 	return (1);
 }
 
-int	setup_last_cmd(cmd_data **data, t_stream **iostream)
-{
-	close((*iostream)->pipes->curr_write);
-	init_stream(iostream);
-	trim_command(data, true);
-	return (1);
-}
-
-int	status_and_clean(cmd_data **data, t_stream **iostream, int *status,
-		int *pid)
-{
-	if ((*iostream)->file_failure)
-	{
-		free_all_close_pipes(data, *iostream, (*data)->total_pipes);
-		return (*status);
-	}
-	*status = wait_for_processes(*pid, (*data)->wait_total);
-	free_all_close_pipes(data, *iostream, (*data)->total_pipes);
-	return (check_status(*status));
-}

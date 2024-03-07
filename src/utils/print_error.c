@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/22 16:56:29 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/07 11:15:21 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/07 11:41:07 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	print_hd_err(char *limiter)
 	write(STDERR_FILENO, "\n", 1);
 }
 
-void print_file_permission_err(char *file)
+void	print_file_permission_err(char *file)
 {
 	write(STDERR_FILENO, "minishell: ", 12);
 	write(STDERR_FILENO, file, ft_strlen(file));

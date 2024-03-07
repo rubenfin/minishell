@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/07 11:35:48 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/07 12:31:47 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,45 +28,6 @@ int	main_set_args(t_command **param, t_stream *iostream)
 	return (count);
 }
 
-int	do_exit(t_stream *iostream, bool *exit_called)
-{
-	pid_t	pid;
-	int		status;
-
-	status = 0;
-	pid = -1;
-	if (check_if_valid_exit(iostream->args))
-		*exit_called = true;
-	pid = fork();
-	if (pid == 0)
-	{
-		status = get_exit(*iostream->env, iostream->args);
-		exit(status);
-	}
-	else
-		waitpid(pid, &status, 0);
-	return (status);
-}
-int	check_parent_builtin(char *str)
-{
-	if (ft_strncmp(str, "exit", 5) == 0)
-		return (1);
-	else if (ft_strncmp(str, "unset", 6) == 0)
-		return (1);
-	else if (ft_strncmp(str, "export", 7) == 0)
-		return (1);
-	else if (ft_strncmp(str, "cd", 3) == 0)
-		return (1);
-	else
-		return (0);
-}
-
-void	clean_single_cmd(cmd_data *data, t_stream *iostream, int count)
-{
-	free_ll_command(*data->command, true);
-	free_iostream(&iostream, count);
-	free(data);
-}
 
 int	setup_builtin_no_pipes(t_command **command, t_stream *iostream, int *pid,
 		int *count)
@@ -88,7 +49,7 @@ int	return_right_status(bool *exit_called, int pid, int status)
 		return (status);
 }
 
-int	builtin(cmd_data *data, t_stream *iostream, bool *exit_called)
+int	builtin(t_cmd_data *data, t_stream *iostream, bool *exit_called)
 {
 	pid_t		pid;
 	int			status;
@@ -109,7 +70,7 @@ int	builtin(cmd_data *data, t_stream *iostream, bool *exit_called)
 	return (return_right_status(exit_called, pid, status));
 }
 
-int	no_pipes(cmd_data *data, t_stream *iostream, bool *exit_called)
+int	no_pipes(t_cmd_data *data, t_stream *iostream, bool *exit_called)
 {
 	pid_t		pid;
 	int			status;
@@ -137,7 +98,7 @@ int	no_pipes(cmd_data *data, t_stream *iostream, bool *exit_called)
 
 int	command_line(t_env_ll **env, t_command **parsed, bool *exit)
 {
-	cmd_data	*data;
+	t_cmd_data	*data;
 	t_stream	*iostream;
 	pid_t		pid;
 	int			status;

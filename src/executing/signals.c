@@ -6,19 +6,19 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/05 18:11:33 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/06 18:25:07 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/07 11:45:09 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-sig_atomic_t	signal_status;
+sig_atomic_t	g_signal_status;
 
 void	handle_signals_normal(int sig)
 {
 	if (sig == SIGINT)
 	{
-		signal_status = 130;
+		g_signal_status = 130;
 		rl_replace_line("", 0);
 		write(STDIN_FILENO, "\n", 1);
 		rl_on_new_line();
@@ -35,7 +35,7 @@ void	handle_signals_heredoc(int sig)
 {
 	if (sig == SIGINT)
 	{
-		signal_status = 130;
+		g_signal_status = 130;
 		close(STDIN_FILENO);
 		write(STDOUT_FILENO, "\n", 1);
 		close(STDOUT_FILENO);

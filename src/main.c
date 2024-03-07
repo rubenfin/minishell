@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   main.c                                             :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/03/07 11:47:31 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/03/07 11:47:34 by rfinneru      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../include/minishell.h"
 
@@ -15,10 +26,10 @@ char	*setup_rl_and_sig(int *status)
 	char	*buffer;
 
 	send_signals(NORMAL);
-	signal_status = -1;
+	g_signal_status = -1;
 	buffer = readline("~$: ");
-	if (signal_status != -1)
-		*status = signal_status;
+	if (g_signal_status != -1)
+		*status = g_signal_status;
 	rl_on_new_line();
 	return (buffer);
 }
@@ -49,8 +60,8 @@ int	minishell(t_env_ll **env, t_std_fd *std_fd)
 		ft_free(&buffer);
 		if (exit)
 			break ;
-		if (signal_status != -1)
-			status = signal_status;
+		if (g_signal_status != -1)
+			status = g_signal_status;
 		refresh_std_fd(std_fd);
 		printf("exit status: %d\n", status);
 	}

@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/14 18:56:11 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/06 15:07:25 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/07 11:43:10 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,15 +75,4 @@ void	free_iostream(t_stream **iostream, int count)
 	free((*iostream)->args);
 	free((*iostream)->pipes);
 	free((*iostream));
-}
-
-void	free_all_close_pipes(cmd_data **data,t_stream *iostream, int total_pipes)
-{
-	free_ll_command((*data)->one_cmd, false);
-	free_ll_command(*(*data)->command, true);
-	free(*data);
-	if (total_pipes)
-		close_pipes(iostream->pipes);
-	free(iostream->pipes);
-	free(iostream);
 }

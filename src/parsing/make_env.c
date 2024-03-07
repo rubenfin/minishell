@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   make_env.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/09 12:35:32 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/03/04 16:54:06 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   make_env.c                                         :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/02/09 12:35:32 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/03/07 11:44:02 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,12 @@ char	**ll_to_2d_arr(t_env_ll *env)
 	envp = (char **)malloc((i + 1) * sizeof(char *));
 	if (!envp)
 		return (NULL);
-	i = 0;
+	i = -1;
 	while (curr)
 	{
 		key_w_equal = ft_strjoin(curr->key, "=");
-		envp[i] = ft_strjoin(key_w_equal, curr->value);
+		envp[++i] = ft_strjoin(key_w_equal, curr->value);
 		ft_free(&key_w_equal);
-		i++;
 		curr = curr->next;
 	}
 	envp[i] = NULL;

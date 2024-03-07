@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/07 11:21:40 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/07 12:17:52 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 #include <termios.h>
 #include <unistd.h>
 
-extern sig_atomic_t		signal_status;
+extern sig_atomic_t		g_signal_status;
 
 typedef struct s_env_ll
 {
@@ -53,7 +53,7 @@ typedef enum TOKEN
 	RE_APPEND,
 	PIPE,
 	BUILTIN,
-}						TOKEN;
+}						t_TOKEN;
 
 typedef struct s_std_fd
 {
@@ -96,7 +96,7 @@ typedef struct s_basic_cmd
 	t_command			*cmds_left;
 	int					total_pipes;
 	int					wait_total;
-}						cmd_data;
+}						t_cmd_data;
 
 int						parser(t_env_ll **env, t_command **command,
 							char *buffer);
@@ -125,15 +125,21 @@ int						get_builtin(char *command, t_stream *param,
 							t_env_ll **env);
 int						check_if_valid_exit(char **args);
 
-int						setup_cmds(cmd_data **data, t_command **command);
-int						setup_before_executing(cmd_data **data, t_env_ll **env,
-							t_command **command, t_stream **iostream);
-int						trim_command(cmd_data **data, bool last_cmd);
-int						clean_cmd_leftovers(cmd_data **data,
+int						setup_cmds(t_cmd_data **data, t_command **command);
+int						setup_before_executing(t_cmd_data **data,
+							t_env_ll **env, t_command **command,
 							t_stream **iostream);
-int						setup_last_cmd(cmd_data **data, t_stream **iostream);
-int						status_and_clean(cmd_data **data, t_stream **iostream,
+int						trim_command(t_cmd_data **data, bool last_cmd);
+int						clean_cmd_leftovers(t_cmd_data **data,
+							t_stream **iostream);
+int						setup_last_cmd(t_cmd_data **data, t_stream **iostream);
+int						status_and_clean(t_cmd_data **data, t_stream **iostream,
 							int *status, int *pid);
+int						do_exit(t_stream *iostream, bool *exit_called);
+int						check_parent_builtin(char *str);
+void					clean_single_cmd(t_cmd_data *data, t_stream *iostream,
+							int count);
+int						wait_for_processes(int pid, int wait_total);
 
 /*
 PARSING
@@ -153,7 +159,7 @@ t_env_ll				*find_value(t_env_ll *env, char *value_str);
 /*
 SIGNALS
 */
-void					handle_signals_running(int sig);
+void					handle_signals_normal(int sig);
 void					handle_signals_heredoc(int sig);
 void					send_signals(t_SIGNALS SIGNAL);
 
@@ -201,7 +207,7 @@ void					free_ll(t_env_ll **env);
 void					free_ll_command(t_command *head, bool main_command);
 void					free_args(char **args);
 void					free_iostream(t_stream **iostream, int count);
-void					free_all_close_pipes(cmd_data **data,
+void					free_all_close_pipes(t_cmd_data **data,
 							t_stream *iostream, int total_pipes);
 
 /*

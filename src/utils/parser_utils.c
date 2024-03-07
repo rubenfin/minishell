@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parser_utils.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/06 15:49:56 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/03/04 17:33:49 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   parser_utils.c                                     :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/02/06 15:49:56 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/03/07 11:41:24 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,10 @@ t_command	*get_command_from_pipe(t_command *command)
 	t_command	*head;
 
 	head = command;
-	// t_command *temp;
 	if (head && head->token == PIPE)
-	{
-		// temp = head;
 		head = head->next;
-	}
 	while (head && head->token != PIPE)
-	{
-		// temp = head;
 		head = head->next;
-	}
 	return (head);
 }
 
