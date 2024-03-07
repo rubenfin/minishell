@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 15:04:48 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/06 18:28:26 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/07 11:20:20 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,11 @@ int	status_and_clean(cmd_data **data, t_stream **iostream, int *status,
 		int *pid)
 {
 	if ((*iostream)->file_failure)
-		return (free_all_close_pipes(data, *iostream, (*data)->total_pipes),
-			*status);
+	{
+		free_all_close_pipes(data, *iostream, (*data)->total_pipes);
+		return (*status);
+	}
 	*status = wait_for_processes(*pid, (*data)->wait_total);
 	free_all_close_pipes(data, *iostream, (*data)->total_pipes);
-	return (1);
+	return (check_status(*status));
 }

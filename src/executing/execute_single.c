@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   execute_single.c                                   :+:    :+:            */
+/*   execute.c                                   :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/07 16:36:54 by jade-haa      #+#    #+#                 */
-/*   Updated: 2024/03/06 11:50:05 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/07 11:21:29 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ void	ft_dup2(int iostream, int standard)
 		exit(errno);
 }
 
-int	execute_single(t_command **param, t_stream *iostream)
+int	execute(t_command **param, t_stream *iostream)
 {
 	t_command	*command;
 	int			count;

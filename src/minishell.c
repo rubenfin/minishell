@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/06 18:16:08 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/07 11:35:48 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,43 +73,66 @@ int	setup_builtin_no_pipes(t_command **command, t_stream *iostream, int *pid,
 {
 	set_redirections(command, iostream, false, pid);
 	*count = main_set_args(command, iostream);
+	if (iostream->file_failure)
+		return (0);
 	if (*count == -1)
 		return (0);
 	return (1);
 }
-int	no_pipes(cmd_data **data, t_stream *iostream, bool *exit_called)
+
+int	return_right_status(bool *exit_called, int pid, int status)
+{
+	if (pid != -1 || *exit_called)
+		return (check_status(status));
+	else
+		return (status);
+}
+
+int	builtin(cmd_data *data, t_stream *iostream, bool *exit_called)
+{
+	pid_t		pid;
+	int			status;
+	t_command	*command;
+	int			count;
+
+	command = *(data)->command;
+	count = 0;
+	status = 0;
+	pid = -1;
+	if (!setup_builtin_no_pipes(&command, iostream, &pid, &count))
+		return (clean_single_cmd(data, iostream, count), EXIT_FAILURE);
+	if ((ft_strncmp(command->string, "exit", 4)) == 0)
+		status = do_exit(iostream, exit_called);
+	else
+		status = get_builtin(command->string, iostream, iostream->env);
+	clean_single_cmd(data, iostream, count);
+	return (return_right_status(exit_called, pid, status));
+}
+
+int	no_pipes(cmd_data *data, t_stream *iostream, bool *exit_called)
 {
 	pid_t		pid;
 	int			status;
 	int			count;
 	t_command	*command;
 
-	command = *(*data)->command;
+	command = *(data)->command;
 	status = 0;
 	count = 0;
 	pid = -1;
 	init_stream(&iostream);
 	if (command->token == BUILTIN && check_parent_builtin(command->string))
-	{
-		setup_builtin_no_pipes(&command, iostream, &pid, &count);
-		if ((ft_strncmp(command->string, "exit", 4)) == 0)
-			status = do_exit(iostream, exit_called);
-		else
-			status = get_builtin(command->string, iostream, iostream->env);
-	}
+		return(builtin(data, iostream, exit_called));
 	else
 	{
 		status = set_redirections(&command, iostream, true, &pid);
 		if (iostream->file_failure)
-			return (clean_single_cmd(*data, iostream, count), status);
+			return (clean_single_cmd(data, iostream, count), status);
 		else
 			waitpid(pid, &status, 0);
 	}
-	clean_single_cmd(*data, iostream, count);
-	if (pid != -1 || *exit_called)
-		return (check_status(status));
-	else
-		return (status);
+	clean_single_cmd(data, iostream, count);
+	return (return_right_status(exit_called, pid, status));
 }
 
 int	command_line(t_env_ll **env, t_command **parsed, bool *exit)
@@ -125,7 +148,7 @@ int	command_line(t_env_ll **env, t_command **parsed, bool *exit)
 	if (!setup_before_executing(&data, env, parsed, &iostream))
 		return (-1);
 	if (!data->total_pipes)
-		return (no_pipes(&data, iostream, exit));
+		return (no_pipes(data, iostream, exit));
 	while (data->total_pipes-- > 0)
 	{
 		init_stream_pipes(&iostream);
@@ -135,6 +158,5 @@ int	command_line(t_env_ll **env, t_command **parsed, bool *exit)
 	}
 	setup_last_cmd(&data, &iostream);
 	status = set_redirections(&data->one_cmd, iostream, true, &pid);
-	status_and_clean(&data, &iostream, &status, &pid);
-	return (check_status(status));
+	return (status_and_clean(&data, &iostream, &status, &pid));
 }

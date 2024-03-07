@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/22 16:56:29 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/06 12:13:43 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/07 11:15:21 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,17 @@ void	print_exit_err(char *buffer, bool numeric)
 
 void	print_hd_err(char *limiter)
 {
-	write(STDOUT_FILENO, "\n", 1);
-	write(STDOUT_FILENO,
+	write(STDERR_FILENO, "\n", 1);
+	write(STDERR_FILENO,
 		"minishell: warning: here-document delimited by signal (wanted `", 64);
-	write(STDOUT_FILENO, limiter, ft_strlen(limiter));
-	write(STDOUT_FILENO, "')", 2);
-	write(STDOUT_FILENO, "\n", 1);
+	write(STDERR_FILENO, limiter, ft_strlen(limiter));
+	write(STDERR_FILENO, "')", 2);
+	write(STDERR_FILENO, "\n", 1);
+}
+
+void print_file_permission_err(char *file)
+{
+	write(STDERR_FILENO, "minishell: ", 12);
+	write(STDERR_FILENO, file, ft_strlen(file));
+	write(STDERR_FILENO, ": Permission denied\n", 20);
 }

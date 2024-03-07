@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/06 12:55:18 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/06 15:09:55 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/07 11:24:59 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,14 @@ int	redirection_here(t_stream *iostream, t_command *command)
 
 int	redirection_in(t_stream *iostream, t_command *command)
 {
-	if (access(command->string, F_OK) == -1 || access(command->string, R_OK) ==
-		-1)
+	if (access(command->string, F_OK) == -1)
 	{
 		print_file_dir_err(command->string, false);
+		return (set_file_failure_return(iostream));
+	}
+	if (access(command->string, R_OK) == -1)
+	{
+		print_file_permission_err(command->string);
 		return (set_file_failure_return(iostream));
 	}
 	iostream->input = open(command->string, O_RDONLY);
@@ -78,7 +82,7 @@ int	redirection_out(t_stream *iostream, t_command *command)
 	if (access(command->string, F_OK) == 0 && access(command->string, W_OK) ==
 		-1)
 	{
-		print_file_dir_err(command->string, false);
+		print_file_permission_err(command->string);
 		return (set_file_failure_return(iostream));
 	}
 	iostream->output = open(command->string, O_CREAT | O_WRONLY | O_TRUNC,
@@ -96,7 +100,7 @@ int	redirection_append(t_stream *iostream, t_command *command)
 	if (access(command->string, F_OK) == 0 && access(command->string, W_OK) ==
 		-1)
 	{
-		print_file_dir_err(command->string, false);
+		print_file_permission_err(command->string);
 		return (set_file_failure_return(iostream));
 	}
 	iostream->output = open(command->string, O_WRONLY | O_CREAT | O_APPEND,
@@ -155,7 +159,8 @@ int	token_checker(t_command *command, t_stream *iostream)
 	return (status);
 }
 
-int	set_redirections(t_command **param, t_stream *iostream, bool child, int *pid)
+int	set_redirections(t_command **param, t_stream *iostream, bool child,
+		int *pid)
 {
 	t_command	*command;
 	int			status;
@@ -186,7 +191,7 @@ int	set_redirections(t_command **param, t_stream *iostream, bool child, int *pid
 		if (*pid == 0)
 		{
 			send_signals(RUNNING_CMD);
-			if (execute_single(param, iostream) == -1)
+			if (execute(param, iostream) == -1)
 				exit(EXIT_FAILURE);
 		}
 		if (iostream->input != -1)

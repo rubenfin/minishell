@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/06 18:18:44 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/07 11:21:40 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ EXECUTING
 */
 int						set_redirections(t_command **param, t_stream *iostream,
 							bool child, int *pid);
-int						execute_single(t_command **param, t_stream *iostream);
+int						execute(t_command **param, t_stream *iostream);
 int						get_builtin(char *command, t_stream *param,
 							t_env_ll **env);
 int						check_if_valid_exit(char **args);
@@ -213,7 +213,7 @@ void					print_exit_err(char *buffer, bool numeric);
 void					print_invalid_identifier(t_env_ll **node,
 							char **export_data, int j);
 void					print_hd_err(char *limiter);
-
+void					print_file_permission_err(char *file);
 /*
 UTILS / BUILTINS UTILS
 */
