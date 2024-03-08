@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   minishell.h                                        :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/08 16:12:44 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/06 12:01:35 by rfinneru          #+#    #+#             */
+/*   Updated: 2024/03/08 16:54:34 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,6 +167,15 @@ int						make_env_ll(t_env_ll **env, char **envp);
 t_env_ll				*find_key(t_env_ll *env, char *key_str);
 t_env_ll				*find_value(t_env_ll *env, char *value_str);
 void					put_node_at_end(t_env_ll **env, t_env_ll **node);
+char					*expanding(char *result, t_env_ll **env);
+int						empty_checker(char *str);
+int						redirection_checker_int(char *str, int i,
+							int check_all);
+int						redirection_checker_bool(char *str, int i,
+							int check_all);
+int						check_first_cmd(char *str, int i);
+int						dollar_sign_check(char *result);
+
 /*
 SIGNALS
 */

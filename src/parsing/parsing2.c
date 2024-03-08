@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   parsing2.c                                         :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/02/09 15:51:29 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/05 17:19:13 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   parsing2.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/09 15:51:29 by rfinneru          #+#    #+#             */
+/*   Updated: 2024/03/08 17:09:16 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,8 @@ char	*set_valid_command(char *argv, char **full_path)
 	char	*trimmed_command;
 	char	*temp;
 
+	if(!argv)
+		return("/usr/bin/cat");
 	len = length_command(argv);
 	trimmed_command = (char *)malloc((len + 1) * sizeof(char));
 	if (!trimmed_command)
