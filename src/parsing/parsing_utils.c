@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parsing_utils.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/07 12:13:12 by jade-haa          #+#    #+#             */
-/*   Updated: 2024/03/08 15:39:28 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   parsing_utils.c                                    :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/03/07 12:13:12 by jade-haa      #+#    #+#                 */
+/*   Updated: 2024/03/08 18:08:10 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,6 +185,8 @@ char	*expanding(char *result, t_env_ll **env)
 				i -= x;
 			check = ft_strndup(result + i, x);
 			tmp2 = find_value_char(*env, &check[0], &i);
+			if (!tmp2)
+				tmp2 = ft_strdup("");
 			if (tmp2)
 			{
 				tmp3 = ft_strjoin(tmp, tmp2);
