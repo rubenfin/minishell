@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/22 16:56:29 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/07 11:41:07 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/08 18:04:56 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,14 @@
 
 void	print_cmd_err(char *cmd)
 {
-	write(STDERR_FILENO, "minishell: ", 11);
-	write(STDERR_FILENO, cmd, ft_strlen(cmd));
-	write(STDERR_FILENO, ": command not found\n", 20);
+	if (cmd && cmd[0])
+	{
+		write(STDERR_FILENO, "minishell: ", 11);
+		write(STDERR_FILENO, cmd, ft_strlen(cmd));
+		write(STDERR_FILENO, ": command not found\n", 20);
+	}
+	else
+		exit(0);
 	exit(127);
 }
 
