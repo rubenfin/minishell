@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/07 13:55:08 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/07 13:55:24 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/08 14:52:02 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,40 @@ int	get_builtin(char *command, t_stream *param, t_env_ll **env)
 		return (get_exit(*env, args));
 	else
 		return (127);
+}
+
+int	return_right_status(bool *exit_called, int pid, int status)
+{
+	if (pid != -1 || *exit_called)
+		return (check_status(status));
+	else
+		return (status);
+}
+
+int	last_slash(char *str)
+{
+	int	i;
+	int	x;
+
+	i = 0;
+	x = 0;
+	if (!str[i])
+		return (0);
+	while (str[i])
+	{
+		if (str[i] == '/')
+			x = i;
+		i++;
+	}
+	if (x == 0)
+		return (1);
+	return (x);
+}
+
+int	plus_or_min(char **args, int i, int j)
+{
+	if (args[i][j] == '-' || args[i][j] == '+')
+		return (1);
+	else
+		return (0);
 }

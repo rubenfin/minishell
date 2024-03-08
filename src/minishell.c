@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/07 12:31:47 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/08 10:44:41 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int	main_set_args(t_command **param, t_stream *iostream)
 	return (count);
 }
 
-
 int	setup_builtin_no_pipes(t_command **command, t_stream *iostream, int *pid,
 		int *count)
 {
@@ -39,14 +38,6 @@ int	setup_builtin_no_pipes(t_command **command, t_stream *iostream, int *pid,
 	if (*count == -1)
 		return (0);
 	return (1);
-}
-
-int	return_right_status(bool *exit_called, int pid, int status)
-{
-	if (pid != -1 || *exit_called)
-		return (check_status(status));
-	else
-		return (status);
 }
 
 int	builtin(t_cmd_data *data, t_stream *iostream, bool *exit_called)
@@ -83,7 +74,7 @@ int	no_pipes(t_cmd_data *data, t_stream *iostream, bool *exit_called)
 	pid = -1;
 	init_stream(&iostream);
 	if (command->token == BUILTIN && check_parent_builtin(command->string))
-		return(builtin(data, iostream, exit_called));
+		return (builtin(data, iostream, exit_called));
 	else
 	{
 		status = set_redirections(&command, iostream, true, &pid);

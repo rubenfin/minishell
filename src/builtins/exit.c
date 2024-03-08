@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/27 10:09:36 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/07 12:29:09 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/08 14:51:54 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,17 +68,16 @@ int	check_if_valid_exit(char **args)
 		j = -1;
 		while (args[i][++j])
 		{
-			if ((!ft_isdigit(args[i][j]) && (args[i][j] != '-'
-						&& args[i][j] != '+')))
+			if ((!ft_isdigit(args[i][j]) && !plus_or_min(args, i, j)))
 				found_not_numeric = true;
-			if (args[i][j] == '-' || args[i][j] == '+')
+			if (plus_or_min(args, i, j))
 				total_min_or_plus++;
 		}
 	}
 	if (i > 1)
 		return (0);
 	else if (found_not_numeric || total_min_or_plus > 1)
-		return(0);
+		return (0);
 	return (1);
 }
 
@@ -112,10 +111,9 @@ int	get_exit(t_env_ll *env, char **args)
 		j = -1;
 		while (args[i][++j])
 		{
-			if ((!ft_isdigit(args[i][j]) && (args[i][j] != '-'
-						&& args[i][j] != '+')))
+			if ((!ft_isdigit(args[i][j]) && !plus_or_min(args, i, j)))
 				found_not_numeric = true;
-			if (args[i][j] == '-' || args[i][j] == '+')
+			if (plus_or_min(args, i, j))
 				total_min_or_plus++;
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/07 13:59:14 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/07 14:30:20 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/08 14:52:19 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	here_doc(t_command *command, char **str, char **limiter)
 			return (0);
 		}
 	}
-	return(1);
+	return (1);
 }
 
 int	redirection_here(t_stream *iostream, t_command *command)

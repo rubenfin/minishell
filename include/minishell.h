@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/07 15:23:24 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/08 16:12:44 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,13 @@ int						redirection_here(t_stream *iostream,
 int						redirection_in(t_stream *iostream, t_command *cmd);
 int						redirection_out(t_stream *iostream, t_command *cmd);
 int						redirection_append(t_stream *iostream, t_command *cmd);
-
+int						return_right_status(bool *exit_called, int pid,
+							int status);
+int						last_slash(char *str);
+int						go_prev(t_env_ll **env);
+int						go_back(t_env_ll **env, char *directory);
+int						go_home(t_env_ll **env, char *directory);
+int						plus_or_min(char **args, int i, int j);
 /*
 PARSING
 */
@@ -160,7 +166,7 @@ int						init_redirections(char *str, t_command **param,
 int						make_env_ll(t_env_ll **env, char **envp);
 t_env_ll				*find_key(t_env_ll *env, char *key_str);
 t_env_ll				*find_value(t_env_ll *env, char *value_str);
-
+void					put_node_at_end(t_env_ll **env, t_env_ll **node);
 /*
 SIGNALS
 */
@@ -214,17 +220,17 @@ void					free_args(char **args);
 void					free_iostream(t_stream **iostream, int count);
 void					free_all_close_pipes(t_cmd_data **data,
 							t_stream *iostream, int total_pipes);
-
 /*
 UTILS / PRINT ERROR
 */
 void					print_cmd_err(char *cmd);
 void					print_file_dir_err(char *dir, bool cd);
 void					print_exit_err(char *buffer, bool numeric);
-void					print_invalid_identifier(t_env_ll **node,
-							char **export_data, int j);
+void					pr_invalid(t_env_ll **node, char **export_data, int j);
 void					print_hd_err(char *limiter);
 void					print_file_permission_err(char *file);
+void					cd_lost_parent_err(void);
+
 /*
 UTILS / BUILTINS UTILS
 */

@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/09 12:35:32 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/07 15:14:30 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/08 16:48:41 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	count_ll_len(t_env_ll *env)
 		len++;
 		env = env->next;
 	}
-	return(len);
+	return (len);
 }
 
 char	**ll_to_2d_arr(t_env_ll *env)
@@ -76,20 +76,31 @@ char	*ft_strndup(char *s, size_t n)
 	return (temp);
 }
 
+int	initalize_node(t_env_ll *current, char **envp, int i, int j)
+{
+	current->key = ft_strndup(envp[i], j);
+	if (!current->key)
+		return (-1);
+	if (envp[i][j] == '=')
+		current->value = ft_strdup(envp[i] + j + 1);
+	else
+		current->value = NULL;
+	current->next = NULL;
+	return (0);
+}
+
 int	make_env_ll(t_env_ll **env, char **envp)
 {
 	int			i;
 	int			j;
 	t_env_ll	*current;
 	t_env_ll	*head;
-	t_env_ll	*temp;
 
-	i = 0;
+	i = -1;
 	j = 0;
-	*env = NULL;
 	current = NULL;
-	head = current;
-	while (envp[i])
+	head = NULL;
+	while (envp[++i])
 	{
 		j = 0;
 		current = (t_env_ll *)malloc(sizeof(t_env_ll));
@@ -97,53 +108,12 @@ int	make_env_ll(t_env_ll **env, char **envp)
 			return (-1);
 		while (envp[i][j] != '=' && envp[i][j] != '\0')
 			j++;
-		current->key = ft_strndup(envp[i], j);
-		if (!current->key)
-			return (-1);
-		if (envp[i][j] == '=')
-			current->value = ft_strdup(envp[i] + j + 1);
-		else
-			current->value = NULL;
-		current->next = NULL;
+		initalize_node(current, envp, i, j);
 		if (!head)
 			head = current;
 		else
-		{
-			temp = head;
-			while (temp->next != NULL)
-				temp = temp->next;
-			temp->next = current;
-			current->prev = temp;
-		}
-		i++;
+			put_node_at_end(&head, &current);
 	}
 	*env = head;
 	return (1);
-}
-
-t_env_ll	*find_key(t_env_ll *env, char *key_str)
-{
-	t_env_ll	*key_ll;
-
-	key_ll = env;
-	while (key_ll)
-	{
-		if (!ft_strncmp(key_ll->key, key_str, max(ft_strlen(key_ll->key),
-					ft_strlen(key_str))))
-			return (key_ll);
-		key_ll = key_ll->next;
-	}
-	return (NULL);
-}
-
-t_env_ll	*find_value(t_env_ll *env, char *value_str)
-{
-	t_env_ll *value_ll = env;
-	while (value_ll)
-	{
-		if (!ft_strncmp(value_ll->key, value_str, ft_strlen(value_str)))
-			return (value_ll);
-		value_ll = value_ll->next;
-	}
-	return (NULL);
 }

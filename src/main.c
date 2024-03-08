@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/07 11:47:31 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/07 16:49:15 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/08 16:47:35 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,12 @@ int	clear_history_close_fds(t_std_fd *std_fd, char **buffer)
 	return (1);
 }
 
+void	add_to_history_clr_buffer(char **buffer)
+{
+	if (*buffer && ft_strlen(*buffer) > 0)
+		add_history(*buffer);
+	ft_free(buffer);
+}
 char	*setup_rl_and_sig(int *status)
 {
 	char	*buffer;
@@ -52,9 +58,7 @@ int	minishell(t_env_ll **env, t_std_fd *std_fd)
 		if (!parser(env, &parsed, buffer))
 			continue ;
 		status = command_line(env, &parsed, &exit);
-		if (buffer && ft_strlen(buffer) > 0)
-			add_history(buffer);
-		ft_free(&buffer);
+		add_to_history_clr_buffer(&buffer);
 		if (exit)
 			break ;
 		if (g_signal_status != -1)

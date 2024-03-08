@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/02 11:26:09 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/06 18:35:08 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/08 15:09:43 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@ int	unset(t_env_ll **env, char **unset_data)
 	t_env_ll	*node;
 	int			i;
 
-	i = 0;
-	while (unset_data[i])
+	i = -1;
+	while (unset_data[++i])
 	{
 		node = find_key(*env, unset_data[i]);
 		if (!node)
-			return (EXIT_SUCCESS);
+			continue ;
 		if (!node->prev)
 		{
 			*env = node->next;
@@ -37,7 +37,6 @@ int	unset(t_env_ll **env, char **unset_data)
 		free(node->key);
 		free(node->value);
 		free(node);
-		++i;
 	}
 	return (EXIT_SUCCESS);
 }

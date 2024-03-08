@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/01 11:28:19 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/05 16:22:53 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/08 14:45:13 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,9 @@ char	*get_curr_dir(void)
 
 int	pwd(t_env_ll *env)
 {
+	char	dir[PATH_MAX];
+
 	(void)env;
-	char dir[PATH_MAX];
 	if (getcwd(dir, PATH_MAX))
 	{
 		write(STDOUT_FILENO, dir, ft_strlen(dir));

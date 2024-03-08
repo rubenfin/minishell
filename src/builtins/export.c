@@ -6,79 +6,84 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/02 11:26:11 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/05 16:26:31 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/08 16:23:07 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	valid_identifier_check(char c)
+int	variable_exists(t_env_ll **node, t_env_ll **exist)
 {
-	if ((c > 122 && c < 127) || (c > 90 && c < 95) || (c < 65 && c > 58)
-		|| (c < 65 && c > 58) || (c < 48))
-		return (0);
-	else
-		return (1);
+	ft_free(&(*exist)->key);
+	ft_free(&(*exist)->value);
+	(*exist)->key = ft_strdup((*node)->key);
+	(*exist)->value = ft_strdup((*node)->value);
+	free((*node)->key);
+	free((*node)->value);
+	free((*node));
+	return (EXIT_SUCCESS);
 }
 
-int	export(t_env_ll **env, char **export_data)
+int	check_if_valid(t_env_ll *node, char **export_data, int *i, int *j)
 {
-	t_env_ll	*current;
+	while (export_data[*j][*i])
+	{
+		if (export_data[*j][*i] == '=')
+		{
+			if (export_data[*j][0] == '=')
+				return (pr_invalid(&node, export_data, *j), 0);
+			break ;
+		}
+		if (!valid_identifier_check(export_data[*j][*i]))
+			return (pr_invalid(&node, export_data, *j), 0);
+		(*i)++;
+	}
+	return (1);
+}
+
+int	equal_sign_check(t_env_ll *node, char **export_data, int *i, int j)
+{
+	if (!export_data[j][*i] || export_data[j][*i] != '=')
+	{
+		(*i)++;
+		free(node);
+		return (0);
+	}
+	(*i)++;
+	return (1);
+}
+
+void	do_export(t_env_ll **env, char **export_data)
+{
 	t_env_ll	*node;
 	t_env_ll	*exist;
 	int			i;
 	int			j;
 
-	j = 0;
-	i = 0;
-	if (!export_data || !export_data[0])
-		return (print_export(*env), EXIT_SUCCESS);
-	while (export_data[j])
+	j = -1;
+	while (export_data[++j])
 	{
 		i = 0;
-		current = *env;
 		node = (t_env_ll *)malloc(sizeof(t_env_ll));
 		node->next = NULL;
-		while (export_data[j][i])
-		{
-			if (export_data[j][i] == '=')
-			{
-				if (export_data[j][0] == '=')
-					return (print_invalid_identifier(&node, export_data, j),
-						EXIT_FAILURE);
-				break ;
-			}
-			if (!valid_identifier_check(export_data[j][i]))
-				return (print_invalid_identifier(&node, export_data, j),
-					EXIT_FAILURE);
-			i++;
-		}
-		if (!export_data[j][i] || export_data[j][i] != '=')
-		{
-			free(node);
-			j++;
+		if (!check_if_valid(node, export_data, &i, &j))
+			return ;
+		if (!equal_sign_check(node, export_data, &i, j))
 			continue ;
-		};
-		i++;
 		node->key = ft_strndup(export_data[j], i - 1);
 		node->value = ft_strdup(export_data[j] + i);
 		exist = find_key(*env, node->key);
 		if (exist)
-		{
-			ft_free(&exist->key);
-			ft_free(&exist->value);
-			exist->key = ft_strdup(node->key);
-			exist->value = ft_strdup(node->value);
-			free(node->key);
-			free(node->value);
-			free(node);
-			return (EXIT_SUCCESS);
-		}
-		while (current->next)
-			current = current->next;
-		current->next = node;
-		node->prev = current;
-		++j;
+			variable_exists(&node, &exist);
+		else
+			put_node_at_end(env, &node);
 	}
+}
+
+int	export(t_env_ll **env, char **export_data)
+{
+	if (!export_data || !export_data[0])
+		return (print_export(*env), EXIT_SUCCESS);
+	do_export(env, export_data);
 	return (EXIT_SUCCESS);
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   print.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/09 10:04:45 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/03/04 17:38:36 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   print.c                                            :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/02/09 10:04:45 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/03/08 15:11:42 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	print_export(t_env_ll *env)
 	}
 }
 
-void	print_invalid_identifier(t_env_ll **node, char **export_data, int j)
+void	pr_invalid(t_env_ll **node, char **export_data, int j)
 {
 	if (*node)
 		free(*node);
