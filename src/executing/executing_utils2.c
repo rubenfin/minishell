@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/07 12:09:47 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/11 12:41:08 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/11 14:30:13 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ int	do_exit(t_stream *iostream, bool *exit_called)
 	if (check_if_valid_exit(iostream->args))
 		*exit_called = true;
 	pid = fork();
+	if (pid == -1)
+		return (-1);
 	if (pid == 0)
 	{
 		status = get_exit(*iostream->env, iostream->args);

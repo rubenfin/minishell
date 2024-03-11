@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/11 11:49:15 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/11 14:01:30 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ typedef struct s_basic_cmd
 }						t_cmd_data;
 
 int						parser(t_env_ll **env, t_command **command,
-							char *buffer);
+							char *buffer, int status);
 
 int						command_line(t_env_ll **env, t_command **command,
 							bool *exit);
@@ -162,12 +162,12 @@ t_command				*createnode_return(t_command **head, char *data,
 
 char					*set_valid_command(char *argv, char **full_path);
 int						init_redirections(char *str, t_command **param,
-							t_env_ll **env);
+							t_env_ll **env, int status);
 int						make_env_ll(t_env_ll **env, char **envp);
 t_env_ll				*find_key(t_env_ll *env, char *key_str);
 t_env_ll				*find_value(t_env_ll *env, char *value_str);
 void					put_node_at_end(t_env_ll **env, t_env_ll **node);
-char					*expanding(char *result, t_env_ll **env);
+char					*expanding(char *result, t_env_ll **env, int status);
 int						empty_checker(char *str);
 int						redirection_checker_int(char *str, int i,
 							int check_all);
@@ -175,6 +175,11 @@ int						redirection_checker_bool(char *str, int i,
 							int check_all);
 int						check_first_cmd(char *str, int i);
 int						dollar_sign_check(char *result);
+int						check_closing_quote_with_quote(char *str, char quote);
+int						check_closing_quote(char *str);
+int						check_starting_quote(char *str);
+int						quote_counter(const char *str, int quote);
+int						total_quote(const char *str);
 
 /*
 SIGNALS
@@ -227,8 +232,8 @@ void					free_ll(t_env_ll **env);
 void					free_ll_command(t_command *head, bool main_command);
 void					free_args(char **args);
 void					free_iostream(t_stream **iostream, int count);
-void					clean_all(t_cmd_data **data,
-							t_stream *iostream, int total_pipes);
+void					clean_all(t_cmd_data **data, t_stream *iostream,
+							int total_pipes);
 /*
 UTILS / PRINT ERROR
 */
@@ -239,6 +244,7 @@ void					pr_invalid(t_env_ll **node, char **export_data, int j);
 void					print_hd_err(char *limiter);
 void					print_file_permission_err(char *file);
 void					cd_lost_parent_err(void);
+void					syntax_error(void);
 
 /*
 UTILS / BUILTINS UTILS
@@ -249,7 +255,7 @@ void					get_key_change_value(t_env_ll **env, char *key_str,
 							char *change_value);
 void					find_key_free_value(t_env_ll **env, char *key_str);
 char					*find_value_char(t_env_ll *env, char *value_str,
-							int *i);
+							int *i, int status);
 int						max(int a, int b);
 
 int						dir_check(char *argv);

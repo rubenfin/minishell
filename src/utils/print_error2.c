@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/08 12:40:47 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/08 12:42:19 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/11 13:56:48 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,4 +19,9 @@ void	cd_lost_parent_err(void)
 	write(STDERR_FILENO,
 		"getcwd: cannot access parent directories: No such file or directory\n",
 		68);
+}
+
+void	syntax_error(void)
+{
+	write(STDERR_FILENO, "minishell: syntax error\n", 24);
 }

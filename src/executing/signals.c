@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/05 18:11:33 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/08 18:21:57 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/11 14:58:50 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,7 @@ void	handle_signals_normal(int sig)
 	{
 		g_signal_status = 130;
 		rl_replace_line("", 0);
-		write(STDIN_FILENO, "\n", 1);
-		rl_on_new_line();
-		rl_redisplay();
-	}
-	else if (sig == SIGQUIT)
-	{
+		write(1, "\n", 1);
 		rl_on_new_line();
 		rl_redisplay();
 	}
@@ -43,29 +38,24 @@ void	handle_signals_heredoc(int sig)
 		rl_on_new_line();
 		rl_redisplay();
 	}
-	else if (sig == SIGQUIT)
+}
+
+void	handle_signals_cmd(int sig)
+{
+	if (sig == SIGINT)
 	{
 		rl_on_new_line();
 		rl_redisplay();
 	}
 }
 
-void	handle_signals_cmd(int sig)
-{
-	kill(0, sig);
-}
-
 void	send_signals(t_SIGNALS SIGNAL)
 {
+	signal(SIGQUIT, SIG_IGN);
 	if (SIGNAL == RUNNING_CMD)
-	{
 		signal(SIGINT, handle_signals_cmd);
-	}
 	else if (SIGNAL == HERE_DOC)
 		signal(SIGINT, handle_signals_heredoc);
 	else
-	{
 		signal(SIGINT, handle_signals_normal);
-		signal(SIGQUIT, SIG_IGN);
-	}
 }

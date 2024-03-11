@@ -6,83 +6,11 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 15:55:14 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/11 13:29:52 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/11 14:31:43 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-int	check_closing_quote_with_quote(char *str, char quote)
-{
-	int	end;
-
-	end = ft_strlen(str) - 1;
-	while (str[end])
-	{
-		if (str[end] == quote)
-			return (end);
-		--end;
-	}
-	return (-1);
-}
-
-int	check_closing_quote(char *str)
-{
-	int	end;
-
-	end = ft_strlen(str) - 1;
-	while (str[end])
-	{
-		if (str[end] == '\'' || str[end] == '\"')
-			return (end);
-		--end;
-	}
-	return (-1);
-}
-
-int	check_starting_quote(char *str)
-{
-	int	start;
-
-	start = 0;
-	while (str[start])
-	{
-		if (str[start] == '\'' || str[start] == '\"')
-			return (start);
-		++start;
-	}
-	return (-1);
-}
-
-int	quote_counter(const char *str, int quote)
-{
-	int	i;
-	int	counter;
-
-	i = 0;
-	counter = 0;
-	while (str[i])
-	{
-		if (str[i] == quote)
-			++counter;
-		++i;
-	}
-	return (counter);
-}
-
-int	total_quote(const char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '\'' || str[i] == '\"')
-			return (1);
-		++i;
-	}
-	return (0);
-}
 
 char	*fill_substr(char const *s, int start, int len, int quote)
 {
@@ -125,12 +53,8 @@ char	*ft_substr_quotes(char const *s, unsigned int start, size_t len,
 	return (substring);
 }
 
-// void	quotes_execeptions(char *str)
-// {
-// 	check_starting_quote(str)
-// }
 int	set_node(t_command **param, char *str, int redirection, int len,
-		t_env_ll **env)
+		t_env_ll **env, int status)
 {
 	char	*check;
 	char	*result;
@@ -140,7 +64,7 @@ int	set_node(t_command **param, char *str, int redirection, int len,
 		check = ft_substr(str, 0, len);
 		if (dollar_sign_check(check))
 		{
-			result = expanding(check, env);
+			result = expanding(check, env, status);
 			ft_free(&check);
 			redirection = CMD;
 			if (createnode(param, result, redirection) == -1)
@@ -158,7 +82,7 @@ int	set_node(t_command **param, char *str, int redirection, int len,
 	return (1);
 }
 
-char	*set_node_quotes(char *str, int quote, t_env_ll **env)
+char	*set_node_quotes(char *str, int quote, t_env_ll **env, int status)
 {
 	char	*check;
 	char	*result;
@@ -166,7 +90,7 @@ char	*set_node_quotes(char *str, int quote, t_env_ll **env)
 	// printf("string voor expanden %s\n", str);
 	if (dollar_sign_check(str) && quote == 34)
 	{
-		result = expanding(str, env);
+		result = expanding(str, env, status);
 		// printf("string na expanden : %s\n", result);
 		return (result);
 	}
@@ -178,19 +102,7 @@ char	*set_node_quotes(char *str, int quote, t_env_ll **env)
 	return (NULL);
 }
 
-// int	check_if_closed(char *str, int quote)
-// {
-// 	int start = check_starting_quote(str);
-// 	int last =  check_closing_quote(str);
-
-// }
-
-void	syntax_error(void)
-{
-	write(STDERR_FILENO, "minishell: syntax error\n", 24);
-}
-
-char	*quote_check(char *str, int *index, t_env_ll **env)
+char	*quote_check(char *str, int *index, t_env_ll **env, int status)
 {
 	int		i;
 	int		len;
@@ -207,26 +119,26 @@ char	*quote_check(char *str, int *index, t_env_ll **env)
 	if (str[i] != str[closing_quote] || closing_quote == i)
 	{
 		syntax_error();
-		return(NULL);
+		return (NULL);
 	}
 	j = 0;
 	len = 0;
 	if (closing_quote == -1)
 	{
-		// printf("UNCLOSED QUOTES\n");
+		// printf("UNCLOSED QUOTES\n"); /////////////////////////heel lelijk ff opnieuw
 		exit(1);
 	}
 	result = ft_substr_quotes(&str[1], i, closing_quote, quote);
 	if (quote == '\"')
 	{
 		// printf("is double quote\n");
-		result = set_node_quotes(result, quote, env);
+		result = set_node_quotes(result, quote, env, status);
 	}
 	*index = closing_quote + 1;
 	return (result);
 }
 
-char	*get_cmd(char *str, int len, t_env_ll **env)
+char	*get_cmd(char *str, int len, t_env_ll **env, int status)
 {
 	char	*origin;
 	char	*result;
@@ -242,9 +154,9 @@ char	*get_cmd(char *str, int len, t_env_ll **env)
 		if (origin[i] == '\'' || origin[i] == '\"')
 		{
 			save = origin[i];
-			tmp = quote_check(&origin[i], &i, env);
+			tmp = quote_check(&origin[i], &i, env, status);
 			if (!tmp)
-				return(NULL);
+				return (NULL);
 			result = ft_strjoin(result, tmp);
 			i = check_closing_quote_with_quote(origin, save);
 			ft_free(&tmp);
@@ -255,56 +167,6 @@ char	*get_cmd(char *str, int len, t_env_ll **env)
 	}
 	return (result);
 }
-
-int	set_node_main(t_command **param, char *str, int redirection, int len,
-		t_env_ll **env)
-{
-	char	*result;
-
-	(void)param;
-	(void)str;
-	(void)len;
-	(void)env;
-	result = NULL;
-	if (redirection == CMD && total_quote(str) > 0)
-	{
-		result = get_cmd(str, len, env);
-		if (!result)
-			return(-1);
-	}
-	else
-	{
-		result = ft_substr(str, 0, len);
-		result = expanding(result, env);
-		// printf("zonder quotes gesubt%s\n", result);
-	}
-	if (createnode(param, result, redirection) == -1)
-		return (-1);
-	// printf("node gemaakt\n");
-	return (len);
-}
-
-// int	get_quote_len(char *str)
-// {
-// 	int	len;
-// 	int	quote;
-
-// 	quote = str[0];
-// 	len = 1;
-// 	while (str[len])
-// 	{
-// 		if (str[len] == quote)
-// 			break ;
-// 		++len;
-// 	}
-// 	if (!str[len])
-// 	{
-// 		printf("exit quote_len\n");
-// 		exit(EXIT_FAILURE);
-// 	}
-// 	return (len);
-// }
-
 int	no_quotes_len(char *str, int redirection)
 {
 	int	len;
@@ -362,13 +224,62 @@ int	get_size(char *str, int redirection)
 		return (no_quotes_len(str, redirection));
 }
 
-int	init_redirections(char *str, t_command **param, t_env_ll **env)
+int	set_node_main(t_command **param, char *str, int redirection, t_env_ll **env,
+		int status)
+{
+	char	*result;
+	char	*builtin_check;
+	int		len;
+
+	len = get_size(str, redirection);
+	builtin_check = ft_substr(str, 0, len);
+	if (redirection == CMD && check_builtin(builtin_check))
+		redirection = BUILTIN;
+	if (redirection == CMD && total_quote(str) > 0)
+	{
+		result = get_cmd(str, len, env, status);
+		if (!result)
+			return (-1);
+	}
+	else
+	{
+		result = ft_substr(str, 0, len);
+		result = expanding(result, env, status);
+		// printf("zonder quotes gesubt%s\n", result);
+	}
+	if (createnode(param, result, redirection) == -1)
+		return (-1);
+	// printf("node gemaakt\n");
+	return (len);
+}
+
+// int	get_quote_len(char *str)
+// {
+// 	int	len;
+// 	int	quote;
+
+// 	quote = str[0];
+// 	len = 1;
+// 	while (str[len])
+// 	{
+// 		if (str[len] == quote)
+// 			break ;
+// 		++len;
+// 	}
+// 	if (!str[len])
+// 	{
+// 		printf("exit quote_len\n");
+// 		exit(EXIT_FAILURE);
+// 	}
+// 	return (len);
+// }
+
+int	init_redirections(char *str, t_command **param, t_env_ll **env, int status)
 {
 	int			i;
 	t_command	*command;
 	int			len;
 	int			redirection;
-	char		*test;
 
 	i = 0;
 	command = *param;
@@ -387,18 +298,13 @@ int	init_redirections(char *str, t_command **param, t_env_ll **env)
 		}
 		if (str && ft_strncmp(&str[i], "|", 1) == 0)
 			redirection = PIPE;
-		len = get_size(&str[i], redirection);
 		// printf("%d\n", len);
-		test = ft_substr(&str[i], 0, len);
-		if (redirection == CMD && check_first_cmd(str, i - 1)
-			&& check_builtin(test))
-			redirection = BUILTIN;
-		if (set_node_main(param, &str[i], redirection, len, env) == -1)
-			return(0);
+		len = set_node_main(param, &str[i], redirection, env, status);
+		if (len == -1)
+			return (0);
 		if (len == -1)
 			return (0);
 		i += len;
-		free(test);
 	}
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/07 13:59:14 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/08 14:52:19 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/11 14:51:07 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	here_doc(t_command *command, char **str, char **limiter)
 	char	*buffer;
 
 	buffer = NULL;
+	signal(SIGINT, SIG_IGN);
 	while (1)
 	{
 		send_signals(HERE_DOC);

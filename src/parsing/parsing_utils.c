@@ -6,19 +6,25 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/07 12:13:12 by jade-haa      #+#    #+#                 */
-/*   Updated: 2024/03/11 12:47:15 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/11 14:22:11 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-char	*find_value_char(t_env_ll *env, char *value_str, int *i)
+char	*find_value_char(t_env_ll *env, char *value_str, int *i, int status)
 {
 	t_env_ll	*value_ll;
 
 	value_ll = env;
 	if (!value_str || !value_str[0])
 		return (NULL);
+	if (!ft_strncmp(value_str, "?", ft_strlen(value_str)))
+	{
+		printf("here\n");
+		*i += ft_strlen(value_str);
+		return (ft_strdup(ft_itoa(status)));
+	}
 	while (value_ll)
 	{
 		if (!ft_strncmp(value_ll->key, value_str, ft_strlen(value_str) + 1))
@@ -119,7 +125,7 @@ int	empty_checker(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (ft_isalnum(str[i]) || str[i] == '.' || str[i] == '/')
+		if (ft_isalnum(str[i]) || !valid_identifier_check(str[i]))
 			flag = true;
 		i++;
 	}
@@ -129,7 +135,7 @@ int	empty_checker(char *str)
 	return (0);
 }
 
-char	*expanding(char *result, t_env_ll **env)
+char	*expanding(char *result, t_env_ll **env, int status)
 {
 	int i;
 	char *tmp;
@@ -151,7 +157,7 @@ char	*expanding(char *result, t_env_ll **env)
 			i++;
 			while (result[i])
 			{
-				if (!valid_identifier_check(result[i]))
+				if (!valid_identifier_check(result[i]) && result[i] != '?')
 				{
 					i -= x;
 					break ;
@@ -160,9 +166,11 @@ char	*expanding(char *result, t_env_ll **env)
 				x++;
 			}
 			if (!result[i])
+			{
 				i -= x;
+			}
 			check = ft_strndup(result + i, x);
-			tmp2 = find_value_char(*env, &check[0], &i);
+			tmp2 = find_value_char(*env, &check[0], &i, status);
 			if (!tmp2)
 				tmp2 = ft_strdup("");
 			if (tmp2)
