@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/05 18:11:33 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/07 11:45:09 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/08 18:21:57 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ void	send_signals(t_SIGNALS SIGNAL)
 {
 	if (SIGNAL == RUNNING_CMD)
 	{
-		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, handle_signals_cmd);
 	}
 	else if (SIGNAL == HERE_DOC)

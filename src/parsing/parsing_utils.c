@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/07 12:13:12 by jade-haa      #+#    #+#                 */
-/*   Updated: 2024/03/08 18:08:10 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/11 12:47:15 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ char	*find_value_char(t_env_ll *env, char *value_str, int *i)
 		}
 		value_ll = value_ll->next;
 	}
+	*i += ft_strlen(value_str);
 	return (NULL);
 }
 int	redirection_checker_int(char *str, int i, int check_all)
@@ -141,29 +142,6 @@ char	*expanding(char *result, t_env_ll **env)
 	x = 0;
 	i = 0;
 	j = 0;
-	// if (result[0] == '$')
-	// {
-	// 	++i;
-	// 	while (result[i])
-	// 	{
-	// 		if (!valid_identifier_check(result[i]))
-	// 		{
-	// 			i -= x;
-	// 			break ;
-	// 		}
-	// 		i++;
-	// 		x++;
-	// 	}
-	// 	if (!result[i])
-	// 		i -= x;
-	// 	check = ft_strndup(result + i, x);
-	// 	tmp = find_value_char(*env, &check[0], &i);
-	// 	if (!tmp)
-	// 		return (ft_strdup(" "));
-	// 	else
-	// 		result = ft_strjoin(tmp, result + i);
-	// 	return (result);
-	// }
 	while (result[i])
 	{
 		x = 0;

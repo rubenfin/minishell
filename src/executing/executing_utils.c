@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 15:04:48 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/07 13:53:36 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/11 11:47:59 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,14 @@ int	trim_command(t_cmd_data **data, bool last_cmd)
 {
 	(*data)->one_cmd = get_command_until_pipe((*data)->cmds_left);
 	if (!(*data)->one_cmd)
-		return (EXIT_FAILURE);
+		return (0);
 	if (!last_cmd)
+	{
 		(*data)->cmds_left = get_command_from_pipe((*data)->cmds_left);
-	return (0);
+		if (!(*data)->cmds_left)
+			return (0);
+	}
+	return (1);
 }
 
 int	clean_cmd_leftovers(t_cmd_data **data, t_stream **iostream)

@@ -1,25 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/08 15:55:14 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/03/08 17:26:42 by jade-haa         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
+/*                                                        ::::::::            */
+/*   parsing.c                                          :+:    :+:            */
+/*                                                     +:+                    */
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 15:55:14 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/06 15:15:25 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/11 13:29:52 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	check_closing_quote(char *str, char quote)
+int	check_closing_quote_with_quote(char *str, char quote)
 {
 	int	end;
 
@@ -27,6 +20,20 @@ int	check_closing_quote(char *str, char quote)
 	while (str[end])
 	{
 		if (str[end] == quote)
+			return (end);
+		--end;
+	}
+	return (-1);
+}
+
+int	check_closing_quote(char *str)
+{
+	int	end;
+
+	end = ft_strlen(str) - 1;
+	while (str[end])
+	{
+		if (str[end] == '\'' || str[end] == '\"')
 			return (end);
 		--end;
 	}
@@ -171,6 +178,18 @@ char	*set_node_quotes(char *str, int quote, t_env_ll **env)
 	return (NULL);
 }
 
+// int	check_if_closed(char *str, int quote)
+// {
+// 	int start = check_starting_quote(str);
+// 	int last =  check_closing_quote(str);
+
+// }
+
+void	syntax_error(void)
+{
+	write(STDERR_FILENO, "minishell: syntax error\n", 24);
+}
+
 char	*quote_check(char *str, int *index, t_env_ll **env)
 {
 	int		i;
@@ -182,7 +201,14 @@ char	*quote_check(char *str, int *index, t_env_ll **env)
 
 	i = check_starting_quote(str);
 	quote = str[i];
-	closing_quote = check_closing_quote(str, quote);
+	closing_quote = check_closing_quote_with_quote(str, quote);
+	// printf("starting = %c | closing_quote %c\n", str[i], str[closing_quote]);
+	printf("index starting = %d | index closing %d\n", i, closing_quote);
+	if (str[i] != str[closing_quote] || closing_quote == i)
+	{
+		syntax_error();
+		return(NULL);
+	}
 	j = 0;
 	len = 0;
 	if (closing_quote == -1)
@@ -217,8 +243,10 @@ char	*get_cmd(char *str, int len, t_env_ll **env)
 		{
 			save = origin[i];
 			tmp = quote_check(&origin[i], &i, env);
+			if (!tmp)
+				return(NULL);
 			result = ft_strjoin(result, tmp);
-			i = check_closing_quote(origin, save);
+			i = check_closing_quote_with_quote(origin, save);
 			ft_free(&tmp);
 		}
 		else
@@ -241,7 +269,8 @@ int	set_node_main(t_command **param, char *str, int redirection, int len,
 	if (redirection == CMD && total_quote(str) > 0)
 	{
 		result = get_cmd(str, len, env);
-		// printf("met quotes gesubt%s\n", result);
+		if (!result)
+			return(-1);
 	}
 	else
 	{
@@ -289,26 +318,6 @@ int	no_quotes_len(char *str, int redirection)
 	}
 	return (len);
 }
-
-int	check_if_closed(char *str, int quote)
-{
-	int	i;
-	int	wrong_quote;
-
-	wrong_quote = 34;
-	i = 0;
-	if (quote == 34)
-		wrong_quote = 27;
-	while (str[i])
-	{
-		if (str[i] == wrong_quote)
-			return(0);
-		if (str[i] == quote)
-			return (1);
-		++i;
-	}
-	return (0);
-}
 int	quotes_len(char *str)
 {
 	int	i;
@@ -324,11 +333,11 @@ int	quotes_len(char *str)
 		{
 			flag = 1;
 			quote = str[i];
-			if (!check_if_closed(&str[i], quote))
-			{
-				printf("did not close : counter\n");
-				exit(EXIT_FAILURE);
-			}
+			// if (!check_if_closed(&str[i], quote))
+			// {
+			// 	printf("did not close : counter\n");
+			// 	exit(EXIT_FAILURE);
+			// }
 			i++;
 		}
 		else if ((str[i] == quote || str[i] == quote) && flag)
@@ -379,12 +388,13 @@ int	init_redirections(char *str, t_command **param, t_env_ll **env)
 		if (str && ft_strncmp(&str[i], "|", 1) == 0)
 			redirection = PIPE;
 		len = get_size(&str[i], redirection);
-		printf("%d\n", len);
+		// printf("%d\n", len);
 		test = ft_substr(&str[i], 0, len);
 		if (redirection == CMD && check_first_cmd(str, i - 1)
 			&& check_builtin(test))
 			redirection = BUILTIN;
-		set_node_main(param, &str[i], redirection, len, env);
+		if (set_node_main(param, &str[i], redirection, len, env) == -1)
+			return(0);
 		if (len == -1)
 			return (0);
 		i += len;
@@ -392,12 +402,23 @@ int	init_redirections(char *str, t_command **param, t_env_ll **env)
 	}
 	return (1);
 }
-// if (str[i] == '\"' || str[i] == '\'')
-// 			{
-// 				temp = quote_check(param, &str[i], env);
-// 				if (temp == -1)
-// 					return (0);
-// 				i += temp;
-// 				temp = 0;
-// 				break ;
-// 			}
+// int	get_quote_len(char *str)
+// {
+// 	int	len;
+// 	int	quote;
+
+// 	quote = str[0];
+// 	len = 1;
+// 	while (str[len])
+// 	{
+// 		if (str[len] == quote)
+// 			break ;
+// 		++len;
+// 	}
+// 	if (!str[len])
+// 	{
+// 		printf("exit quote_len\n");
+// 		exit(EXIT_FAILURE);
+// 	}
+// 	return (len);
+// }

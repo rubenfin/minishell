@@ -6,20 +6,24 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/07 11:42:50 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/08 12:42:31 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/11 12:03:19 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	free_all_close_pipes(t_cmd_data **data, t_stream *iostream,
-		int total_pipes)
+void	clean_all(t_cmd_data **data, t_stream *iostream, int total_pipes)
 {
-	free_ll_command((*data)->one_cmd, false);
-	free_ll_command(*(*data)->command, true);
-	free(*data);
+	if ((*data)->one_cmd)
+		free_ll_command((*data)->one_cmd, false);
+	if (*(*data)->command)
+		free_ll_command(*(*data)->command, true);
+	if (*data)
+		free(*data);
 	if (total_pipes)
 		close_pipes(iostream->pipes);
-	free(iostream->pipes);
-	free(iostream);
+	if (iostream->pipes)
+		free(iostream->pipes);
+	if (iostream)
+		free(iostream);
 }

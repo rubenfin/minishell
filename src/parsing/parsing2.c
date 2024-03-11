@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/09 15:51:29 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/08 18:01:55 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/11 12:21:28 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int	createnode(t_command **head, char *data, int redirection)
 	t_command	*newnode;
 	t_command	*temp;
 
+	if (!data || !data[0])
+		return (0);
 	newnode = (t_command *)malloc(sizeof(t_command));
 	if (!newnode)
 		return (-1);
@@ -148,8 +150,8 @@ char	*set_valid_command(char *argv, char **full_path)
 	char	*trimmed_command;
 	char	*temp;
 
-	if(!argv)
-		return(NULL);
+	if (!argv)
+		return (NULL);
 	len = length_command(argv);
 	trimmed_command = (char *)malloc((len + 1) * sizeof(char));
 	if (!trimmed_command)

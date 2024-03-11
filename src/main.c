@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/07 11:47:31 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/08 16:47:35 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/11 11:57:37 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,16 @@ char	*setup_rl_and_sig(int *status)
 		*status = g_signal_status;
 	return (buffer);
 }
-
+int	check_signal_fds_exit(bool exit, int *status, t_std_fd *std_fd)
+{
+	if (exit)
+		return (0);
+	if (g_signal_status != -1)
+		*status = g_signal_status;
+	if (!refresh_std_fd(std_fd))
+		return (0);
+	return (1);
+}
 int	minishell(t_env_ll **env, t_std_fd *std_fd)
 {
 	t_command	*parsed;
@@ -59,14 +68,12 @@ int	minishell(t_env_ll **env, t_std_fd *std_fd)
 			continue ;
 		status = command_line(env, &parsed, &exit);
 		add_to_history_clr_buffer(&buffer);
-		if (exit)
+		if (!check_signal_fds_exit(exit, &status, std_fd))
 			break ;
-		if (g_signal_status != -1)
-			status = g_signal_status;
-		refresh_std_fd(std_fd);
 		printf("exit status: %d\n", status);
 	}
-	clear_history_close_fds(std_fd, &buffer);
+	if (!clear_history_close_fds(std_fd, &buffer))
+		return(-1);
 	return (write(1, "exit\n", 5), status);
 }
 

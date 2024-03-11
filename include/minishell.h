@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/06 12:01:35 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/03/08 16:54:34 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   minishell.h                                        :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/03/11 11:49:15 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,7 +193,7 @@ int						check_builtin(char *arg);
 int						malloc_stream(t_stream **iostream, t_env_ll **env);
 void					set_args(t_command **param, t_stream *iostream,
 							int count);
-void					refresh_std_fd(t_std_fd *std_fd);
+int						refresh_std_fd(t_std_fd *std_fd);
 int						init_std_fd(t_std_fd **std_fd);
 /*
 UTILS / PARSER_UTILS
@@ -227,7 +227,7 @@ void					free_ll(t_env_ll **env);
 void					free_ll_command(t_command *head, bool main_command);
 void					free_args(char **args);
 void					free_iostream(t_stream **iostream, int count);
-void					free_all_close_pipes(t_cmd_data **data,
+void					clean_all(t_cmd_data **data,
 							t_stream *iostream, int total_pipes);
 /*
 UTILS / PRINT ERROR

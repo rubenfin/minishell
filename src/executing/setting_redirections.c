@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   setting_redirections.c                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/06 12:55:18 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/03/08 17:02:43 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   setting_redirections.c                             :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/02/06 12:55:18 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/03/11 11:53:33 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ int	setup_and_do_execute(t_command **param, t_stream *iostream, int *pid)
 {
 	signal(SIGINT, SIG_IGN);
 	*pid = fork();
+	if (*pid == -1)
+		return (0);
 	if (*pid == 0)
 	{
 		send_signals(RUNNING_CMD);
@@ -53,9 +55,15 @@ int	setup_and_do_execute(t_command **param, t_stream *iostream, int *pid)
 			return (0);
 	}
 	if (iostream->input != -1)
-		close(iostream->input);
+	{
+		if (close(iostream->input) == -1)
+			return (0);
+	}
 	if (iostream->output != -1)
-		close(iostream->output);
+	{
+		if (close(iostream->output) == -1)
+			return (0);
+	}
 	return (1);
 }
 

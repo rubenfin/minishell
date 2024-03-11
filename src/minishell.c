@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/08 10:44:41 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/11 12:43:22 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	builtin(t_cmd_data *data, t_stream *iostream, bool *exit_called)
 	status = 0;
 	pid = -1;
 	if (!setup_builtin_no_pipes(&command, iostream, &pid, &count))
-		return (clean_single_cmd(data, iostream, count), EXIT_FAILURE);
+		return (clean_single_cmd(data, iostream, count), -1);
 	if ((ft_strncmp(command->string, "exit", 4)) == 0)
 		status = do_exit(iostream, exit_called);
 	else
@@ -83,7 +83,7 @@ int	no_pipes(t_cmd_data *data, t_stream *iostream, bool *exit_called)
 		else
 			waitpid(pid, &status, 0);
 	}
-	clean_single_cmd(data, iostream, count);
+	// clean_single_cmd(data, iostream, count);
 	return (return_right_status(exit_called, pid, status));
 }
 
@@ -103,9 +103,12 @@ int	command_line(t_env_ll **env, t_command **parsed, bool *exit)
 		return (no_pipes(data, iostream, exit));
 	while (data->total_pipes-- > 0)
 	{
-		init_stream_pipes(&iostream);
-		trim_command(&data, false);
-		set_redirections(&data->one_cmd, iostream, true, &pid);
+		if (!init_stream_pipes(&iostream))
+			return (clean_all(&data, iostream, data->total_pipes), -1);
+		if (!trim_command(&data, false))
+			return (clean_all(&data, iostream, data->total_pipes), -1);
+		if (set_redirections(&data->one_cmd, iostream, true, &pid))
+			return (clean_all(&data, iostream, data->total_pipes), -1);
 		clean_cmd_leftovers(&data, &iostream);
 	}
 	setup_last_cmd(&data, &iostream);

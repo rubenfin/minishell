@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/07 12:09:47 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/07 13:55:52 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/11 12:41:08 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@ int	status_and_clean(t_cmd_data **data, t_stream **iostream, int *status,
 {
 	if ((*iostream)->file_failure)
 	{
-		free_all_close_pipes(data, *iostream, (*data)->total_pipes);
+		clean_all(data, *iostream, (*data)->total_pipes);
 		return (*status);
 	}
 	*status = wait_for_processes(*pid, (*data)->wait_total);
-	free_all_close_pipes(data, *iostream, (*data)->total_pipes);
+	clean_all(data, *iostream, (*data)->total_pipes);
 	return (check_status(*status));
 }
 
@@ -69,7 +69,10 @@ int	check_parent_builtin(char *str)
 
 void	clean_single_cmd(t_cmd_data *data, t_stream *iostream, int count)
 {
-	free_ll_command(*data->command, true);
-	free_iostream(&iostream, count);
-	free(data);
+	if (*(data)->command)
+		free_ll_command(*(data)->command, true);
+	if (iostream)
+		free_iostream(&iostream, count);
+	if (data)
+		free(data);
 }
