@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/12 15:58:14 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/12 15:58:30 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/12 17:37:16 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,33 @@ char	*find_until_dollar(char *str)
 		i++;
 	}
 	return (ft_strndup(str, i));
+}
+
+char	*find_key_return_value_expanding(t_env_ll *env, char *key_str,
+		int status)
+{
+	char	*status_str;
+	char	*status_and_text;
+
+	if (!key_str[0])
+		return (ft_strdup("$"));
+	if (!ft_strncmp(key_str, "?", 1))
+	{
+		status_str = ft_itoa(status);
+		if (key_str + 1)
+		{
+			status_and_text = ft_strjoin(status_str, key_str + 1);
+			ft_free(&status_str);
+			return (status_and_text);
+		}
+		return (status_str);
+	}
+	while (env)
+	{
+		if (!ft_strncmp(env->key, key_str, max(ft_strlen(env->key),
+					ft_strlen(key_str))))
+			return (ft_strdup(env->value));
+		env = env->next;
+	}
+	return (NULL);
 }

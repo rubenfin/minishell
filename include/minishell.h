@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/12 15:58:49 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/12 16:05:45 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,7 +191,8 @@ int								total_quote(const char *str);
 int								dollar_count(char *str);
 int								find_end_sign(char *str);
 char							*find_until_dollar(char *str);
-
+char							*find_key_return_value_expanding(t_env_ll *env,
+									char *key_str, int status);
 /*
 SIGNALS
 */
