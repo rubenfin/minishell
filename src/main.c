@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/07 11:47:31 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/11 14:55:59 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/12 13:50:07 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	add_to_history_clr_buffer(char **buffer)
 		add_history(*buffer);
 	ft_free(buffer);
 }
+
 char	*setup_rl_and_sig(int *status)
 {
 	char	*buffer;
@@ -39,6 +40,7 @@ char	*setup_rl_and_sig(int *status)
 		*status = g_signal_status;
 	return (buffer);
 }
+
 int	check_signal_fds_exit(bool exit, int *status, t_std_fd *std_fd)
 {
 	if (exit)
@@ -49,6 +51,7 @@ int	check_signal_fds_exit(bool exit, int *status, t_std_fd *std_fd)
 		return (0);
 	return (1);
 }
+
 int	minishell(t_env_ll **env, t_std_fd *std_fd)
 {
 	t_command	*parsed;
@@ -68,7 +71,8 @@ int	minishell(t_env_ll **env, t_std_fd *std_fd)
 			continue ;
 		status = command_line(env, &parsed, &exit);
 		add_to_history_clr_buffer(&buffer);
-		check_signal_fds_exit(exit, &status, std_fd);
+		if (!check_signal_fds_exit(exit, &status, std_fd))
+			break ;
 		printf("exit status: %d\n", status);
 	}
 	clear_history_close_fds(std_fd, &buffer);

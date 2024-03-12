@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/11 13:58:18 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/11 14:00:32 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/12 13:49:24 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,10 @@ int	dir_check(char *argv)
 void	check_dir_exe(char *argv)
 {
 	if (!argv)
+	{
 		return ;
-	if ((argv[0] == '.' && argv[1] == '/'))
+	}
+	if (!ft_strncmp(argv, "/home", 5) || (argv[0] == '.' && argv[1] == '/'))
 	{
 		if (access(argv, F_OK) != 0)
 		{
@@ -59,7 +61,7 @@ int	length_command(char *command)
 	i = 0;
 	if (!command)
 		return (0);
-	while (command[i] && command[i] != ' ')
+	while (command[i])
 		i++;
 	return (i + 1);
 }

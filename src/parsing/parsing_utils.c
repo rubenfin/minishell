@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/07 12:13:12 by jade-haa      #+#    #+#                 */
-/*   Updated: 2024/03/11 14:22:11 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/12 12:45:08 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,14 @@ char	*find_value_char(t_env_ll *env, char *value_str, int *i, int status)
 	value_ll = env;
 	if (!value_str || !value_str[0])
 		return (NULL);
-	if (!ft_strncmp(value_str, "?", ft_strlen(value_str)))
+	if (!ft_strncmp(value_str, "?", 1))
 	{
-		printf("here\n");
-		*i += ft_strlen(value_str);
+		*i += 1;
 		return (ft_strdup(ft_itoa(status)));
 	}
 	while (value_ll)
 	{
-		if (!ft_strncmp(value_ll->key, value_str, ft_strlen(value_str) + 1))
+		if (!ft_strncmp(value_ll->key, value_str, ft_strlen(value_str)))
 		{
 			*i += ft_strlen(value_str);
 			return (ft_strdup(value_ll->value));
@@ -131,58 +130,6 @@ int	empty_checker(char *str)
 	}
 	if (flag)
 		return (1);
-	write(STDERR_FILENO, "minishell: syntax error\n", 24);
+	syntax_error();
 	return (0);
-}
-
-char	*expanding(char *result, t_env_ll **env, int status)
-{
-	int i;
-	char *tmp;
-	char *tmp2;
-	char *tmp3;
-	int x;
-	char *check;
-	int j;
-
-	x = 0;
-	i = 0;
-	j = 0;
-	while (result[i])
-	{
-		x = 0;
-		if (result[i] == '$')
-		{
-			tmp = ft_substr(result, 0, i);
-			i++;
-			while (result[i])
-			{
-				if (!valid_identifier_check(result[i]) && result[i] != '?')
-				{
-					i -= x;
-					break ;
-				}
-				i++;
-				x++;
-			}
-			if (!result[i])
-			{
-				i -= x;
-			}
-			check = ft_strndup(result + i, x);
-			tmp2 = find_value_char(*env, &check[0], &i, status);
-			if (!tmp2)
-				tmp2 = ft_strdup("");
-			if (tmp2)
-			{
-				tmp3 = ft_strjoin(tmp, tmp2);
-				ft_free(&tmp);
-				ft_free(&tmp2);
-			}
-			result = ft_strjoin(tmp3, result + (i));
-		}
-		j++;
-		i++;
-	}
-	return (result);
 }

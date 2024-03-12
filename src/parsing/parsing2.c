@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/09 15:51:29 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/11 14:00:24 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/11 15:58:43 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	createnode(t_command **head, char *data, int redirection)
 	t_command	*temp;
 
 	if (!data || !data[0])
-		return (0);
+		return (-1);
 	newnode = (t_command *)malloc(sizeof(t_command));
 	if (!newnode)
 		return (-1);

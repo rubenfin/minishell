@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 13:04:05 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/11 12:43:22 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/12 11:09:59 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int	no_pipes(t_cmd_data *data, t_stream *iostream, bool *exit_called)
 		else
 			waitpid(pid, &status, 0);
 	}
-	// clean_single_cmd(data, iostream, count);
+	clean_single_cmd(data, iostream, count);
 	return (return_right_status(exit_called, pid, status));
 }
 

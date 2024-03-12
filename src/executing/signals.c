@@ -6,13 +6,13 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/05 18:11:33 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/11 14:58:50 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/11 15:40:10 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-sig_atomic_t	g_signal_status;
+volatile sig_atomic_t	g_signal_status;
 
 void	handle_signals_normal(int sig)
 {
@@ -24,17 +24,30 @@ void	handle_signals_normal(int sig)
 		rl_on_new_line();
 		rl_redisplay();
 	}
+	else if (sig == SIGQUIT)
+	{
+		rl_on_new_line();
+		rl_redisplay();
+	}
 }
 
 void	handle_signals_heredoc(int sig)
 {
 	if (sig == SIGINT)
 	{
-		g_signal_status = 130;
-		close(STDIN_FILENO);
-		write(STDOUT_FILENO, "\n", 1);
-		close(STDOUT_FILENO);
-		close(STDERR_FILENO);
+		if (g_signal_status != 130)
+		{
+			g_signal_status = 130;
+			close(STDIN_FILENO);
+			write(STDOUT_FILENO, "\n", 1);
+			close(STDOUT_FILENO);
+			close(STDERR_FILENO);
+			rl_on_new_line();
+			rl_redisplay();
+		}
+	}
+	else if (sig == SIGQUIT)
+	{
 		rl_on_new_line();
 		rl_redisplay();
 	}
@@ -42,11 +55,7 @@ void	handle_signals_heredoc(int sig)
 
 void	handle_signals_cmd(int sig)
 {
-	if (sig == SIGINT)
-	{
-		rl_on_new_line();
-		rl_redisplay();
-	}
+	kill(0, sig);
 }
 
 void	send_signals(t_SIGNALS SIGNAL)

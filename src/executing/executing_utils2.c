@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/07 12:09:47 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/11 14:30:13 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/11 15:13:10 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 int	setup_last_cmd(t_cmd_data **data, t_stream **iostream)
 {
-	close((*iostream)->pipes->curr_write);
+	if ((*iostream)->pipes->curr_write)
+		close((*iostream)->pipes->curr_write);
 	init_stream(iostream);
 	trim_command(data, true);
 	return (1);
