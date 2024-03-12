@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/01 11:40:21 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/08 10:48:13 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/12 14:44:59 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int	check_for_n(char *str)
 	int	i;
 
 	i = 0;
+	if (!str || !str[i])
+		return (0);
 	if (str[i] != '-')
 		return (0);
 	i++;

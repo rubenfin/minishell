@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/12 10:42:45 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/12 11:04:23 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/12 13:59:41 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ char	*handle_expanding_str(char *expanded, char **until_dollar, char *value)
 {
 	char	*tmp;
 
-	// char	*tmp2;
 	if (!expanded)
 	{
 		if (value)
@@ -140,11 +139,9 @@ char	*expanding(char *result, t_env_ll **env, int status)
 			break ;
 		}
 		i += ft_strlen(until_dollar) + 1;
-		// printf("ud: %s\n beyfore fd: %s\n", until_dollar, from_dollar);
 		end = find_end_sign(from_dollar);
 		tmp = ft_strndup(from_dollar + 1, end);
 		i += ft_strlen(tmp);
-		// printf("fd after: %s\n", tmp);
 		value = find_key_return_value_expanding(*env, tmp, status);
 		ft_free(&tmp);
 		expanded = handle_expanding_str(expanded, &until_dollar, value);

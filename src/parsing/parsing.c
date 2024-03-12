@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/12 13:51:40 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/12 13:51:50 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/12 14:34:55 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,7 @@ char	*set_node_quotes(char *str, int quote, t_env_ll **env, int status)
 		return (result);
 	}
 	else
-	{
 		return (str);
-	}
 	ft_free(&check);
 	return (NULL);
 }
@@ -100,6 +98,7 @@ char	*get_cmd(char *str, int len, t_env_ll **env, int status)
 	char	save;
 
 	i = 0;
+	result = ft_strdup("");
 	origin = ft_substr(str, 0, len);
 	while (origin[i])
 	{
@@ -119,6 +118,7 @@ char	*get_cmd(char *str, int len, t_env_ll **env, int status)
 	}
 	return (result);
 }
+
 int	no_quotes_len(char *str, int redirection)
 {
 	int	len;
@@ -163,23 +163,22 @@ int	quotes_len(char *str)
 int	get_size(char *str, int redirection)
 {
 	if (total_quote(str) > 0)
-	{
 		return (quotes_len(str));
-	}
 	else
 		return (no_quotes_len(str, redirection));
 }
-char	*set_node_main(char *str, int redirection, t_env_ll **env, int status)
+char	*set_node_main(char *str, int *redirection, t_env_ll **env, int status)
 {
 	char	*result;
-	char	*builtin_check;
+	char	*temp;
 	int		len;
 
-	len = get_size(str, redirection);
-	builtin_check = ft_substr(str, 0, len);
-	if (redirection == CMD && check_builtin(builtin_check))
-		redirection = BUILTIN;
-	if (redirection == CMD && total_quote(str) > 0)
+	len = get_size(str, *redirection);
+	temp = ft_substr(str, 0, len);
+	if (*redirection == CMD && check_builtin(temp))
+		*redirection = BUILTIN;
+	ft_free(&temp);
+	if (*redirection == CMD && total_quote(str) > 0)
 	{
 		result = get_cmd(str, len, env, status);
 		if (!result)
@@ -187,32 +186,13 @@ char	*set_node_main(char *str, int redirection, t_env_ll **env, int status)
 	}
 	else
 	{
-		result = ft_substr(str, 0, len);
-		result = expanding(result, env, status);
-		// printf("zonder quotes gesubt%s\n", result);
+		temp = ft_substr(str, 0, len);
+		result = expanding(temp, env, status);
+		ft_free(&temp);
 	}
-	// printf("node gemaakt\n");
 	return (result);
 }
-// int  get_quote_len(char *str)
-// {
-//  int len;
-//  int quote;
-//  quote = str[0];
-//  len = 1;
-//  while (str[len])
-//  {
-//      if (str[len] == quote)
-//          break ;
-//      ++len;
-//  }
-//  if (!str[len])
-//  {
-//      printf("exit quote_len\n");
-//      exit(EXIT_FAILURE);
-//  }
-//  return (len);
-// }
+
 int	determine_redirection(char *str, int *i, int *redirection)
 {
 	while (str[*i] && (str[*i] == ' ' || redirection_checker_bool(&str[*i], 0,
@@ -243,8 +223,8 @@ int	init_redirections(char *str, t_command **param, t_env_ll **env, int status)
 		redirection = CMD;
 		determine_redirection(str, &i, &redirection);
 		len = get_size(&str[i], redirection);
-		result = set_node_main(&str[i], redirection, env, status);
-		if (!result)
+		result = set_node_main(&str[i], &redirection, env, status);
+		if (!result && len > 0)
 			return (0);
 		if (createnode(param, result, redirection) == -1)
 			return (0);
