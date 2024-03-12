@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 13:21:00 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/12 09:11:06 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/12 15:39:25 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,7 @@ int	parser(t_env_ll **env, t_command **command, char *buffer, int status)
 			add_history(buffer);
 		return (ft_free(&buffer), 0);
 	}
+	if (!*command)
+		return(0);
 	return (1);
 }

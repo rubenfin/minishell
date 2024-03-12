@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/12 10:26:26 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/12 15:58:49 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,6 +188,9 @@ int								check_closing_quote(char *str);
 int								check_starting_quote(char *str);
 int								quote_counter(const char *str, int quote);
 int								total_quote(const char *str);
+int								dollar_count(char *str);
+int								find_end_sign(char *str);
+char							*find_until_dollar(char *str);
 
 /*
 SIGNALS

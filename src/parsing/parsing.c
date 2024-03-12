@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/12 13:51:40 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/12 14:34:55 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/12 15:22:04 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,39 @@ char	*quote_check(char *str, int *index, t_env_ll **env, int status)
 	*index = closing_quote + 1;
 	return (result);
 }
+
+char	*get_result(char **result, char **tmp)
+{
+	char	*returned_result;
+
+	if (*result)
+	{
+		returned_result = ft_strjoin(*result, *tmp);
+	}
+	else
+		returned_result = ft_strdup(*tmp);
+	ft_free(result);
+	ft_free(tmp);
+	return (returned_result);
+}
+
+char	*get_result_w_origin(char **result, char *origin)
+{
+	char	*origin_tmp;
+	char	*returned_result;
+
+	origin_tmp = ft_strndup(origin, 1);
+	if (*result)
+	{
+		returned_result = ft_strjoin(*result, origin_tmp);
+	}
+	else
+		returned_result = ft_strdup(origin_tmp);
+	ft_free(result);
+	ft_free(&origin_tmp);
+	return (returned_result);
+}
+
 char	*get_cmd(char *str, int len, t_env_ll **env, int status)
 {
 	char	*origin;
@@ -97,8 +130,8 @@ char	*get_cmd(char *str, int len, t_env_ll **env, int status)
 	int		i;
 	char	save;
 
+	result = NULL;
 	i = 0;
-	result = ft_strdup("");
 	origin = ft_substr(str, 0, len);
 	while (origin[i])
 	{
@@ -108,14 +141,14 @@ char	*get_cmd(char *str, int len, t_env_ll **env, int status)
 			tmp = quote_check(&origin[i], &i, env, status);
 			if (!tmp)
 				return (NULL);
-			result = ft_strjoin(result, tmp);
 			i = check_closing_quote_with_quote(origin, save);
-			ft_free(&tmp);
+			result = get_result(&result, &tmp);
 		}
 		else
-			result = ft_strjoin(result, ft_strndup(&origin[i], 1));
+			result = get_result_w_origin(&result, &origin[i]);
 		++i;
 	}
+	ft_free(&origin);
 	return (result);
 }
 
