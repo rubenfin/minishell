@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/06 15:49:56 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/07 11:41:24 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/13 17:54:13 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,18 @@
 char	**get_path(char **envp)
 {
 	int		i;
-	char	*path_string;
 	char	**result_string;
 
-	path_string = NULL;
 	i = 0;
-	while (!path_string)
-	{
-		path_string = ft_strnstr(envp[i], "PATH=", 5);
+	if (!envp)
+		return (NULL);
+	while (envp[i] && ft_strnstr(envp[i], "PATH", 4) == NULL)
 		i++;
-	}
-	result_string = ft_split(path_string + 5, ':');
+	if (envp[i] && !ft_strnstr(envp[i], "PATH", 4))
+		return (NULL);
+	if (!envp[i])
+		return (NULL);
+	result_string = ft_split(envp[i] + 5, ':');
 	if (!result_string)
 		return (NULL);
 	return (result_string);

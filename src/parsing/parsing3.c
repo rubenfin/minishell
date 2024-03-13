@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parsing3.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/13 15:05:10 by jade-haa          #+#    #+#             */
-/*   Updated: 2024/03/13 15:17:15 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   parsing3.c                                         :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/03/13 15:05:10 by jade-haa      #+#    #+#                 */
+/*   Updated: 2024/03/13 16:47:57 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,42 +53,45 @@ char	*ft_substr_quotes(char const *s, unsigned int start, size_t len,
 	return (substring);
 }
 
-char	*set_node_quotes(char *str, int quote, t_env_ll **env, int status)
+char	*set_node_quotes(char **str, int quote, t_env_ll **env, int status)
 {
-	char	*check;
 	char	*result;
 
-	if (dollar_sign_check(str) && quote == 34)
+	if (dollar_sign_check(*str) && quote == 34)
 	{
-		result = expanding(str, env, status);
+		result = expanding(*str, env, status);
+		if (!result)
+			return (ft_free(str), NULL);
+		ft_free(str);
 		return (result);
 	}
 	else
-		return (str);
-	ft_free(&check);
-	return (NULL);
+	{
+		result = ft_strdup(*str);
+		if (!result)
+			return (ft_free(str), NULL);
+		ft_free(str);
+		return (result);
+	}
 }
 
 char	*quote_check(char *str, int *index, t_env_ll **env, int status)
 {
 	int		i;
-	int		len;
 	char	*result;
+	char	*saved;
 	char	quote;
 	int		closing_quote;
 
+	result = NULL;
 	i = check_starting_quote(str);
 	quote = str[i];
 	closing_quote = check_closing_quote_with_quote(str, quote);
 	if (str[i] != str[closing_quote] || closing_quote == i)
-	{
-		syntax_error();
-		return (NULL);
-	}
-	len = 0;
-	result = ft_substr_quotes(&str[1], i, closing_quote, quote);
+		return (syntax_error(), NULL);
+	saved = ft_substr_quotes(&str[1], i, closing_quote, quote);
 	if (quote == '\"')
-		result = set_node_quotes(result, quote, env, status);
+		result = set_node_quotes(&saved, quote, env, status);
 	*index = closing_quote + 1;
 	return (result);
 }
@@ -98,11 +101,11 @@ char	*get_result(char **result, char **tmp)
 	char	*returned_result;
 
 	if (*result)
-	{
 		returned_result = ft_strjoin(*result, *tmp);
-	}
 	else
 		returned_result = ft_strdup(*tmp);
+	if (!returned_result)
+		return (ft_free2(result, tmp), NULL);
 	ft_free(result);
 	ft_free(tmp);
 	return (returned_result);

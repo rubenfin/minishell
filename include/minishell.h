@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/06 12:01:35 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/03/13 15:58:43 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   minishell.h                                        :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/03/13 17:01:05 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -308,6 +308,10 @@ int								dir_check(char *argv);
 void							check_dir_exe(char *argv);
 int								valid_identifier_check(char c);
 char							*get_curr_dir(void);
+int								check_if_valid(t_env_ll *node,
+									char **export_data, int *i, int *j);
+int								equal_sign_check(t_env_ll **node,
+									char **export_data, int *i, int j);
 
 /*
 UTILS / FD_HANDLING

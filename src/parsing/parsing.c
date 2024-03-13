@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/12 13:51:40 by rfinneru          #+#    #+#             */
-/*   Updated: 2024/03/13 15:10:36 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   parsing.c                                          :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/03/12 13:51:40 by rfinneru      #+#    #+#                 */
+/*   Updated: 2024/03/13 16:49:44 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ char	*get_result_w_origin(char **result, char *origin)
 
 	origin_tmp = ft_strndup(origin, 1);
 	if (*result)
-	{
 		returned_result = ft_strjoin(*result, origin_tmp);
-	}
 	else
 		returned_result = ft_strdup(origin_tmp);
+	if (!returned_result)
+		return (ft_free2(result, &origin_tmp), NULL);
 	ft_free(result);
 	ft_free(&origin_tmp);
 	return (returned_result);
@@ -57,7 +57,11 @@ char	*set_node_main(char *str, int *redirection, t_env_ll **env, int status)
 	else
 	{
 		temp = ft_substr(str, 0, len);
+		if (!temp)
+			return (NULL);
 		result = expanding(temp, env, status);
+		if (!result)
+			return (ft_free(&temp), NULL);
 		ft_free(&temp);
 	}
 	return (result);
@@ -95,7 +99,7 @@ int	init_redirections(char *str, t_command **param, t_env_ll **env, int status)
 		determine_redirection(str, &i, &redirection);
 		len = get_size(&str[i], redirection);
 		result = set_node_main(&str[i], &redirection, env, status);
-		if (!result && len > 0)
+		if (!result)
 			return (0);
 		if (createnode(param, result, redirection) == -1)
 			return (0);

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parsing4.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/13 15:07:32 by jade-haa          #+#    #+#             */
-/*   Updated: 2024/03/13 15:17:25 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   parsing4.c                                         :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/03/13 15:07:32 by jade-haa      #+#    #+#                 */
+/*   Updated: 2024/03/13 16:53:17 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ char	*get_cmd(char *str, int len, t_env_ll **env, int status)
 	char	*result;
 	char	*tmp;
 	int		i;
+	char	save;
 
 	initialize_variables(&result, &i);
 	origin = ft_substr(str, 0, len);
@@ -33,14 +34,17 @@ char	*get_cmd(char *str, int len, t_env_ll **env, int status)
 	{
 		if (origin[i] == '\'' || origin[i] == '\"')
 		{
+			save = origin[i];
 			tmp = quote_check(&origin[i], &i, env, status);
 			if (!tmp)
-				return (NULL);
-			i = check_closing_quote_with_quote(origin, origin[i]);
+				return (ft_free(&origin), ft_free(&result), NULL);
+			i = check_closing_quote_with_quote(origin, save);
 			result = get_result(&result, &tmp);
 		}
 		else
 			result = get_result_w_origin(&result, &origin[i]);
+		if (!result)
+			return (ft_free(&origin), NULL);
 	}
 	ft_free(&origin);
 	return (result);

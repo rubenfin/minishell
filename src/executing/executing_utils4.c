@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/11 13:58:18 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/12 13:49:24 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/13 17:59:46 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,74 +65,52 @@ int	length_command(char *command)
 		i++;
 	return (i + 1);
 }
-
-int	valid_command(char *argv, char **full_path)
+char	*init_set_valid_command(char *argv, int *j, char **full_path)
 {
-	int		j;
-	char	*str;
-	size_t	len;
 	char	*trimmed_command;
-	char	*temp;
 
-	len = length_command(argv);
-	trimmed_command = (char *)malloc(len * sizeof(char));
-	if (!trimmed_command)
-		return (0);
-	ft_strlcpy(trimmed_command, argv, len);
-	j = 0;
-	while (full_path[j])
+	if (!argv || !argv[0])
+		return (NULL);
+	if (argv && !full_path)
 	{
-		temp = ft_strjoin(full_path[j], "/");
-		str = ft_strjoin(temp, trimmed_command);
-		if (!temp | !str)
-			return (0);
-		ft_free(&temp);
-		if (access(str, X_OK) == 0)
-			return (1);
-		ft_free(&str);
-		j++;
+		if (access(argv, X_OK) == 0)
+			return (ft_strdup(argv));
+		else
+			return (NULL);
 	}
-	ft_free(&trimmed_command);
-	return (0);
+	if (!full_path)
+		return (NULL);
+	trimmed_command = ft_strdup(argv);
+	if (!trimmed_command)
+		return (NULL);
+	*j = -1;
+	return (trimmed_command);
 }
 
 char	*set_valid_command(char *argv, char **full_path)
 {
 	int		j;
 	char	*str;
-	size_t	len;
 	char	*trimmed_command;
 	char	*temp;
 
-	if (!argv)
-		return (NULL);
-	len = length_command(argv);
-	trimmed_command = (char *)malloc((len + 1) * sizeof(char));
+	trimmed_command = init_set_valid_command(argv, &j, full_path);
 	if (!trimmed_command)
 		return (NULL);
-	ft_strlcpy(trimmed_command, argv, len);
-	trimmed_command[len] = '\0';
-	j = 0;
-	if (!argv[0])
-		return (free(trimmed_command), NULL);
 	if (access(argv, X_OK) == 0)
 		return (free(trimmed_command), argv);
-	while (full_path[j])
+	while (full_path[++j])
 	{
 		temp = ft_strjoin(full_path[j], "/");
 		if (!temp)
-			return (NULL);
+			return (ft_free(&trimmed_command), NULL);
 		str = ft_strjoin(temp, trimmed_command);
 		if (!str)
-			return (NULL);
-		ft_free(&temp);
+			return (ft_free(&temp), ft_free(&trimmed_command), NULL);
 		if (access(str, X_OK) == 0)
-			return (str);
-		ft_free(&str);
-		j++;
+			return (ft_free(&temp), str);
+		ft_free2(&str, &temp);
 	}
 	ft_free(&trimmed_command);
-	if (!str)
-		return (NULL);
 	return (str);
 }
