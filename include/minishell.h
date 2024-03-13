@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/13 10:01:37 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/13 15:31:51 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,6 @@ typedef struct s_expanding
 	char						*from_dollar;
 }								t_expanding;
 
-
 int								parser(t_env_ll **env, t_command **command,
 									char *buffer, int status);
 int								command_line(t_env_ll **env,
@@ -205,6 +204,11 @@ int								find_end_sign(char *str);
 char							*find_until_dollar(char *str);
 char							*find_key_return_value_expanding(t_env_ll *env,
 									char *key_str, int status);
+int								init_expanding(t_expanding **data);
+void							free_expanding_data(t_expanding **data);
+int								end_of_expanding_char(t_expanding *data);
+char							*free_data_setup_return(t_expanding *data);
+
 /*
 SIGNALS
 */
@@ -260,6 +264,8 @@ void							free_args(char **args);
 void							free_iostream(t_stream **iostream, int count);
 void							clean_all(t_cmd_data **data, t_stream *iostream,
 									int total_pipes);
+void							ft_free2(char **string1, char **string2);
+
 /*
 UTILS / PRINT ERROR
 */

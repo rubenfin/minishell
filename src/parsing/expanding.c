@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/12 10:42:45 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/13 13:35:04 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/13 15:35:19 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,62 +31,63 @@ char	*expanded_doesnt_exist(char **until_dollar, char **value)
 	}
 	ft_free(value);
 	ft_free(until_dollar);
+	if (!expanded)
+		return (NULL);
 	return (expanded);
 }
-char	*handle_expanding_str(char **expanded, char **until_dollar,
-		char **value)
+
+int	if_expanding_and_value(t_expanding **data, char **tmp)
+{
+	if (*tmp)
+	{
+		(*data)->expanded = ft_strjoin(*tmp, (*data)->value);
+		if (!(*data)->expanded)
+			return (ft_free(tmp), 0);
+	}
+	else
+	{
+		*tmp = ft_strjoin((*data)->expanded, (*data)->value);
+		if (!*tmp)
+			return (0);
+		ft_free(&(*data)->expanded);
+		ft_free(&(*data)->value);
+		(*data)->expanded = ft_strdup(*tmp);
+		ft_free(tmp);
+		if (!(*data)->expanded)
+			return (0);
+		ft_free(&(*data)->until_dollar);
+		return (1);
+	}
+	return (1);
+}
+
+char	*handle_expanding_str(t_expanding **data)
 {
 	char	*tmp;
 
 	tmp = NULL;
-	if (!*expanded)
-		*expanded = expanded_doesnt_exist(until_dollar, value);
+	if (!(*data)->expanded)
+		(*data)->expanded = expanded_doesnt_exist(&(*data)->until_dollar,
+				&(*data)->value);
 	else
 	{
-		if (*until_dollar)
+		if ((*data)->until_dollar)
 		{
-			tmp = ft_strjoin(*expanded, *until_dollar);
-			ft_free(expanded);
-			*expanded = ft_strdup(tmp);
+			tmp = ft_strjoin((*data)->expanded, (*data)->until_dollar);
+			ft_free(&(*data)->expanded);
+			(*data)->expanded = ft_strdup(tmp);
 			ft_free(&tmp);
-			ft_free(until_dollar);
+			ft_free(&(*data)->until_dollar);
 		}
-		if (*value)
+		if ((*data)->value)
 		{
-			if (tmp)
-				*expanded = ft_strjoin(tmp, *value);
-			else
-			{
-				tmp = ft_strjoin(*expanded, *value);
-				ft_free(expanded);
-				ft_free(value);
-				ft_free(until_dollar);
-				return (tmp);
-			}
-			ft_free(&tmp);
-			ft_free(value);
-			ft_free(until_dollar);
+			if (!if_expanding_and_value(data, &tmp))
+				return (ft_free(&tmp), free_expanding_data(data), NULL);
 		}
 	}
-	ft_free(value);
-	ft_free(until_dollar);
+	ft_free2(&(*data)->value, &(*data)->until_dollar);
 	ft_free(&tmp);
-	return (*expanded);
-}
-
-int	init_expanding(t_expanding **data)
-{
-	(*data) = (t_expanding *)malloc(sizeof(t_expanding));
-	if (!(*data))
-		return (0);
-	(*data)->i = 0;
-	(*data)->expanded = NULL;
-	(*data)->end = 0;
-	(*data)->from_dollar = NULL;
-	(*data)->until_dollar = NULL;
-	(*data)->tmp = NULL;
-	(*data)->value = NULL;
-	return (1);
+	return ((*data)->expanded);
 }
 
 int	from_and_until_dollar(t_expanding *data, char *result)
@@ -94,63 +95,28 @@ int	from_and_until_dollar(t_expanding *data, char *result)
 	if (result[data->i] != '$')
 		data->until_dollar = find_until_dollar(result + data->i);
 	else
-		data->until_dollar = NULL;
+		data->until_dollar = ft_strdup("");
+	if (!data->until_dollar)
+		return (free_expanding_data(&data), 0);
 	data->from_dollar = ft_strnstr(&result[data->i], "$", ft_strlen(result));
 	if (!data->from_dollar)
 	{
 		if (data->expanded)
 		{
 			data->tmp = ft_strjoin(data->expanded, data->until_dollar);
+			if (!data->tmp)
+				return (free_expanding_data(&data), 0);
 			ft_free(&data->expanded);
 			data->expanded = ft_strdup(data->tmp);
 			ft_free(&data->tmp);
 		}
 		else
 			data->expanded = ft_strdup(data->until_dollar);
-		ft_free(&data->until_dollar);
-		return (0);
+		if (!data->expanded)
+			return (free_expanding_data(&data), 0);
+		return (ft_free(&data->until_dollar), 0);
 	}
 	return (1);
-}
-
-int	end_of_expanding_char(t_expanding *data)
-{
-	data->i += ft_strlen(data->until_dollar) + 1;
-	data->end = find_end_sign(data->from_dollar);
-	data->tmp = ft_strndup(data->from_dollar + 1, data->end);
-	if (!data->tmp)
-		return (0);
-	data->i += ft_strlen(data->tmp);
-	return (1);
-}
-
-void	free_expanding_data(t_expanding **data)
-{
-	if ((*data)->value)
-		ft_free(&(*data)->value);
-	if ((*data)->expanded)
-		ft_free(&(*data)->expanded);
-	if ((*data)->until_dollar)
-		ft_free(&(*data)->until_dollar);
-	if ((*data)->tmp)
-		ft_free(&(*data)->tmp);
-	(*data)->i = 0;
-	(*data)->end = 0;
-	if ((*data))
-		free((*data));
-}
-
-char	*free_data_setup_return(t_expanding *data)
-{
-	char	*return_value;
-
-	return_value = ft_strdup(data->expanded);
-	// ft_free(&data->expanded);
-	// free(data);
-	free_expanding_data(&data);
-	if (!return_value)
-		return (NULL);
-	return (return_value);
 }
 
 char	*expanding(char *result, t_env_ll **env, int status)
@@ -171,8 +137,7 @@ char	*expanding(char *result, t_env_ll **env, int status)
 		if (!data->value)
 			return (free_expanding_data(&data), NULL);
 		ft_free(&data->tmp);
-		data->expanded = handle_expanding_str(&data->expanded,
-				&data->until_dollar, &data->value);
+		data->expanded = handle_expanding_str(&data);
 		if (!data->expanded)
 			return (free_expanding_data(&data), NULL);
 		ft_free(&data->value);

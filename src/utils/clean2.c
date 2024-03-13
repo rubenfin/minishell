@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/07 11:42:50 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/11 12:03:19 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/13 14:55:41 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,4 +26,10 @@ void	clean_all(t_cmd_data **data, t_stream *iostream, int total_pipes)
 		free(iostream->pipes);
 	if (iostream)
 		free(iostream);
+}
+
+void	ft_free2(char **string1, char **string2)
+{
+	ft_free(string1);
+	ft_free(string2);
 }
