@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   minishell.h                                        :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/13 15:31:51 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/06 12:01:35 by rfinneru          #+#    #+#             */
+/*   Updated: 2024/03/13 15:58:43 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,8 +189,6 @@ char							*expanding(char *result, t_env_ll **env,
 int								empty_checker(char *str);
 int								redirection_checker_int(char *str, int i,
 									int check_all);
-int								redirection_checker_bool(char *str, int i,
-									int check_all);
 int								check_first_cmd(char *str, int i);
 int								dollar_sign_check(char *result);
 int								check_closing_quote_with_quote(char *str,
@@ -208,6 +206,18 @@ int								init_expanding(t_expanding **data);
 void							free_expanding_data(t_expanding **data);
 int								end_of_expanding_char(t_expanding *data);
 char							*free_data_setup_return(t_expanding *data);
+char							*get_result(char **result, char **tmp);
+char							*quote_check(char *str, int *index,
+									t_env_ll **env, int status);
+char							*get_result_w_origin(char **result,
+									char *origin);
+int								quotes_len(char *str);
+int								no_quotes_len(char *str, int redirection);
+char							*get_cmd(char *str, int len, t_env_ll **env,
+									int status);
+void							initialize_variables(char **result, int *i);
+int								redirection_checker_bool(char *str, int i,
+									int check_all);
 
 /*
 SIGNALS

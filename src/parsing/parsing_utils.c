@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   parsing_utils.c                                    :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/03/07 12:13:12 by jade-haa      #+#    #+#                 */
-/*   Updated: 2024/03/13 13:48:19 by rfinneru      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   parsing_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/07 12:13:12 by jade-haa          #+#    #+#             */
+/*   Updated: 2024/03/13 15:59:25 by jade-haa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,24 +51,6 @@ int	redirection_checker_int(char *str, int i, int check_all)
 		return (RE_IN);
 	if (ft_strncmp(&str[i], ">", 1) == 0)
 		return (RE_OUT);
-	return (0);
-}
-
-int	redirection_checker_bool(char *str, int i, int check_all)
-{
-	if (check_all)
-	{
-		if (ft_strncmp(&str[i], "|", 1) == 0)
-			return (1);
-	}
-	if (ft_strncmp(&str[i], ">>", 2) == 0)
-		return (1);
-	if (ft_strncmp(&str[i], "<<", 2) == 0)
-		return (1);
-	if (ft_strncmp(&str[i], "<", 1) == 0)
-		return (1);
-	if (ft_strncmp(&str[i], ">", 1) == 0)
-		return (1);
 	return (0);
 }
 
