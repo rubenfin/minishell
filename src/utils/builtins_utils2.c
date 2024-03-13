@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/08 14:18:29 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/08 16:23:17 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/13 14:20:58 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ int	go_back(t_env_ll **env, char *directory)
 	i = 0;
 	i = last_slash(find_key_return_value(*env, "PWD"));
 	temp = ft_strndup(find_key_return_value(*env, "PWD"), i);
+	if (!temp)
+		return (0);
 	if (chdir(temp) == 0)
 	{
 		change_pwd(env, temp);

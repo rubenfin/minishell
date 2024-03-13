@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/12 10:42:45 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/13 12:56:23 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/13 13:35:04 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,15 +166,15 @@ char	*expanding(char *result, t_env_ll **env, int status)
 		if (!from_and_until_dollar(data, result))
 			break ;
 		if (!end_of_expanding_char(data))
-			return (NULL);
+			return (free_expanding_data(&data), NULL);
 		data->value = find_key_return_value_expanding(*env, data->tmp, status);
 		if (!data->value)
-			return (NULL);
+			return (free_expanding_data(&data), NULL);
 		ft_free(&data->tmp);
 		data->expanded = handle_expanding_str(&data->expanded,
 				&data->until_dollar, &data->value);
 		if (!data->expanded)
-			return (NULL);
+			return (free_expanding_data(&data), NULL);
 		ft_free(&data->value);
 	}
 	total = free_data_setup_return(data);

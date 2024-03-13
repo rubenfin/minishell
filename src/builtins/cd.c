@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/30 12:09:22 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/08 14:19:03 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/13 14:18:50 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ int	find_in_dir(t_env_ll **env, char *directory)
 		directory = ft_strjoin("/", directory);
 	node = find_key(*env, "PWD");
 	path = ft_strjoin(node->value, directory);
+	if (!path)
+		return (ft_free(&directory), 0);
 	if (chdir(path) == -1)
 	{
 		print_file_dir_err(directory, true);

@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/12 13:51:40 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/13 10:42:15 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/13 13:59:41 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,8 @@ char	*get_cmd(char *str, int len, t_env_ll **env, int status)
 	result = NULL;
 	i = 0;
 	origin = ft_substr(str, 0, len);
+	if (!origin)
+		return (NULL);
 	while (origin[i])
 	{
 		if (origin[i] == '\'' || origin[i] == '\"')
@@ -140,12 +142,14 @@ char	*get_cmd(char *str, int len, t_env_ll **env, int status)
 			save = origin[i];
 			tmp = quote_check(&origin[i], &i, env, status);
 			if (!tmp)
-				return (NULL);
+				return (ft_free(&origin), NULL);
 			i = check_closing_quote_with_quote(origin, save);
 			result = get_result(&result, &tmp);
 		}
 		else
 			result = get_result_w_origin(&result, &origin[i]);
+		if (!result)
+			return (ft_free(&origin), NULL);
 		++i;
 	}
 	ft_free(&origin);
@@ -174,6 +178,8 @@ int	quotes_len(char *str)
 	quote = -1;
 	i = 0;
 	flag = 0;
+	if (!str || !str[i])
+		return (0);
 	while (str[i])
 	{
 		if ((str[i] == 27 || str[i] == 34) && flag == 0)
@@ -208,6 +214,8 @@ char	*set_node_main(char *str, int *redirection, t_env_ll **env, int status)
 
 	len = get_size(str, *redirection);
 	temp = ft_substr(str, 0, len);
+	if (!temp)
+		return (NULL);
 	if (*redirection == CMD && check_builtin(temp))
 		*redirection = BUILTIN;
 	ft_free(&temp);
@@ -220,7 +228,11 @@ char	*set_node_main(char *str, int *redirection, t_env_ll **env, int status)
 	else
 	{
 		temp = ft_substr(str, 0, len);
+		if (!temp)
+			return(NULL);
 		result = expanding(temp, env, status);
+		if (!result)
+			return (ft_free(&temp), NULL);
 		ft_free(&temp);
 	}
 	return (result);
@@ -239,6 +251,7 @@ int	determine_redirection(char *str, int *i, int *redirection)
 		*redirection = PIPE;
 	return (*redirection);
 }
+
 int	init_redirections(char *str, t_command **param, t_env_ll **env, int status)
 {
 	int			i;
@@ -251,18 +264,18 @@ int	init_redirections(char *str, t_command **param, t_env_ll **env, int status)
 	command = *param;
 	if (!empty_checker(str))
 		return (0);
-	while (str[i])
+	while (str && str[i])
 	{
 		redirection = CMD;
 		determine_redirection(str, &i, &redirection);
 		len = get_size(&str[i], redirection);
 		result = set_node_main(&str[i], &redirection, env, status);
-		if (!result && len > 0)
-			return (0);
+		if (!result)
+			return (free_ll_command(*param, true), 0);
 		if (createnode(param, result, redirection) == -1)
-			return (0);
+			return (free_ll_command(*param, true), 0);
 		if (len == -1)
-			return (0);
+			return (free_ll_command(*param, true), 0);
 		i += len;
 	}
 	return (1);
