@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/12 16:05:45 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/13 10:01:37 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,18 @@ typedef struct s_basic_cmd
 	int							total_pipes;
 	int							wait_total;
 }								t_cmd_data;
+
+typedef struct s_expanding
+{
+	int							i;
+	int							end;
+	char						*tmp;
+	char						*value;
+	char						*expanded;
+	char						*until_dollar;
+	char						*from_dollar;
+}								t_expanding;
+
 
 int								parser(t_env_ll **env, t_command **command,
 									char *buffer, int status);

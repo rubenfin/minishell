@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/12 15:58:14 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/12 17:37:16 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/13 12:44:33 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ char	*find_key_return_value_expanding(t_env_ll *env, char *key_str,
 		status_str = ft_itoa(status);
 		if (key_str + 1)
 		{
-			status_and_text = ft_strjoin(status_str, key_str + 1);
+			status_and_text = ft_strjoin(status_str, key_str + 1);;
 			ft_free(&status_str);
 			return (status_and_text);
 		}
@@ -86,5 +86,5 @@ char	*find_key_return_value_expanding(t_env_ll *env, char *key_str,
 			return (ft_strdup(env->value));
 		env = env->next;
 	}
-	return (NULL);
+	return (ft_strdup(""));
 }
