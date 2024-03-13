@@ -18,6 +18,7 @@ EXECUTING_DIR = executing
 PARSING_DIR = parsing
 UTILS_DIR = utils
 GNL_DIR = gnl
+LIBFT_DIR = libft
 
 SRC :=  $(wildcard $(SRC_DIR)/*.c) \
         $(wildcard $(SRC_DIR)/$(BUILTINS_DIR)/*.c) \
@@ -31,6 +32,8 @@ OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJS_DIR)/%.o)
 
 NAME = minishell
 
+LIBS_TARGET = src/libft.a
+
 .PHONY: all clean fclean re
 
 all: $(NAME)
@@ -38,16 +41,27 @@ all: $(NAME)
 clean:
 	rm -rf $(OBJ)
 	@echo "$(YELLOW)Removed all objects!$(DEFAULT)"
+	$(MAKE) -C $(LIBFT_DIR) clean
+	@echo "$(YELLOW)Cleaned libft static library!$(DEFAULT)"
 
 fclean: clean
 	rm -rf $(NAME)
 	rm -rf $(OBJS_DIR)
 	@echo "$(RED)Removed executables!$(DEFAULT)"
+	$(MAKE) -C $(LIBFT_DIR) fclean
+	rm -f $(SRC_DIR)/libft.a
+	@echo "$(RED)Removed libft static library in src directory!$(DEFAULT)"
+
+
+$(LIBS_TARGET):
+	$(MAKE) -C $(LIBFT_DIR)
+
+library: $(LIBS_TARGET)
 
 re: fclean all
 
-$(NAME): $(OBJS_DIR) $(OBJ)
-	$(CC) -o $(NAME) $(OBJ) $(LDFLAGS) $(LINKERFLAGS) src/libft.a -lreadline 
+$(NAME): $(OBJS_DIR) $(OBJ) $(LIBS_TARGET)
+	$(CC) -o $(NAME) $(OBJ) $(LDFLAGS) $(LINKERFLAGS) $(LIBS_TARGET) $(LIBS_TARGET) -lreadline 
 	@echo "$(GREEN)Compiled minishell!$(DEFAULT)"
 
 $(OBJS_DIR)/%.o: $(SRC_DIR)/%.c
