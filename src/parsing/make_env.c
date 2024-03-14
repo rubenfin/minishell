@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/09 12:35:32 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/08 16:48:41 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/14 15:38:55 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ int	initalize_node(t_env_ll *current, char **envp, int i, int j)
 		current->value = ft_strdup(envp[i] + j + 1);
 	else
 		current->value = NULL;
+	current->equal = true;
 	current->next = NULL;
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/13 17:00:22 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/13 17:00:48 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/14 16:06:59 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,26 @@
 
 int	check_if_valid(t_env_ll *node, char **export_data, int *i, int *j)
 {
+	int	x;
+
+	x = 0;
+	if (export_data[*j][0] == '=')
+		return (pr_invalid(&node, export_data, *j), 0);
 	while (export_data[*j][*i])
 	{
 		if (export_data[*j][*i] == '=')
 		{
-			if (export_data[*j][0] == '=')
-				return (pr_invalid(&node, export_data, *j), 0);
+			x = *i;
+			node->equal = true;
+			while (export_data[*j][x])
+			{
+				if (!valid_identifier_check(export_data[*j][x])
+					&& export_data[*j][*i] != '=')
+					return (pr_invalid(&node, export_data, *j), 0);
+				x++;
+			}
 			break ;
 		}
-		if (!valid_identifier_check(export_data[*j][*i]))
-			return (pr_invalid(&node, export_data, *j), 0);
 		(*i)++;
 	}
 	return (1);

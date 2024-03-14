@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/09 10:04:45 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/14 10:59:04 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/14 16:01:14 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,13 @@ void	print_env_ll(t_env_ll *env)
 {
 	while (env)
 	{
-		write(STDOUT_FILENO, env->key, ft_strlen(env->key));
-		write(STDOUT_FILENO, "=", 1);
-		write(STDOUT_FILENO, env->value, ft_strlen(env->value));
-		write(STDOUT_FILENO, "\n", 1);
+		if (env->equal)
+		{
+			write(STDOUT_FILENO, env->key, ft_strlen(env->key));
+			write(STDOUT_FILENO, "=", 1);
+			write(STDOUT_FILENO, env->value, ft_strlen(env->value));
+			write(STDOUT_FILENO, "\n", 1);
+		}
 		env = env->next;
 	}
 }
@@ -28,11 +31,16 @@ void	print_export(t_env_ll *env)
 {
 	while (env)
 	{
-		write(STDOUT_FILENO, "declare -x ", 11);
+		write(STDOUT_FILENO, "declare -x ", 12);
 		write(STDOUT_FILENO, env->key, ft_strlen(env->key));
-		write(STDOUT_FILENO, "=\"", 2);
-		write(STDOUT_FILENO, env->value, ft_strlen(env->value));
-		write(STDOUT_FILENO, "\"\n", 2);
+		if (env->equal)
+		{
+			write(STDOUT_FILENO, "=\"", 2);
+			write(STDOUT_FILENO, env->value, ft_strlen(env->value));
+			write(STDOUT_FILENO, "\"\n", 2);
+		}
+		else
+			write(STDOUT_FILENO, "\n", 1);
 		env = env->next;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/14 15:22:34 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/14 15:38:17 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_env_ll
 	char						*value;
 	struct s_env_ll				*prev;
 	struct s_env_ll				*next;
+	bool						equal;
 }								t_env_ll;
 
 typedef enum SIGNALS

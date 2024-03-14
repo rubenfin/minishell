@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/02 11:26:11 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/13 17:00:43 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/14 16:15:30 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,16 @@ int	variable_exists(t_env_ll **node, t_env_ll **exist)
 
 int	create_nodes(t_env_ll *node, char **export_data, int i, int j)
 {
-	node->key = ft_strndup(export_data[j], i - 1);
+	if (node->equal)
+		node->key = ft_strndup(export_data[j], i);
+	else
+		node->key = ft_strndup(export_data[j], i);
 	if (!node->key)
 		return (free(node), 0);
-	node->value = ft_strdup(export_data[j] + i);
+	if (node->equal)
+		node->value = ft_strdup(export_data[j] + (i + 1));
+	else
+		node->value = ft_strdup("");
 	if (!node->value)
 		return (ft_free(&node->key), free(node), 0);
 	return (1);
@@ -68,10 +74,11 @@ int	do_export(t_env_ll **env, char **export_data)
 		if (!node)
 			return (0);
 		node->next = NULL;
+		node->equal = false;
 		if (!check_if_valid(node, export_data, &i, &j))
 			return (0);
-		if (!equal_sign_check(&node, export_data, &i, j))
-			continue ;
+		// if (!equal_sign_check(&node, export_data, &i, j))
+		// 	continue ;
 		if (!create_nodes(node, export_data, i, j))
 			return (0);
 		if (!set_node_right_place(env, node))
