@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/11 13:58:18 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/14 09:17:31 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/14 10:58:10 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int	dir_check(char *argv)
 		closedir(p);
 		exit(126);
 	}
+	else if (access(argv, X_OK) == 0)
+		return (0);
 	else
 		print_file_dir_err(argv, false);
 	exit(127);
@@ -50,7 +52,8 @@ void	check_dir_exe(char *argv)
 			write(STDERR_FILENO, ": Permission denied\n", 20);
 			exit(126);
 		}
-		dir_check(argv);
+		else
+			(dir_check(argv));
 	}
 }
 
