@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/07 13:59:14 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/13 17:27:31 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/14 09:04:08 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,21 @@ int	redirection_here(t_stream *iostream, t_command *command)
 	char	*str;
 
 	str = ft_strdup("");
+	if (!str)
+		return (set_file_failure_return(iostream));
 	limiter = ft_strjoin(command->string, "\n");
+	if (!limiter)
+		return (ft_free(&str), set_file_failure_return(iostream));
 	fd = open("objs/utils/.hd", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
-		return (set_file_failure_return(iostream));
-	here_doc(command, &str, &limiter);
+		return (ft_free2(&limiter, &str), set_file_failure_return(iostream));
+	if (!here_doc(command, &str, &limiter))
+		return (ft_free2(&limiter, &str), set_file_failure_return(iostream));
 	write(fd, str, ft_strlen(str));
 	close(fd);
 	iostream->input = open("objs/utils/.hd", O_RDONLY);
+	if (iostream->input == -1)
+		return (ft_free2(&limiter, &str), set_file_failure_return(iostream));
 	ft_free(&str);
 	ft_free(&limiter);
 	return (EXIT_SUCCESS);

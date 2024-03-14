@@ -6,28 +6,11 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/12 13:51:40 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/13 16:49:44 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/14 10:24:28 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-char	*get_result_w_origin(char **result, char *origin)
-{
-	char	*origin_tmp;
-	char	*returned_result;
-
-	origin_tmp = ft_strndup(origin, 1);
-	if (*result)
-		returned_result = ft_strjoin(*result, origin_tmp);
-	else
-		returned_result = ft_strdup(origin_tmp);
-	if (!returned_result)
-		return (ft_free2(result, &origin_tmp), NULL);
-	ft_free(result);
-	ft_free(&origin_tmp);
-	return (returned_result);
-}
 
 int	get_size(char *str, int redirection)
 {
@@ -37,17 +20,28 @@ int	get_size(char *str, int redirection)
 		return (no_quotes_len(str, redirection));
 }
 
-char	*set_node_main(char *str, int *redirection, t_env_ll **env, int status)
+int	get_len_and_check_builtin(int *len, int *redirection, char *str)
 {
-	char	*result;
 	char	*temp;
-	int		len;
 
-	len = get_size(str, *redirection);
-	temp = ft_substr(str, 0, len);
+	*len = get_size(str, *redirection);
+	temp = ft_substr(str, 0, *len);
+	if (!temp)
+		return (0);
 	if (*redirection == CMD && check_builtin(temp))
 		*redirection = BUILTIN;
 	ft_free(&temp);
+	return (1);
+}
+
+char	*set_node_main(char *str, int *redirection, t_env_ll **env, int status)
+{
+	char	*result;
+	int		len;
+	char	*temp;
+
+	if (!get_len_and_check_builtin(&len, redirection, str))
+		return (NULL);
 	if (*redirection == CMD && total_quote(str) > 0)
 	{
 		result = get_cmd(str, len, env, status);

@@ -6,27 +6,11 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/07 11:47:31 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/13 10:55:08 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/14 10:47:12 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-int	clear_history_close_fds(t_std_fd *std_fd, char **buffer)
-{
-	rl_clear_history();
-	ft_free(buffer);
-	if (!close_std_fds(std_fd))
-		return (0);
-	return (1);
-}
-
-void	add_to_history_clr_buffer(char **buffer)
-{
-	if (*buffer && ft_strlen(*buffer) > 0)
-		add_history(*buffer);
-	ft_free(buffer);
-}
 
 char	*setup_rl_and_sig(int *status)
 {
@@ -73,22 +57,9 @@ int	minishell(t_env_ll **env, t_std_fd *std_fd)
 		add_to_history_clr_buffer(&buffer);
 		if (!check_signal_fds_exit(exit, &status, std_fd))
 			break ;
-		printf("exit status: %d\n", status);
 	}
 	clear_history_close_fds(std_fd, &buffer);
 	return (write(1, "exit\n", 5), status);
-}
-
-int	set_tty_settings(void)
-{
-	struct termios	term;
-
-	if (tcgetattr(STDIN_FILENO, &term) == -1)
-		return (0);
-	term.c_lflag &= ~ECHOCTL;
-	if (tcsetattr(STDIN_FILENO, TCSANOW, &term) == -1)
-		return (0);
-	return (1);
 }
 
 int	main(int ac, char **av, char **envp)
@@ -108,7 +79,6 @@ int	main(int ac, char **av, char **envp)
 		if (make_env_ll(&env, envp) == -1)
 			exit(EXIT_FAILURE);
 		status = minishell(&env, std_fd);
-		printf("exited with %d\n", status);
 		free_ll(&env);
 		free(std_fd);
 		return (status);

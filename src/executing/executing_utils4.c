@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/11 13:58:18 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/13 17:59:46 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/14 09:17:31 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ int	length_command(char *command)
 		i++;
 	return (i + 1);
 }
+
 char	*init_set_valid_command(char *argv, int *j, char **full_path)
 {
 	char	*trimmed_command;

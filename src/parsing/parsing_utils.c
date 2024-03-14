@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parsing_utils.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jade-haa <jade-haa@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/07 12:13:12 by jade-haa          #+#    #+#             */
-/*   Updated: 2024/03/13 15:59:25 by jade-haa         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   parsing_utils.c                                    :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/03/07 12:13:12 by jade-haa      #+#    #+#                 */
+/*   Updated: 2024/03/14 09:53:34 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ char	*find_value_char(t_env_ll *env, char *value_str, int *i, int status)
 	*i += ft_strlen(value_str);
 	return (NULL);
 }
+
 int	redirection_checker_int(char *str, int i, int check_all)
 {
 	if (check_all)
@@ -94,7 +95,6 @@ int	empty_checker(char *str)
 	i = 0;
 	if (!str || !str[0])
 		return (0);
-	i = 0;
 	while (str[i])
 	{
 		if (str[i] != ' ')
@@ -103,12 +103,11 @@ int	empty_checker(char *str)
 	}
 	if (!str[i] || str[i] == ' ')
 		return (0);
-	i = 0;
-	while (str[i])
+	i = -1;
+	while (str[++i])
 	{
 		if (ft_isalnum(str[i]) || !valid_identifier_check(str[i]))
 			flag = true;
-		i++;
 	}
 	if (flag)
 		return (1);

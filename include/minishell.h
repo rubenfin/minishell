@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/13 17:01:05 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/14 10:27:20 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,7 +215,8 @@ int								quotes_len(char *str);
 int								no_quotes_len(char *str, int redirection);
 char							*get_cmd(char *str, int len, t_env_ll **env,
 									int status);
-void							initialize_variables(char **result, int *i);
+char							*initialize_variables(char **result, int *i,
+									char *str, int len);
 int								redirection_checker_bool(char *str, int i,
 									int check_all);
 
@@ -317,3 +318,11 @@ int								equal_sign_check(t_env_ll **node,
 UTILS / FD_HANDLING
 */
 int								close_std_fds(t_std_fd *std_fd);
+
+/*
+UTILS / MAIN
+*/
+int								clear_history_close_fds(t_std_fd *std_fd,
+									char **buffer);
+void							add_to_history_clr_buffer(char **buffer);
+int								set_tty_settings(void);

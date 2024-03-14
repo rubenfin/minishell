@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/13 15:05:10 by jade-haa      #+#    #+#                 */
-/*   Updated: 2024/03/13 16:47:57 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/14 10:24:42 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,22 +91,13 @@ char	*quote_check(char *str, int *index, t_env_ll **env, int status)
 		return (syntax_error(), NULL);
 	saved = ft_substr_quotes(&str[1], i, closing_quote, quote);
 	if (quote == '\"')
+	{
 		result = set_node_quotes(&saved, quote, env, status);
+		*index = closing_quote + 1;
+		return (result);
+	}
 	*index = closing_quote + 1;
+	if (!result)
+		result = saved;
 	return (result);
-}
-
-char	*get_result(char **result, char **tmp)
-{
-	char	*returned_result;
-
-	if (*result)
-		returned_result = ft_strjoin(*result, *tmp);
-	else
-		returned_result = ft_strdup(*tmp);
-	if (!returned_result)
-		return (ft_free2(result, tmp), NULL);
-	ft_free(result);
-	ft_free(tmp);
-	return (returned_result);
 }
