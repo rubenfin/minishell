@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/14 10:27:20 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/14 15:22:34 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ typedef struct s_expanding
 }								t_expanding;
 
 int								parser(t_env_ll **env, t_command **command,
-									char *buffer, int status);
+									char **buffer, int status);
 int								command_line(t_env_ll **env,
 									t_command **command, bool *exit);
 

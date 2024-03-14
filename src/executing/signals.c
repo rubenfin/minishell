@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/05 18:11:33 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/14 10:41:19 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/14 15:23:44 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,6 @@ void	handle_signals_normal(int sig)
 		g_signal_status = 130;
 		rl_replace_line("", 0);
 		write(1, "\n", 1);
-		rl_on_new_line();
-		rl_redisplay();
-	}
-	else if (sig == SIGQUIT)
-	{
 		rl_on_new_line();
 		rl_redisplay();
 	}
@@ -46,25 +41,37 @@ void	handle_signals_heredoc(int sig)
 			rl_redisplay();
 		}
 	}
-	else if (sig == SIGQUIT)
-	{
-		rl_on_new_line();
-		rl_redisplay();
-	}
 }
 
 void	handle_signals_cmd(int sig)
 {
-	kill(0, sig);
+	if (sig == SIGINT)
+	{
+		write(STDOUT_FILENO, "\n", 1);
+		g_signal_status = 130;
+	}
+	else if (sig == SIGQUIT)
+	{
+		write(STDERR_FILENO, "Quit (core dumped)\n", 19);
+		g_signal_status = 131;
+	}
 }
 
 void	send_signals(t_SIGNALS SIGNAL)
 {
-	signal(SIGQUIT, SIG_IGN);
 	if (SIGNAL == RUNNING_CMD)
+	{
+		signal(SIGQUIT, handle_signals_cmd);
 		signal(SIGINT, handle_signals_cmd);
+	}
 	else if (SIGNAL == HERE_DOC)
+	{
+		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, handle_signals_heredoc);
-	else
+	}
+	else if (SIGNAL == NORMAL)
+	{
+		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, handle_signals_normal);
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/30 12:09:22 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/13 14:18:50 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/14 15:03:38 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ int	find_in_dir(t_env_ll **env, char *directory)
 
 	if (directory[0] != '/')
 		directory = ft_strjoin("/", directory);
+	if(!directory)
+		return(1);
 	node = find_key(*env, "PWD");
 	path = ft_strjoin(node->value, directory);
 	if (!path)
@@ -48,7 +50,7 @@ int	relative_path(t_env_ll **env, char *directory)
 		else
 			directory = ft_strdup(directory + 1);
 	}
-	if (!ft_strncmp(directory, ".", 2) || !ft_strncmp(directory, "./", 2))
+	if (!ft_strncmp(directory, ".", 2))
 		return (0);
 	if (!ft_strncmp(directory, "-", 1))
 		return (go_prev(env));

@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/14 09:48:00 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/14 09:49:15 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/14 14:44:32 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,18 @@ int	set_tty_settings(void)
 	if (tcgetattr(STDIN_FILENO, &term) == -1)
 		return (0);
 	term.c_lflag &= ~ECHOCTL;
+	if (tcsetattr(STDIN_FILENO, TCSANOW, &term) == -1)
+		return (0);
+	return (1);
+}
+
+int	restore_tty_settings(void)
+{
+	struct termios	term;
+
+	if (tcgetattr(STDIN_FILENO, &term) == -1)
+		return (0);
+	term.c_lflag |= ECHOCTL;
 	if (tcsetattr(STDIN_FILENO, TCSANOW, &term) == -1)
 		return (0);
 	return (1);

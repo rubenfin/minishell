@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/06 12:55:18 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/11 15:06:02 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/14 15:21:16 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ int	setup_and_do_execute(t_command **param, t_stream *iostream, int *pid)
 	*pid = fork();
 	if (*pid == -1)
 		return (0);
+	send_signals(RUNNING_CMD);
 	if (*pid == 0)
 	{
-		send_signals(RUNNING_CMD);
 		if (execute(param, iostream) == -1)
 			return (0);
 	}

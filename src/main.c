@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/07 11:47:31 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/14 10:47:12 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/14 14:57:29 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int	minishell(t_env_ll **env, t_std_fd *std_fd)
 	int			status;
 	bool		exit;
 
+	buffer = NULL;
 	exit = false;
 	status = 0;
 	parsed = NULL;
@@ -51,10 +52,9 @@ int	minishell(t_env_ll **env, t_std_fd *std_fd)
 		buffer = setup_rl_and_sig(&status);
 		if (!buffer)
 			break ;
-		if (!parser(env, &parsed, buffer, status))
+		if (!parser(env, &parsed, &buffer, status))
 			continue ;
 		status = command_line(env, &parsed, &exit);
-		add_to_history_clr_buffer(&buffer);
 		if (!check_signal_fds_exit(exit, &status, std_fd))
 			break ;
 	}
