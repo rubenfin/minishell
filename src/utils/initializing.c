@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/08 16:17:12 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/11 11:25:34 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/15 10:54:40 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ void	init_stream(t_stream **iostream)
 	(*iostream)->input = -1;
 	(*iostream)->output = -1;
 	(*iostream)->file_failure = false;
+	(*iostream)->pipe = false;
 }
 
 int	init_stream_pipes(t_stream **iostream)
@@ -58,6 +59,7 @@ int	init_stream_pipes(t_stream **iostream)
 	init_stream(iostream);
 	if (!init_pipe((*iostream)->pipes))
 		return (0);
+	(*iostream)->pipe = true;
 	return (1);
 }
 

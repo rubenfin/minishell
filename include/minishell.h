@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/14 15:38:17 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/15 11:00:55 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ typedef struct s_stream
 	int							output;
 	t_pipes						*pipes;
 	int							prev_exit_status;
+	bool						pipe;
 }								t_stream;
 
 typedef struct t_command
@@ -168,6 +169,9 @@ int								go_prev(t_env_ll **env);
 int								go_back(t_env_ll **env, char *directory);
 int								go_home(t_env_ll **env, char *directory);
 int								plus_or_min(char **args, int i, int j);
+void							ft_dup_single(t_stream *iostream);
+void							ft_dup_pipes(t_stream *iostream);
+
 /*
 PARSING
 */

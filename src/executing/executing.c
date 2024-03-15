@@ -71,12 +71,6 @@ void	else_statement(t_stream *iostream)
 	exit(127);
 }
 
-void	ft_dup2(int iostream, int standard)
-{
-	if (dup2(iostream, standard) == -1)
-		exit(errno);
-}
-
 int	execute(t_command **param, t_stream *iostream)
 {
 	t_command	*command;
@@ -90,10 +84,10 @@ int	execute(t_command **param, t_stream *iostream)
 	if (!iostream->args)
 		return (-1);
 	set_args(param, iostream, count);
-	if (iostream->input != -1)
-		ft_dup2(iostream->input, STDIN_FILENO);
-	if (iostream->output != -1)
-		ft_dup2(iostream->output, STDOUT_FILENO);
+	if (iostream->pipe)
+		ft_dup_pipes(iostream);
+	else
+		ft_dup_single(iostream);
 	if (command->token == BUILTIN)
 		exit(get_builtin(command->string, iostream, iostream->env));
 	else

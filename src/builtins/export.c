@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/02 11:26:11 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/14 16:15:30 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/15 11:01:23 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,6 @@ int	do_export(t_env_ll **env, char **export_data)
 		node->equal = false;
 		if (!check_if_valid(node, export_data, &i, &j))
 			return (0);
-		// if (!equal_sign_check(&node, export_data, &i, j))
-		// 	continue ;
 		if (!create_nodes(node, export_data, i, j))
 			return (0);
 		if (!set_node_right_place(env, node))
