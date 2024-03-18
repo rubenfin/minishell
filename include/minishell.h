@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/06 12:01:35 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/15 11:00:55 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/15 14:58:46 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 #include <sys/wait.h>
 #include <termios.h>
 #include <unistd.h>
+
+#define PROMPT "\x1b[94mminishell ~$: \x1b[0m"
 
 extern volatile sig_atomic_t	g_signal_status;
 
@@ -299,12 +301,12 @@ void							print_dup_err(void);
 /*
 UTILS / BUILTINS UTILS
 */
-void							change_pwd(t_env_ll **env, char *change_value);
+int								change_pwd(t_env_ll **env, char *change_value);
 char							*find_key_return_value(t_env_ll *env,
 									char *key_str);
-void							get_key_change_value(t_env_ll **env,
+int								get_key_change_value(t_env_ll **env,
 									char *key_str, char *change_value);
-void							find_key_free_value(t_env_ll **env,
+int								find_key_free_value(t_env_ll **env,
 									char *key_str);
 char							*find_value_char(t_env_ll *env, char *value_str,
 									int *i, int status);

@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/30 12:09:22 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/15 11:01:32 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/15 14:56:36 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,25 +16,25 @@ int	find_in_dir(t_env_ll **env, char *directory)
 {
 	t_env_ll	*node;
 	char		*path;
+	char		*curr_dir;
 
 	if (directory[0] != '/')
 		directory = ft_strjoin("/", directory);
 	if (!directory)
 		return (1);
 	node = find_key(*env, "PWD");
+	if (!node)
+		return (ft_free(&directory), 1);
 	path = ft_strjoin(node->value, directory);
 	if (!path)
-		return (ft_free(&directory), 0);
+		return (ft_free(&directory), 1);
 	if (chdir(path) == -1)
-	{
-		print_file_dir_err(directory, true);
-		ft_free(&directory);
-		ft_free(&path);
-		return (1);
-	}
-	ft_free(&directory);
-	ft_free(&path);
-	change_pwd(env, get_curr_dir());
+		return (print_file_dir_err(directory, true), ft_free2(&directory,
+				&path), 1);
+	ft_free2(&directory, &path);
+	curr_dir = get_curr_dir();
+	if (!change_pwd(env, curr_dir))
+		return (ft_free(&curr_dir), EXIT_FAILURE);
 	return (0);
 }
 
@@ -62,8 +62,16 @@ int	relative_path(t_env_ll **env, char *directory)
 
 int	absolute_path(t_env_ll **env, char *directory)
 {
+	char	*curr_dir;
+
 	if (chdir(directory) == 0)
-		change_pwd(env, get_curr_dir());
+	{
+		curr_dir = get_curr_dir();
+		if (!curr_dir)
+			return (EXIT_FAILURE);
+		if (!change_pwd(env, curr_dir))
+			return (ft_free(&curr_dir), EXIT_FAILURE);
+	}
 	else
 		return (print_file_dir_err(directory, true), EXIT_FAILURE);
 	return (EXIT_SUCCESS);

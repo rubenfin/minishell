@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/07 11:47:31 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/14 14:57:29 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/15 11:43:42 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*setup_rl_and_sig(int *status)
 
 	g_signal_status = -1;
 	send_signals(NORMAL);
-	buffer = readline("~$: ");
+	buffer = readline(PROMPT);
 	rl_on_new_line();
 	if (g_signal_status != -1)
 		*status = g_signal_status;

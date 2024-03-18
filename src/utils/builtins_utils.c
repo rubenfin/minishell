@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/26 09:51:12 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/02/26 11:28:47 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/15 14:48:14 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,24 @@ int	max(int a, int b)
 		return (b);
 }
 
-void	change_pwd(t_env_ll **env, char *change_value)
+int	change_pwd(t_env_ll **env, char *change_value)
 {
-	find_key_free_value(env, "OLDPWD");
-	get_key_change_value(env, "OLDPWD", find_key_return_value(*env, "PWD"));
-	get_key_change_value(env, "PWD", change_value);
+	if (find_key_free_value(env, "OLDPWD"))
+		get_key_change_value(env, "OLDPWD", find_key_return_value(*env, "PWD"));
+	if (!get_key_change_value(env, "PWD", change_value))
+		return (0);
+	return (1);
 }
 
-void	find_key_free_value(t_env_ll **env, char *key_str)
+int	find_key_free_value(t_env_ll **env, char *key_str)
 {
 	t_env_ll	*node;
 
 	node = find_key(*env, key_str);
+	if (!node)
+		return (0);
 	ft_free(&node->value);
+	return (1);
 }
 
 char	*find_key_return_value(t_env_ll *env, char *key_str)
@@ -50,13 +55,16 @@ char	*find_key_return_value(t_env_ll *env, char *key_str)
 	return (NULL);
 }
 
-void	get_key_change_value(t_env_ll **env, char *key_str, char *change_value)
+int	get_key_change_value(t_env_ll **env, char *key_str, char *change_value)
 {
 	t_env_ll	*node;
 
 	node = find_key(*env, key_str);
+	if (!node)
+		return (0);
 	if (change_value)
 	{
 		node->value = change_value;
 	}
+	return (1);
 }

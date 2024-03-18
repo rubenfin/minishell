@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/07 13:55:08 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/12 14:09:43 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/15 14:12:31 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	last_slash(char *str)
 
 	i = 0;
 	x = 0;
-	if (!str[i])
+	if (!str || !str[i])
 		return (0);
 	while (str[i])
 	{

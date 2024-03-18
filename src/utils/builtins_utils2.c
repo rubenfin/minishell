@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/08 14:18:29 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/13 14:20:58 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/15 14:49:50 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,17 @@
 int	go_prev(t_env_ll **env)
 {
 	char	*temp;
+	char	*back;
 
 	temp = NULL;
-	if (chdir(find_key_return_value(*env, "OLDPWD")) == 0)
+	back = find_key_return_value(*env, "OLDPWD");
+	if (!back)
+		return (write(STDOUT_FILENO, "minishell: cd: OLDPWD not set\n", 30), 1);
+	if (chdir(back))
 	{
 		temp = find_key_return_value(*env, "PWD");
+		if (!temp)
+			return (1);
 		get_key_change_value(env, "PWD", find_key_return_value(*env, "OLDPWD"));
 		get_key_change_value(env, "OLDPWD", temp);
 		return (0);
@@ -30,18 +36,23 @@ int	go_prev(t_env_ll **env)
 int	go_back(t_env_ll **env, char *directory)
 {
 	char	*temp;
+	char	*pwd;
 	int		i;
 
 	(void)directory;
 	temp = NULL;
 	i = 0;
-	i = last_slash(find_key_return_value(*env, "PWD"));
-	temp = ft_strndup(find_key_return_value(*env, "PWD"), i);
+	pwd = find_key_return_value(*env, "PWD");
+	if (!pwd)
+		return (1);
+	i = last_slash(pwd);
+	temp = ft_strndup(pwd, i);
 	if (!temp)
 		return (0);
 	if (chdir(temp) == 0)
 	{
-		change_pwd(env, temp);
+		if (!change_pwd(env, temp))
+			return (ft_free(&temp), 1);
 		return (0);
 	}
 	cd_lost_parent_err();

@@ -6,7 +6,7 @@
 /*   By: rfinneru <rfinneru@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/14 18:56:11 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/11 12:36:22 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/15 13:53:47 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	ft_free(char **buffer)
 {
+	if (!buffer)
+		return ;
 	if (*buffer)
 		free(*buffer);
 	*buffer = NULL;

@@ -6,7 +6,7 @@
 /*   By: jade-haa <jade-haa@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/09 12:35:32 by rfinneru      #+#    #+#                 */
-/*   Updated: 2024/03/14 15:38:55 by rfinneru      ########   odam.nl         */
+/*   Updated: 2024/03/15 17:43:25 by rfinneru      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ char	*ft_strndup(char *s, size_t n)
 	char	*temp;
 
 	i = 0;
+	if (!s)
+		return (NULL);
 	while (s[i] && i < n)
 		i++;
 	temp = (char *)malloc((i + 1) * sizeof(char));
@@ -75,12 +77,35 @@ char	*ft_strndup(char *s, size_t n)
 	*ptr = '\0';
 	return (temp);
 }
+int	increase_SHLVL(t_env_ll *current, char **envp, int i, int j)
+{
+	int	SHLLEVEL;
+
+	if (envp[i][j] == '=')
+	{
+		current->value = ft_strdup(envp[i] + j + 1);
+		if (!current->value)
+			return(0);
+		SHLLEVEL = (ft_atoi(current->value)) + 1;
+		ft_free(&current->value);
+		current->value = ft_itoa(SHLLEVEL);
+	}
+	else
+		current->value = NULL;
+	current->equal = true;
+	current->next = NULL;
+	return (1);
+}
 
 int	initalize_node(t_env_ll *current, char **envp, int i, int j)
 {
+	if (!current)
+		return (-1);
 	current->key = ft_strndup(envp[i], j);
 	if (!current->key)
 		return (-1);
+	if (!ft_strncmp(current->key, "SHLVL", 6))
+		return (increase_SHLVL(current, envp, i, j));
 	if (envp[i][j] == '=')
 		current->value = ft_strdup(envp[i] + j + 1);
 	else

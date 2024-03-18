@@ -16,22 +16,22 @@ CFLAGS = -Wall -Werror -Wextra
 
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 
 $(NAME): $(OBJ_FILES)
-	ar rcs $@ $(OBJ_FILES)
+	@ar rcs $@ $(OBJ_FILES)
 
 
 all: $(NAME)
 
 
 clean:
-	rm -f $(OBJ_FILES)
+	@rm -f $(OBJ_FILES)
 
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
 
 
 re: fclean all
